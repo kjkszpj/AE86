@@ -3,7 +3,7 @@
 #   pipeline寄存器未实现
 
 def alu(aluA=1, aluB=1, aluFun=0):
-    #   ------DONE------
+    #   DONE
     #   alu result
     if aluFun not in [0, 1, 2, 3]: print "alu_fun error! %d" % aluFun
     if aluFun == 0:   result = aluA + aluB
@@ -20,18 +20,20 @@ def alu(aluA=1, aluB=1, aluFun=0):
     return result, CC
 
 def little_endian(data, s):
-    #   ------DONE------
+    #   DONE
     return (data[s + 3] << 24) +\
            (data[s + 2] << 16) +\
            (data[s + 1] << 8) +\
             data[s]
 
+#   ---about FETCH stage---
+
 def need_regids(f_icode):
-    #   ------DONE------
+    #   DONE
     return f_icode in [IRRMOVL, IOPL, IPUSHL, IPOPL, IIRMOVL, IRMMOVL, IMRMOVL]
 
 def need_valC(f_icode):
-    #   ------DONE------
+    #   DONE
     return f_icode in [IIRMOVL, IRMMOVL, IMRMOVL, IJXX, ICALL]
 
 def decode(pc=0):
@@ -61,20 +63,47 @@ def decode(pc=0):
     return icode, ifun, rA, rB, valC, valP
 
 def f_predPC(f_icode, f_valC, f_valP):
-    #   ------DONE------
+    #   DONE
     #   what about IRET?
     if f_icode in [IJXX, ICALL]: return f_valC
     else: return f_valP
 
 def f_pc(F_predPC, M_icode, M_valA, W_icode, W_valM, M_Cnd):
-    #   ------DONE------
+    #   DONE
     if M_icode == IJXX and not M_Cnd: return M_valA
     if W_icode == IRET: return W_valM
     return F_predPC
 
+#   ---about DECODE stage---
+
+def d_srcA(D_icode, D_rA):
+    #   DONE
+    if D_icode in [IRRMOVL, IRMMOVL, IOPL, IPUSHL]: return D_rA
+    if D_icode in [IPOPL, IRET]: return RESP
+    return RNONE
+
+def d_srcB(D_icode, D_rB):
+    #   DONE
+    if D_icode in [IOPL, IRMMOVL, IMRMOVL]: return D_rB
+    if D_icode in [IPUSHL, IPOPL, ICALL, IRET]: return RESP;
+    return RNONE;
+
+def d_dstE(D_icode, D_rB):
+    #   DONE
+    #   是指在write back阶段的r[dstE]=valE
+    if D_icode in [IRRMOVL, IIRMOVL, IOPL]: return D_rB
+    if D_icode in [IPUSHL, IPOPL, ICALL, IRET]: return RESP
+    return RNONE;
+
+def d_dstM(D_icode, D_ra):
+    #   DONE
+    if D_icode in [IMRMOVL, IPOPL]: D_ra
+    return RNONE
+
 def init():
     #   double check this function
-    global instruction, INOP, IHALT, IRRMOVL, IIRMOVL, IRMMOVL, IMRMOVL, IOPL, IJXX, ICALL, IRET, IPUSHL, IPOPL, FNONE, RNONE, SAOK, SADR, SINS, SHLT
+    global instruction, INOP, IHALT, IRRMOVL, IIRMOVL, IRMMOVL, IMRMOVL, IOPL, IJXX, ICALL, IRET, IPUSHL, IPOP0
+    global FNONE, RNONE, RESP, ALUADD, SAOK, SADR, SINS, SHLT
 
     instruction = [0x30, 0x84, 0x00, 0x01, 0x00, 0x00]
     #   icode
@@ -82,24 +111,26 @@ def init():
     IHALT = 0x1
     IRRMOVL = 0x2
     IIRMOVL = 0x3
-    IRMMOVL = 0X4
-    IMRMOVL = 0X5
-    IOPL = 0X6
-    IJXX = 0X7
-    ICALL = 0X8
-    IRET = 0X9
-    IPUSHL = 0XA
-    IPOPL = 0XB
+    IRMMOVL = 0x4
+    IMRMOVL = 0x5
+    IOPL = 0x6
+    IJXX = 0x7
+    ICALL = 0x8
+    IRET = 0x9
+    IPUSHL = 0xA
+    IPOPL = 0xB
 
     #   ??
-    FNONE = 0X0
-    RNONE = 0XF
+    FNONE = 0x0
+    RESP = 0x4
+    RNONE = 0xF
+    ALUADD = 0x0
 
     #   status code
-    SAOK = 0X1
-    SADR = 0X2
-    SINS = 0X3
-    SHLT = 0X4
+    SAOK = 0x1
+    SADR = 0x2
+    SINS = 0x3
+    SHLT = 0x4
 
 if __name__ == "__main__":
     init()
