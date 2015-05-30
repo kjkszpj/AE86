@@ -100,6 +100,33 @@ def d_dstM(D_icode, D_ra):
     if D_icode in [IMRMOVL, IPOPL]: D_ra
     return RNONE
 
+def d_valA(D_icode, D_valP, d_valA, srcA, e_dstE, M_dstM, M_dstE, W_dstM, W_dstE, e_valE, m_valM, M_valE, W_valM, W_valE):
+    #   DONE
+    #   srcA or d_srcA
+    if D_icode in [ICALL, IJXX]: return D_valP
+    if srcA == e_dstE: return e_valE
+    if srcA == M_dstM: return m_valM
+    if srcA == M_dstE: return M_valE
+    if srcA == W_dstM: return W_valM
+    if srcA == W_dstE: return W_valE
+    return d_valA
+
+def d_valB(srcB, d_valB, e_dstE, M_dstM, M_dstE, W_dstM, W_dstE, e_valE, m_valM, M_valE, W_valM, W_valE):
+    #   DONE
+    #   no bug?
+    #   srcB or d_srcB
+    if srcB == e_dstE: return e_valE
+    if srcB == M_dstM: return m_valM
+    if srcB == M_dstE: return M_valE
+    if srcB == W_dstM: return W_valM
+    if srcB == W_dstE: return W_valE
+    return d_valB
+
+def alufun(E_icode, E_ifun):
+    #   DONE
+    if E_icode == IOPL: return E_ifun
+    return ALUADD
+
 def init():
     #   double check this function
     global instruction, INOP, IHALT, IRRMOVL, IIRMOVL, IRMMOVL, IMRMOVL, IOPL, IJXX, ICALL, IRET, IPUSHL, IPOP0
