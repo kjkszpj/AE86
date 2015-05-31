@@ -219,8 +219,8 @@ def sim_main():
         #   ---DECODE connection---
         td_valA = 0
         td_valB = 0
-        #   TODO td_valA
-        #   TODO td_valB
+        srcA = d_srcA(read_reg('D_icode'), read_reg('D_rA'))
+        srcB = d_srcB(read_reg('D_icode'), read_reg('D_rB'))
         prepare_reg('E_stat', read_reg('D_stat'))
         prepare_reg('E_icode', read_reg('D_icode'))
         prepare_reg('E_ifun', read_reg('D_ifun'))
@@ -229,8 +229,8 @@ def sim_main():
         prepare_reg('E_valB', td_valB)
         prepare_reg('E_dstE', d_dstE(read_reg('D_icode'), read_reg('D_rB')))
         prepare_reg('E_dstM', d_dstM(read_reg('D_icode'), read_reg('D_rA')))
-        prepare_reg('E_srcA', d_srcA(read_reg('D_icode'), read_reg('D_rA')))
-        prepare_reg('E_srcB', d_srcB(read_reg('D_icode'), read_reg('D_rB')))
+        prepare_reg('E_srcA', srcA)
+        prepare_reg('E_srcB', srcB)
 
         #   ---EXECUTE connection---
         taluA = aluA(read_reg('E_icode'), read_reg('E_valA'), read_reg('E_valC'))
@@ -256,7 +256,19 @@ def sim_main():
         #   TODO valM
         prepare_reg('W_dstE', read_reg('M_dstE'))
         prepare_reg('W_dstM', read_reg('M_dstM'))
-        #   TODO now working here
+
+        #   forward comes at last
+        #   valA
+        #   TODO valM
+        td_valA = d_valA(read_reg('D_icode'), read_reg(register_name[srcA]), srcA,
+                         read_reg('D_valP'), e_dstE(read_reg('E_icode'), te_Cnd, read_reg('E_dstE')),
+                         read_reg('M_dstM'), read_reg('M_dstE'), read_reg('W_dstM'), read_reg('W_dstE'),
+                         te_valE, m_valM, read_reg('M_valE'), read_reg('W_valM'), read_reg('W_valE'))
+        #   valB
+        #   TODO valM
+        td_valB = d_valB(srcB, read_reg(register_name[srcB]), e_dstE(read_reg('E_icode'), te_Cnd, read_reg('E_dstE')),
+                         read_reg('M_dstM'), read_reg('M_dstE'), read_reg('W_dstM'), read_reg('W_dstE'),
+                         te_valE, m_valM,  read_reg('M_valE'), read_reg('W_valM'), read_reg('W_valE'))
     return 0
 
 def init():
