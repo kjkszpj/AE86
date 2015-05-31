@@ -2,6 +2,8 @@
 
 #   pipeline¼Ä´æÆ÷Î´ÊµÏÖ
 
+import memory
+
 def alu(aluA=1, aluB=1, aluFun=0):
     #   DONE
     #   alu result
@@ -176,8 +178,6 @@ def m_stat(dmem_error, M_stat):
     #   DONE
     if dmem_error: return SADR
     return M_stat
-
-
 
 def init():
     #   double check this function
