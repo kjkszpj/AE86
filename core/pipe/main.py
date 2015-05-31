@@ -3,7 +3,6 @@
 #   imem_error, JXX的ifun
 
 from memory import *
-
 #   以下是小函数
 #   ---about FETCH stage---
 
@@ -64,7 +63,7 @@ def d_dstM(D_icode, D_ra):
     if D_icode in [IMRMOVL, IPOPL]: D_ra
     return RNONE
 
-def d_valA(D_icode, D_valP, d_valA, srcA, e_dstE, M_dstM, M_dstE, W_dstM, W_dstE, e_valE, m_valM, M_valE, W_valM, W_valE):
+def d_valA(D_icode, d_valA, srcA, D_valP, e_dstE, M_dstM, M_dstE, W_dstM, W_dstE, e_valE, m_valM, M_valE, W_valM, W_valE):
     #   DONE
     #   srcA or d_srcA
     if D_icode in [ICALL, IJXX]: return D_valP
@@ -107,7 +106,7 @@ def alufun(E_icode, E_ifun):
     if E_icode == IOPL: return E_ifun
     return ALUADD
 
-def set_cc(E_icode, m_stat, W_stat):
+def set_CC(E_icode, m_stat, W_stat):
     #   DONE
     return E_icode == IOPL and not m_stat in [SADR, SINS, SHLT] and not W_stat in [SADR, SINS, SHLT]
 
@@ -119,6 +118,17 @@ def e_dstE(E_icode, e_Cnd, E_dstE):
     #   DONE
     if E_icode == IRRMOVL and not e_Cnd: return RNONE
     return E_dstE
+
+def e_Cnd(E_icode, E_ifun, CC):
+    #   TODO should CHECK
+    ZF, SF, OF = (CC & 4) >> 2, (CC & 2) >> 1, CC & 1
+    if E_ifun == 0: return 1
+    if E_ifun == 1: return (SF ^ OF) | ZF
+    if E_ifun == 2: return SF ^ OF
+    if E_ifun == 3: return ZF
+    if E_ifun == 4: return ~ZF
+    if E_ifun == 5: return ~(SF ^ OF)
+    if E_ifun == 6: return ~(SF ^ OF) & ~ZF
 
 #   ---about MEMORY stage---
 
@@ -196,6 +206,7 @@ def sim_main():
         #   ---FETCH connection---
         tf_pc = f_pc(read_reg('F_predPC'), read_reg('M_icode'), read_reg('M_valA'), read_reg('W_icode'), read_reg('W_valM'), read_reg('M_Cnd'))
         tf_icode, tf_ifun, tf_rA, tf_rB, tf_valC, tf_valP, imem_error = decode(tf_pc)
+
         prepare_reg('D_icode', tf_icode)
         prepare_reg('D_ifun', tf_ifun)
         prepare_reg('D_rA', tf_rA)
@@ -204,12 +215,56 @@ def sim_main():
         prepare_reg('D_valP', tf_valP)
         prepare_reg('F_predPC', f_predPC(tf_icode, tf_valC, tf_valP))
         prepare_reg('D_stat', f_stat(tf_icode, imem_error))
+
+        #   ---DECODE connection---
+        td_valA = 0
+        td_valB = 0
+        #   TODO td_valA
+        #   TODO td_valB
+        prepare_reg('E_stat', read_reg('D_stat'))
+        prepare_reg('E_icode', read_reg('D_icode'))
+        prepare_reg('E_ifun', read_reg('D_ifun'))
+        prepare_reg('E_valC', read_reg('D_valC'))
+        prepare_reg('E_valA', td_valA)
+        prepare_reg('E_valB', td_valB)
+        prepare_reg('E_dstE', d_dstE(read_reg('D_icode'), read_reg('D_rB')))
+        prepare_reg('E_dstM', d_dstM(read_reg('D_icode'), read_reg('D_rA')))
+        prepare_reg('E_srcA', d_srcA(read_reg('D_icode'), read_reg('D_rA')))
+        prepare_reg('E_srcB', d_srcB(read_reg('D_icode'), read_reg('D_rB')))
+
+        #   ---EXECUTE connection---
+        taluA = aluA(read_reg('E_icode'), read_reg('E_valA'), read_reg('E_valC'))
+        taluB = aluB(read_reg('E_icode'), read_reg('E_valB'))
+        te_valE, tCC = alu(taluA, taluB, alufun(read_reg('E_icode'), read_reg('E_ifun')))
+        te_Cnd = e_Cnd(read_reg('E_icode'), read_reg('E_ifun'), read_reg('CC'))
+
+        prepare_reg('M_stat', read_reg('E_stat'))
+        prepare_reg('M_icode', read_reg('E_icode'))
+        prepare_reg('M_valE', te_valE)
+        prepare_reg('M_valA', read_reg('E_valA'))
+        if set_CC(E_icode, m_stat, W_stat): prepare_reg('CC', tCC)
+        prepare_reg('M_Cnd', te_Cnd)
+        prepare_reg('M_dstE', e_dstE(read_reg('E_icode'), te_Cnd, read_reg('E_dstE')))
+        prepare_reg('M_dstM', read_reg('D_dstM'))
+
+        #   ---MEMORY connection---
+        #   dmem_error here
+        tm_stat = m_stat(False, read_reg('M_stat'))
+        prepare_reg('W_stat', tm_stat)
+        prepare_reg('W_icode', read_reg('M_icode'))
+        prepare_reg('W_valE', read_reg('M_valE'))
+        #   TODO valM
+        prepare_reg('W_dstE', read_reg('M_dstE'))
+        prepare_reg('W_dstM', read_reg('M_dstM'))
+        #   TODO now working here
     return 0
 
 def init():
     #   double check this function
-    global mem, INOP, IHALT, IRRMOVL, IIRMOVL, IRMMOVL, IMRMOVL, IOPL, IJXX, ICALL, IRET, IPUSHL, IPOP0
+    global INOP, IHALT, IRRMOVL, IIRMOVL, IRMMOVL, IMRMOVL, IOPL, IJXX, ICALL, IRET, IPUSHL, IPOP0
     global FNONE, RNONE, RESP, ALUADD, SAOK, SADR, SINS, SHLT
+    global register_name
+    global CC_mask, CC_result
 
     mem_init();
     #   TEST
@@ -260,6 +315,9 @@ def init():
     SADR = 0x2
     SINS = 0x3
     SHLT = 0x4
+
+    #ZF|SF|OF
+    register_name = ['REAX', 'RECX', 'REDX', 'REBX', 'RESP', 'REBP', 'RESI', 'REDI']
 
 if __name__ == "__main__":
     init()
