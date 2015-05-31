@@ -4,23 +4,6 @@
 
 import memory
 
-def alu(aluA=1, aluB=1, aluFun=0):
-    #   DONE
-    #   alu result
-    if aluFun not in [0, 1, 2, 3]: print "alu_fun error! %d" % aluFun
-    if aluFun == 0:   result = aluA + aluB
-    elif aluFun == 1: result = aluB - aluA
-    elif aluFun == 2: result = aluA & aluB
-    elif aluFun == 3: result = aluA ^ aluB
-
-    #   condition code, ZF|SF|OF
-    ZF = result == 0
-    SF = result < 0
-    OF = (aluA < 0 == aluB < 0) and ((result < 0) != (aluA < 0))
-    CC = (ZF << 2) | (SF << 1) | OF
-
-    return result, CC
-
 def little_endian(data, s):
     #   DONE
     return (data[s + 3] << 24) +\
@@ -37,32 +20,6 @@ def need_regids(f_icode):
 def need_valC(f_icode):
     #   DONE
     return f_icode in [IIRMOVL, IRMMOVL, IMRMOVL, IJXX, ICALL]
-
-def decode(pc=0):
-    #   异常处理没做
-    #   icode, ifun, rA, rB, valC, valP
-
-    #   get icode & ifun
-    valP = pc
-    temp = instruction[valP]
-    valP = valP + 1
-    icode = (temp >> 4) & 0xF
-    ifun = (temp >> 0) & 0xF
-
-    #   get rA & rB
-    if need_regids(ifun):
-        temp = instruction[valP]
-        valP = valP + 1
-        rA = (temp >> 4) & 0xF
-        rB = (temp >> 0) & 0xF
-    else: rA, rB = 0xF, 0xF
-
-    #   get valC
-    if need_valC(ifun):
-        valC = little_endian(instruction, valP)
-        valP = valP + 4
-    else: valC = 0
-    return icode, ifun, rA, rB, valC, valP
 
 def f_predPC(f_icode, f_valC, f_valP):
     #   DONE
@@ -124,7 +81,7 @@ def d_valB(srcB, d_valB, e_dstE, M_dstM, M_dstE, W_dstM, W_dstE, e_valE, m_valM,
     if srcB == W_dstE: return W_valE
     return d_valB
 
-#   ---about excure stage---
+#   ---about EXECUTE stage---
 
 def aluA(E_icode, E_valA, E_valC):
     #   DONE
@@ -158,7 +115,7 @@ def e_dstE(E_icode, e_Cnd, E_dstE):
     if E_icode == IRRMOVL and not e_Cnd: return RNONE
     return E_dstE
 
-#   ---about memory stage---
+#   ---about MEMORY stage---
 
 def mem_addr(M_icode, M_valA, M_valE):
     #   DONE
@@ -179,12 +136,86 @@ def m_stat(dmem_error, M_stat):
     if dmem_error: return SADR
     return M_stat
 
+def alu(aluA=1, aluB=1, aluFun=0):
+    #   DONE
+    #   alu result
+    if aluFun not in [0, 1, 2, 3]: print "alu_fun error! %d" % aluFun
+    if aluFun == 0:   result = aluA + aluB
+    elif aluFun == 1: result = aluB - aluA
+    elif aluFun == 2: result = aluA & aluB
+    elif aluFun == 3: result = aluA ^ aluB
+
+    #   condition code, ZF|SF|OF
+    ZF = result == 0
+    SF = result < 0
+    OF = (aluA < 0 == aluB < 0) and ((result < 0) != (aluA < 0))
+    CC = (ZF << 2) | (SF << 1) | OF
+
+    return result, CC
+
+def decode(pc=0):
+    #   异常处理没做
+    #   icode, ifun, rA, rB, valC, valP
+
+    #   get icode & ifun
+    valP = pc
+    temp = mem[valP]
+    valP = valP + 1
+    icode = (temp >> 4) & 0xF
+    ifun = (temp >> 0) & 0xF
+
+    #   get rA & rB
+    if need_regids(ifun):
+        temp = mem[valP]
+        valP = valP + 1
+        rA = (temp >> 4) & 0xF
+        rB = (temp >> 0) & 0xF
+    else: rA, rB = 0xF, 0xF
+
+    #   get valC
+    if need_valC(ifun):
+        valC = little_endian(mem, valP)
+        valP = valP + 4
+    else: valC = 0
+    return icode, ifun, rA, rB, valC, valP
+
+def sim_main():
+    pc = 0
+    while pc < 0x00c:
+        pc = pc + 1
+
+
 def init():
     #   double check this function
-    global instruction, INOP, IHALT, IRRMOVL, IIRMOVL, IRMMOVL, IMRMOVL, IOPL, IJXX, ICALL, IRET, IPUSHL, IPOP0
+    global mem, INOP, IHALT, IRRMOVL, IIRMOVL, IRMMOVL, IMRMOVL, IOPL, IJXX, ICALL, IRET, IPUSHL, IPOP0
     global FNONE, RNONE, RESP, ALUADD, SAOK, SADR, SINS, SHLT
 
-    instruction = [0x30, 0x84, 0x00, 0x01, 0x00, 0x00]
+    #   TEST
+
+    #   mem
+    mem = [0x30, 0x84, 0x00, 0x01, 0x00, 0x00, 0x30, 0x85, 0x00, 0x01, 0x00, 0x00]
+    for i in range(100):
+        mem.append(0)
+
+    #   mem-alias
+    #   alias for register
+    register_alias = {'REAX':1, 'RECX':2, 'REDX':3, 'REBX':4, 'RESP':5, 'REBP':6, 'RESI':6, 'REDI':7}
+    #   alias for pipeline-register
+    F_alias = {'F_predPC':8}
+    D_alias = {'D_stat':9, 'D_icode':10, 'D_ifun':11, 'D_rA':12, 'D_rB':13, 'D_valC':14, 'D_valP':15}
+    E_alias = {'E_stat':16, 'E_icode':17, 'E_ifun':18, 'E_valC':19, 'E_valA':20, 'E_valB':21, 'E_dstE':22, 'E_dstM':23, 'E_srcA':24, 'E_srcB':25}
+    M_alias = {'M_stat':26, 'M_icode':27, 'M_Cnd':28, 'M_valE':39, 'M_valA':30, 'M_dstE':31, 'M_dstM':32}
+    W_alias = {'W_stat':33, 'W_icode':34, 'W_valE':35, 'W_valM':36, 'W_dstE':37, 'W_dstM':38}
+    mem_alias = dict(register_alias.items() + F_alias.items() + D_alias.items() + E_alias.items() + M_alias.items() + W_alias.items());
+    #   assign mem address
+    cnt = 0
+    for key, value in mem_alias.items():
+        mem_alias[key] = cnt
+        cnt = cnt + 1
+
+    print len(mem_alias)
+    print mem_alias
+
     #   icode
     INOP = 0x0
     IHALT = 0x1
