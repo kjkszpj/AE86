@@ -9,7 +9,6 @@
 -    exception检测及处理
 -    memory, register file, forwarding三块没写
 -    写完差不多开始debug了
--    输入文件解析器
 
 ##功能列表
 
@@ -18,6 +17,8 @@
 -    内存管理
 -    拓展功能？
 -    report
+-    输入文件解析器
+-    单条语句执行程序
 
 ##联系我
 Peijie You

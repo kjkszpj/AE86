@@ -8,33 +8,29 @@ def little_endian(val):
     return b0, b1, b2, b3
 
 
-def prepare_reg(name, val):
+def prepare_reg(name, val, data_len = 1):
     #   DONE
     #   TODO, 如果没有name这个名字，输出错误信息
     global mem_alias, stage_list
     print "Ready to write memory, NAME=%s\t ADDR=%d \tVALUE=%d" % (name, mem_alias[name], val)
-    stage_list[mem_alias[name]] = val
+    stage_list[mem_alias[name]] = (val, data_len)
+
+
+def prepare_mem(addr, val, data_len = 4):
+    global mem_alias, stage_list
+    print "Ready to write memory, NAME=%s\t ADDR=%d \tVALUE=%d" % (name, mem_alias[name], val)
+    stage_list[addr] = (val, data_len)
     return 0
 
 
 def read_reg(name):
     global mem, mem_alias
 
+    #   TODO invalid name detection
     return mem[mem_alias[name]]
 
 
-def commit():
-    #   DONE
-    #   TODO, memory exception
-    global mem, stage_list
-    for addr, value in stage_list.items():
-        mem[addr] = value
-    stage_list = {}
-    return 0
-
-
 def read_instr(pc, data_len):
-    #   TODO, instruction exception
     if data_len == 1:
         temp = mem[pc]
         high = (temp >> 4) & 0xF
@@ -47,30 +43,47 @@ def read_instr(pc, data_len):
                 mem[pc]
 
 
-def read_data(addr, data_len):
+def read_data(addr, data_len = 1):
     #   TODO, exception
+    if addr <= inst_addr: return True
     if data_len == 1: return mem[addr]
     if data_len == 4:
         return (mem[addr + 3] << 24) +\
                (mem[addr + 2] << 16) +\
                (mem[addr + 1] << 8) +\
                 mem[addr]
+    return False
 
 
-def write_data(addr, data_len, val):
-    #   TODO, exception
+def commit():
+    #   DONE
+    #   TODO, memory exception
+    #   what about memory write(4-bits)
+    global mem, stage_list
+    for addr, tvalue in stage_list.items():
+        value, data_len = tvalue
+        write_data(addr, value, data_len)
+    stage_list = {}
+    return 0
+
+
+def write_data(addr, val, data_len = 1):
+    #   需要更合理判断地址非法
+    if addr <= inst_addr: return True
     if data_len == 1: mem[addr] = val
     if data_len == 4: mem[addr], mem[addr + 1], mem[addr + 2], mem[addr + 3] = little_endian(val)
+    return False
 
 
 def mem_init():
-    global mem_alias, mem, stage_list
+    global mem_alias, mem, stage_list, inst_addr
 
     #   TEST
 
     stage_list = {};
     #   mem
     mem = [0x30, 0x84, 0x00, 0x01, 0x00, 0x00, 0x30, 0x85, 0x00, 0x01, 0x00, 0x00]
+    inst_addr = 0x00C
     for i in range(200):
         mem.append(0)
 
@@ -94,3 +107,7 @@ def mem_init():
 
 if __name__ == "__main__":
     mem_init()
+    prepare_reg('RESP', 10)
+    print read_reg('RESP')
+    commit()
+    print read_reg('RESP')
