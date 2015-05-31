@@ -122,10 +122,62 @@ def d_valB(srcB, d_valB, e_dstE, M_dstM, M_dstE, W_dstM, W_dstE, e_valE, m_valM,
     if srcB == W_dstE: return W_valE
     return d_valB
 
+#   ---about excure stage---
+
+def aluA(E_icode, E_valA, E_valC):
+    #   DONE
+    if E_icode in [IRRMOVL, IOPL]: return E_valA
+    if E_icode in [IIRMOVL, IRMMOVL, IMRMOVL]: return E_valC
+    if E_icode in [ICALL, IPUSHL]: -4
+    if E_icode in [IRET, IPOPL]: 4
+    return 0
+
+def aluB(E_icode, E_valB):
+    #   DONE
+    if E_icode in [IRMMOVL, IMRMOVL, IOPL, ICALL, IPUSHL, IRET, IPOPL]: return E_valB
+    if E_icode in [IRRMOVL, IIRMOVL]: return 0
+    return 0
+
 def alufun(E_icode, E_ifun):
     #   DONE
     if E_icode == IOPL: return E_ifun
     return ALUADD
+
+def set_cc(E_icode, m_stat, W_stat):
+    #   DONE
+    return E_icode == IOPL and not m_stat in [SADR, SINS, SHLT] and not W_stat in [SADR, SINS, SHLT]
+
+def e_valA(E_valA):
+    #   应该单独开一个函数么...
+    return E_valA
+
+def e_dstE(E_icode, e_Cnd, E_dstE):
+    #   DONE
+    if E_icode == IRRMOVL and not e_Cnd: return RNONE
+    return E_dstE
+
+#   ---about memory stage---
+
+def mem_addr(M_icode, M_valA, M_valE):
+    #   DONE
+    if M_icode in [IRMMOVL, IPUSHL, ICALL, IMRMOVL]: return M_valE
+    if M_icode in [IPOPL, IRET]: return M_valA
+    return 0
+
+def mem_read(M_icode):
+    #DONE
+    return M_icode in [IMRMOVL, IPOPL, IRET]
+
+def mem_write(M_icode):
+    #   DONE
+    return M_icode in [IRMMOVL, IPUSHL, ICALL]
+
+def m_stat(dmem_error, M_stat):
+    #   DONE
+    if dmem_error: return SADR
+    return M_stat
+
+
 
 def init():
     #   double check this function
