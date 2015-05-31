@@ -5,7 +5,11 @@
 ---
 ###最近TODO
 
--    pipeline寄存器
+-    pipeline连线
+-    exception检测及处理
+-    memory, register file, forwarding三块没写
+-    写完差不多开始debug了
+-    输入文件解析器
 
 ##功能列表
 
