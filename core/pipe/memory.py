@@ -1,3 +1,5 @@
+# -*- coding: cp936 -*-
+
 def little_endian(val):
     b0 = val & 0xF
     b1 = (val >> 8) & 0xF
@@ -72,14 +74,14 @@ def mem_init():
     for i in range(200):
         mem.append(0)
 
-    #   mem-alias
+    #   mem-alias, should have 40? items
     #   alias for register
     register_alias = {'REAX':1, 'RECX':2, 'REDX':3, 'REBX':4, 'RESP':5, 'REBP':6, 'RESI':6, 'REDI':7}
     #   alias for pipeline-register
     F_alias = {'F_predPC':8}
     D_alias = {'D_stat':9, 'D_icode':10, 'D_ifun':11, 'D_rA':12, 'D_rB':13, 'D_valC':14, 'D_valP':15}
     E_alias = {'E_stat':16, 'E_icode':17, 'E_ifun':18, 'E_valC':19, 'E_valA':20, 'E_valB':21, 'E_dstE':22, 'E_dstM':23, 'E_srcA':24, 'E_srcB':25}
-    M_alias = {'M_stat':26, 'M_icode':27, 'M_Cnd':28, 'M_valE':39, 'M_valA':30, 'M_dstE':31, 'M_dstM':32}
+    M_alias = {'M_stat':26, 'M_icode':27, 'M_Cnd':28, 'M_valE':39, 'M_valA':30, 'M_dstE':31, 'M_dstM':32, 'CC':39}
     W_alias = {'W_stat':33, 'W_icode':34, 'W_valE':35, 'W_valM':36, 'W_dstE':37, 'W_dstM':38}
     mem_alias = dict(register_alias.items() + F_alias.items() + D_alias.items() + E_alias.items() + M_alias.items() + W_alias.items())
     #   assign mem address
@@ -87,8 +89,8 @@ def mem_init():
     for key, value in mem_alias.items():
         cnt = cnt + 1
         mem_alias[key] = cnt
-
-    return 0
+    print mem_alias
+    print len(mem_alias)
 
 if __name__ == "__main__":
-    init()
+    mem_init()
