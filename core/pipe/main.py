@@ -1,16 +1,10 @@
 # -*- coding: cp936 -*-
 
-#   pipeline寄存器未实现
+#   imem_error, JXX的ifun
 
-import memory
+from memory import *
 
-def little_endian(data, s):
-    #   DONE
-    return (data[s + 3] << 24) +\
-           (data[s + 2] << 16) +\
-           (data[s + 1] << 8) +\
-            data[s]
-
+#   以下是小函数
 #   ---about FETCH stage---
 
 def need_regids(f_icode):
@@ -32,6 +26,17 @@ def f_pc(F_predPC, M_icode, M_valA, W_icode, W_valM, M_Cnd):
     if M_icode == IJXX and not M_Cnd: return M_valA
     if W_icode == IRET: return W_valM
     return F_predPC
+
+def instr_valid(f_icode):
+    #   DONE
+    return f_icode in [INOPL, IHALT, IRRMOVL, IIRMOVL, IRMMOVL, IMRMOVL, IOPL, IJXX, ICALL, IRET, IPUSHL, IPOPL]
+
+def f_stat(f_icode, imem_error):
+    #   DONE
+    if imem_error: return SADR
+    if not instr_valid(f_icode): return SINS
+    if f_icode == IHALT: return SHLT
+    return SAOK
 
 #   ---about DECODE stage---
 
@@ -132,7 +137,7 @@ def mem_write(M_icode):
     return M_icode in [IRMMOVL, IPUSHL, ICALL]
 
 def m_stat(dmem_error, M_stat):
-    #   DONE
+    #   TODO dmem_error
     if dmem_error: return SADR
     return M_stat
 
@@ -154,7 +159,8 @@ def alu(aluA=1, aluB=1, aluFun=0):
     return result, CC
 
 def decode(pc=0):
-    #   异常处理没做
+    #   TODO, 异常处理
+    #   TODO, imem_error
     #   icode, ifun, rA, rB, valC, valP
 
     #   get icode & ifun
@@ -177,44 +183,57 @@ def decode(pc=0):
         valC = little_endian(mem, valP)
         valP = valP + 4
     else: valC = 0
-    return icode, ifun, rA, rB, valC, valP
+    return icode, ifun, rA, rB, valC, valP, False
 
 def sim_main():
-    pc = 0
-    while pc < 0x00c:
-        pc = pc + 1
+    while f_pc(read_reg('F_predPC'),
+               read_reg('M_icode'),
+               read_reg('M_valA'),
+               read_reg('W_icode'),
+               read_reg('W_valM'),
+               read_reg('M_Cnd')) < 0x010:
 
+        #   ---FETCH connection---
+        tf_pc = f_pc(read_reg('F_predPC'), read_reg('M_icode'), read_reg('M_valA'), read_reg('W_icode'), read_reg('W_valM'), read_reg('M_Cnd'))
+        tf_icode, tf_ifun, tf_rA, tf_rB, tf_valC, tf_valP, imem_error = decode(tf_pc)
+        prepare_reg('D_icode', tf_icode)
+        prepare_reg('D_ifun', tf_ifun)
+        prepare_reg('D_rA', tf_rA)
+        prepare_reg('D_rB', tf_rB)
+        prepare_reg('D_valC', tf_valC)
+        prepare_reg('D_valP', tf_valP)
+        prepare_reg('F_predPC', f_predPC(tf_icode, tf_valC, tf_valP))
+        prepare_reg('D_stat', f_stat(tf_icode, imem_error))
+    return 0
 
 def init():
     #   double check this function
     global mem, INOP, IHALT, IRRMOVL, IIRMOVL, IRMMOVL, IMRMOVL, IOPL, IJXX, ICALL, IRET, IPUSHL, IPOP0
     global FNONE, RNONE, RESP, ALUADD, SAOK, SADR, SINS, SHLT
 
+    mem_init();
     #   TEST
-
+    #
     #   mem
-    mem = [0x30, 0x84, 0x00, 0x01, 0x00, 0x00, 0x30, 0x85, 0x00, 0x01, 0x00, 0x00]
-    for i in range(100):
-        mem.append(0)
-
+    # mem = [0x30, 0x84, 0x00, 0x01, 0x00, 0x00, 0x30, 0x85, 0x00, 0x01, 0x00, 0x00]
+    # for i in range(100):
+    #     mem.append(0)
+    #
     #   mem-alias
     #   alias for register
-    register_alias = {'REAX':1, 'RECX':2, 'REDX':3, 'REBX':4, 'RESP':5, 'REBP':6, 'RESI':6, 'REDI':7}
+    # register_alias = {'REAX':1, 'RECX':2, 'REDX':3, 'REBX':4, 'RESP':5, 'REBP':6, 'RESI':6, 'REDI':7}
     #   alias for pipeline-register
-    F_alias = {'F_predPC':8}
-    D_alias = {'D_stat':9, 'D_icode':10, 'D_ifun':11, 'D_rA':12, 'D_rB':13, 'D_valC':14, 'D_valP':15}
-    E_alias = {'E_stat':16, 'E_icode':17, 'E_ifun':18, 'E_valC':19, 'E_valA':20, 'E_valB':21, 'E_dstE':22, 'E_dstM':23, 'E_srcA':24, 'E_srcB':25}
-    M_alias = {'M_stat':26, 'M_icode':27, 'M_Cnd':28, 'M_valE':39, 'M_valA':30, 'M_dstE':31, 'M_dstM':32}
-    W_alias = {'W_stat':33, 'W_icode':34, 'W_valE':35, 'W_valM':36, 'W_dstE':37, 'W_dstM':38}
-    mem_alias = dict(register_alias.items() + F_alias.items() + D_alias.items() + E_alias.items() + M_alias.items() + W_alias.items());
-    #   assign mem address
-    cnt = 0
-    for key, value in mem_alias.items():
-        mem_alias[key] = cnt
-        cnt = cnt + 1
-
-    print len(mem_alias)
-    print mem_alias
+    # F_alias = {'F_predPC':8}
+    # D_alias = {'D_stat':9, 'D_icode':10, 'D_ifun':11, 'D_rA':12, 'D_rB':13, 'D_valC':14, 'D_valP':15}
+    # E_alias = {'E_stat':16, 'E_icode':17, 'E_ifun':18, 'E_valC':19, 'E_valA':20, 'E_valB':21, 'E_dstE':22, 'E_dstM':23, 'E_srcA':24, 'E_srcB':25}
+    # M_alias = {'M_stat':26, 'M_icode':27, 'M_Cnd':28, 'M_valE':39, 'M_valA':30, 'M_dstE':31, 'M_dstM':32}
+    # W_alias = {'W_stat':33, 'W_icode':34, 'W_valE':35, 'W_valM':36, 'W_dstE':37, 'W_dstM':38}
+    # mem_alias = dict(register_alias.items() + F_alias.items() + D_alias.items() + E_alias.items() + M_alias.items() + W_alias.items());
+    # #   assign mem address
+    # cnt = 0
+    # for key, value in mem_alias.items():
+    #     mem_alias[key] = cnt
+    #     cnt = cnt + 1
 
     #   icode
     INOP = 0x0
@@ -230,7 +249,7 @@ def init():
     IPUSHL = 0xA
     IPOPL = 0xB
 
-    #   ??
+    #   在pipeline里面用到的常量
     FNONE = 0x0
     RESP = 0x4
     RNONE = 0xF
@@ -244,4 +263,5 @@ def init():
 
 if __name__ == "__main__":
     init()
+    sim_main()
     print alu(1, 2, 0)
