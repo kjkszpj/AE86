@@ -34,6 +34,7 @@ def prepare_mem(addr, val, data_len = 4):
 def read_reg(name):
     global mem, mem_alias
 
+    if name == 'RNONE': return 0
     if not name in mem_alias.keys():
         print "No exist register alias %s......" % name
         n = raw_input()
@@ -42,7 +43,10 @@ def read_reg(name):
 
 
 def read_instr(pc, data_len = 1):
-    if pc > inst_addr: return 'mem_error'
+    if pc > inst_addr:
+        print 'mem_error'
+        n = raw_input()
+        return 'mem_error'
     if data_len == 1:
         temp = mem[pc]
         high = (temp >> 4) & 0xF
@@ -56,7 +60,10 @@ def read_instr(pc, data_len = 1):
 
 
 def read_data(addr, data_len = 1):
-    if addr <= inst_addr: return 'mem_error'
+    if addr <= inst_addr:
+        print 'mem_error'
+        n = raw_input()
+        return 'mem_error'
     if data_len == 1: return mem[addr]
     if data_len == 4:
         return (mem[addr + 3] << 24) +\
@@ -81,7 +88,10 @@ def commit():
 
 def write_data(addr, val, data_len = 1):
     #   需要更合理判断地址非法
-    if addr <= inst_addr: return True
+    if addr <= inst_addr:
+        print 'invalid addr'
+        n = raw_input()
+        return True
     if data_len == 1: mem[addr] = val
     if data_len == 4: mem[addr], mem[addr + 1], mem[addr + 2], mem[addr + 3] = little_endian(val)
     return False
@@ -94,8 +104,8 @@ def mem_init():
 
     stage_list = {};
     #   mem
-    mem = [0x30, 0x84, 0x00, 0x01, 0x00, 0x00, 0x30, 0x85, 0x00, 0x01, 0x00, 0x00]
-    inst_addr = 0x0CC
+    mem = [0x30, 0x84, 0x00, 0x01, 0x00, 0x00]
+    inst_addr = 0x050
     for i in range(200):
         mem.append(0)
 

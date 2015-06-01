@@ -93,11 +93,6 @@ def aluA(E_icode, E_valA, E_valC):
     if E_icode in [IRET, IPOPL]: 4
     return 0
 
-#   ---TODO---
-def debug():
-    print f_stat(233, False)
-    return
-
 def aluB(E_icode, E_valB):
     #   DONE
     #   12个指令, 9个要alu, 还有HALT, NOP, JXX, JXX只要set pc
@@ -191,7 +186,7 @@ def decode(pc=0):
     else: rA, rB = 0xF, 0xF
 
     #   get valC
-    if need_valC(ifun):
+    if need_valC(icode):
         if read_instr(valP) == 'mem_error': return 0, 0, 0, 0, 0, 0, True
         valC = read_instr(valP, 4)
         valP = valP + 4
@@ -211,16 +206,17 @@ def decode(pc=0):
     return icode, ifun, rA, rB, valC, valP, imem_error
 
 def rf_read(srcA, srcB):
-    global register_file
+    global register_name
 
-    return read_reg(register_file[srcA]), read_reg(register_file[srcB])
+    return read_reg(register_name[srcA]), read_reg(register_name[srcB])
 
 def rf_write(dstM, valM, dstE, valE):
     #   CHECK valM优先
-    global register_file
+    global register_name
 
-    prepare_reg(register_file[dstM], valM)
-    if dstE != dstM: prepare_reg(register_file[dstE], valE)
+    prepare_reg(register_name[dstM], valM)
+    if dstE != dstM:
+        prepare_reg(register_name[dstE], valE)
 
 def dm_read(addr):
     return read_data(addr, 4)
@@ -229,13 +225,9 @@ def dm_write(addr, val):
     prepare_mem(addr, val)
 
 def sim_main():
-    while f_pc(read_reg('F_predPC'),
-               read_reg('M_icode'),
-               read_reg('M_valA'),
-               read_reg('W_icode'),
-               read_reg('W_valM'),
-               read_reg('M_Cnd')) < 0x010:
-
+    cnt = 0
+    while cnt < 5:
+        cnt = cnt + 1
         #   出现两次的表达式基本上用临时变量存储
         #   ---FETCH connection---
         tf_pc = f_pc(read_reg('F_predPC'), read_reg('M_icode'), read_reg('M_valA'), read_reg('W_icode'), read_reg('W_valM'), read_reg('M_Cnd'))
@@ -276,10 +268,10 @@ def sim_main():
         prepare_reg('M_icode', read_reg('E_icode'))
         prepare_reg('M_valE', te_valE)
         prepare_reg('M_valA', read_reg('E_valA'))
-        if set_CC(E_icode, m_stat, W_stat): prepare_reg('CC', tCC)
+        if set_CC(read_reg('E_icode'), m_stat, read_reg('W_stat')): prepare_reg('CC', tCC)
         prepare_reg('M_Cnd', te_Cnd)
         prepare_reg('M_dstE', e_dstE(read_reg('E_icode'), te_Cnd, read_reg('E_dstE')))
-        prepare_reg('M_dstM', read_reg('D_dstM'))
+        prepare_reg('M_dstM', read_reg('E_dstM'))
 
         #   ---MEMORY connection---
         tm_stat = m_stat(False, read_reg('M_stat'))
@@ -296,21 +288,65 @@ def sim_main():
         prepare_reg('W_dstE', read_reg('M_dstE'))
         prepare_reg('W_dstM', read_reg('M_dstM'))
 
+        #   ---WRITE BACK connection---
+        rf_write(read_reg('W_dstM'), read_reg('W_valM'), read_reg('W_dstE'), read_reg('W_valE'))
+
         #   forward comes at last
         #   valA
-        td_valA = d_valA(read_reg('D_icode'), read_reg(register_name[srcA]), srcA,
+        tvalA, tvalB = rf_read(srcA, srcB)
+        td_valA = d_valA(read_reg('D_icode'), tvalA, srcA,
                          read_reg('D_valP'), e_dstE(read_reg('E_icode'), te_Cnd, read_reg('E_dstE')),
                          read_reg('M_dstM'), read_reg('M_dstE'), read_reg('W_dstM'), read_reg('W_dstE'),
                          te_valE, tm_valM, read_reg('M_valE'), read_reg('W_valM'), read_reg('W_valE'))
         #   valB
-        td_valB = d_valB(srcB, read_reg(register_name[srcB]), e_dstE(read_reg('E_icode'), te_Cnd, read_reg('E_dstE')),
+        td_valB = d_valB(srcB, tvalB, e_dstE(read_reg('E_icode'), te_Cnd, read_reg('E_dstE')),
                          read_reg('M_dstM'), read_reg('M_dstE'), read_reg('W_dstM'), read_reg('W_dstE'),
                          te_valE, tm_valM,  read_reg('M_valE'), read_reg('W_valM'), read_reg('W_valE'))
 
         #   OK to change
-        #   TODO what?
         commit()
+        my_print()
     return 0
+
+def my_print():
+    #   NO stat here
+    print '------cycle!------'
+    print "FETCH:"
+    print '\tF_predPC 	= 0x%x' % read_reg('F_predPC')
+
+    print 'DECODE:'
+    print '\tD_icode  	= 0x%x' % read_reg('D_icode')
+    print '\tD_ifun   	= 0x%x' % read_reg('D_ifun')
+    print '\tD_rA     	= 0x%x' % read_reg('D_rA')
+    print '\tD_rB     	= 0x%x' % read_reg('D_rB')
+    print '\tD_valC   	= 0x%x' % read_reg('D_valC')
+    print '\tD_valP   	= 0x%x' % read_reg('D_valP')
+
+    print 'EXECUTE:'
+    print '\tE_icode  	= 0x%x' % read_reg('E_icode')
+    print '\tE_ifun   	= 0x%x' % read_reg('E_ifun')
+    print '\tE_valC   	= 0x%x' % read_reg('E_valC')
+    print '\tE_valA   	= 0x%x' % read_reg('E_valA')
+    print '\tE_valB   	= 0x%x' % read_reg('E_valB')
+    print '\tE_dstE   	= 0x%x' % read_reg('E_dstE')
+    print '\tE_dstM   	= 0x%x' % read_reg('E_dstM')
+    print '\tE_srcA   	= 0x%x' % read_reg('E_srcA')
+    print '\tE_srcB   	= 0x%x' % read_reg('E_srcB')
+
+    print 'MEMORY:'
+    print '\tM_icode  	= 0x%x' % read_reg('M_icode')
+    print '\tM_Cnd    	= %d'   % read_reg('M_Cnd')
+    print '\tM_valE   	= 0x%x' % read_reg('M_valE')
+    print '\tM_valA   	= 0x%x' % read_reg('M_valA')
+    print '\tM_dstE   	= 0x%x' % read_reg('M_dstE')
+    print '\tM_dstM   	= 0x%x' % read_reg('M_dstM')
+
+    print 'WRITE BACK:'
+    print '\tW_icode  	= 0x%x' % read_reg('W_icode')
+    print '\tW_valE   	= 0x%x' % read_reg('W_valE')
+    print '\tW_valM   	= 0x%x' % read_reg('W_valM')
+    print '\tW_dstE   	= 0x%x' % read_reg('W_dstE')
+    print '\tW_dstM   	= 0x%x' % read_reg('W_dstM')
 
 def init():
     #   double check this function
@@ -347,4 +383,5 @@ def init():
 
 if __name__ == "__main__":
     init()
-    debug()
+    sim_main()
+    print read_reg('RESP')
