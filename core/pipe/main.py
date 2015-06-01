@@ -1,11 +1,10 @@
 # -*- coding: cp936 -*-
 
-#   mem_error
-
 from memory import *
 #   以下是小函数
 #   ---about FETCH stage---
 
+#   ---bug free---
 def need_regids(f_icode):
     #   DONE
     return f_icode in [IRRMOVL, IOPL, IPUSHL, IPOPL, IIRMOVL, IRMMOVL, IMRMOVL]
@@ -16,7 +15,7 @@ def need_valC(f_icode):
 
 def f_predPC(f_icode, f_valC, f_valP):
     #   DONE
-    #   what about IRET?
+    #   what about RET? stall until memory done(before write back)
     if f_icode in [IJXX, ICALL]: return f_valC
     else: return f_valP
 
@@ -28,10 +27,11 @@ def f_pc(F_predPC, M_icode, M_valA, W_icode, W_valM, M_Cnd):
 
 def instr_valid(f_icode):
     #   DONE
-    return f_icode in [INOPL, IHALT, IRRMOVL, IIRMOVL, IRMMOVL, IMRMOVL, IOPL, IJXX, ICALL, IRET, IPUSHL, IPOPL]
+    return f_icode in [INOP, IHALT, IRRMOVL, IIRMOVL, IRMMOVL, IMRMOVL, IOPL, IJXX, ICALL, IRET, IPUSHL, IPOPL]
 
 def f_stat(f_icode, imem_error):
     #   DONE
+    #   有优先级？
     if imem_error: return SADR
     if not instr_valid(f_icode): return SINS
     if f_icode == IHALT: return SHLT
@@ -58,9 +58,9 @@ def d_dstE(D_icode, D_rB):
     if D_icode in [IPUSHL, IPOPL, ICALL, IRET]: return RESP
     return RNONE;
 
-def d_dstM(D_icode, D_ra):
+def d_dstM(D_icode, D_rA):
     #   DONE
-    if D_icode in [IMRMOVL, IPOPL]: D_ra
+    if D_icode in [IMRMOVL, IPOPL]: D_rA
     return RNONE
 
 def d_valA(D_icode, d_valA, srcA, D_valP, e_dstE, M_dstM, M_dstE, W_dstM, W_dstE, e_valE, m_valM, M_valE, W_valM, W_valE):
@@ -76,8 +76,6 @@ def d_valA(D_icode, d_valA, srcA, D_valP, e_dstE, M_dstM, M_dstE, W_dstM, W_dstE
 
 def d_valB(srcB, d_valB, e_dstE, M_dstM, M_dstE, W_dstM, W_dstE, e_valE, m_valM, M_valE, W_valM, W_valE):
     #   DONE
-    #   no bug?
-    #   srcB or d_srcB
     if srcB == e_dstE: return e_valE
     if srcB == M_dstM: return m_valM
     if srcB == M_dstE: return M_valE
@@ -95,8 +93,14 @@ def aluA(E_icode, E_valA, E_valC):
     if E_icode in [IRET, IPOPL]: 4
     return 0
 
+#   ---TODO---
+def debug():
+    print f_stat(233, False)
+    return
+
 def aluB(E_icode, E_valB):
     #   DONE
+    #   12个指令, 9个要alu, 还有HALT, NOP, JXX, JXX只要set pc
     if E_icode in [IRMMOVL, IMRMOVL, IOPL, ICALL, IPUSHL, IRET, IPOPL]: return E_valB
     if E_icode in [IRRMOVL, IIRMOVL]: return 0
     return 0
@@ -180,7 +184,7 @@ def decode(pc=0):
     valP += 1
 
     #   get rA & rB
-    if need_regids(ifun):
+    if need_regids(icode):
         if read_instr(valP) == 'mem_error': return 0, 0, 0, 0, 0, 0, True
         rA, rB = read_instr(valP)
         valP += 1
@@ -310,7 +314,7 @@ def sim_main():
 
 def init():
     #   double check this function
-    global INOP, IHALT, IRRMOVL, IIRMOVL, IRMMOVL, IMRMOVL, IOPL, IJXX, ICALL, IRET, IPUSHL, IPOP0
+    global INOP, IHALT, IRRMOVL, IIRMOVL, IRMMOVL, IMRMOVL, IOPL, IJXX, ICALL, IRET, IPUSHL, IPOPL
     global FNONE, RNONE, RESP, ALUADD, SAOK, SADR, SINS, SHLT
     global register_name
     global CC_mask, CC_result
@@ -343,5 +347,4 @@ def init():
 
 if __name__ == "__main__":
     init()
-    sim_main()
-    print alu(1, 2, 0)
+    debug()
