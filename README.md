@@ -5,10 +5,9 @@
 ---
 ###最近TODO
 
--    pipeline连线
 -    exception检测及处理
--    memory, register file, forwarding三块没写
--    写完差不多开始debug了
+-    加上global声明咯
+-    写完差不多开始检查和debug了
 
 ##功能列表
 

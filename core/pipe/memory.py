@@ -1,4 +1,5 @@
 # -*- coding: cp936 -*-
+#   在prepare就检测mem_error
 
 def little_endian(val):
     b0 = val & 0xFF
@@ -10,14 +11,21 @@ def little_endian(val):
 
 def prepare_reg(name, val, data_len = 1):
     #   DONE
-    #   TODO, 如果没有name这个名字，输出错误信息
     global mem_alias, stage_list
+
+    if name == 'RNONE': return False
+    if not name in mem_alias.keys():
+        print "No exist register alias %s......" % name
+        n = raw_input()
+        return True
     print "Ready to write memory, NAME=%s\t ADDR=%d \tVALUE=%d" % (name, mem_alias[name], val)
     stage_list[mem_alias[name]] = (val, data_len)
+    return False
 
 
 def prepare_mem(addr, val, data_len = 4):
     global mem_alias, stage_list
+
     print "Ready to write memory, NAME=%s\t ADDR=%d \tVALUE=%d" % (name, mem_alias[name], val)
     stage_list[addr] = (val, data_len)
     return 0
@@ -26,11 +34,15 @@ def prepare_mem(addr, val, data_len = 4):
 def read_reg(name):
     global mem, mem_alias
 
-    #   TODO invalid name detection
+    if not name in mem_alias.keys():
+        print "No exist register alias %s......" % name
+        n = raw_input()
+        return True
     return mem[mem_alias[name]]
 
 
-def read_instr(pc, data_len):
+def read_instr(pc, data_len = 1):
+    if addr > inst_addr: return 'mem_error'
     if data_len == 1:
         temp = mem[pc]
         high = (temp >> 4) & 0xF
@@ -45,14 +57,13 @@ def read_instr(pc, data_len):
 
 def read_data(addr, data_len = 1):
     #   TODO, exception
-    if addr <= inst_addr: return True
+    if addr <= inst_addr: return 'mem_error'
     if data_len == 1: return mem[addr]
     if data_len == 4:
         return (mem[addr + 3] << 24) +\
                (mem[addr + 2] << 16) +\
                (mem[addr + 1] << 8) +\
                 mem[addr]
-    return False
 
 
 def commit():
@@ -60,11 +71,13 @@ def commit():
     #   TODO, memory exception
     #   what about memory write(4-bits)
     global mem, stage_list
+
+    mem_error = False
     for addr, tvalue in stage_list.items():
         value, data_len = tvalue
-        write_data(addr, value, data_len)
+        mem_error = mem_error | write_data(addr, value, data_len)
     stage_list = {}
-    return 0
+    return mem_error
 
 
 def write_data(addr, val, data_len = 1):
