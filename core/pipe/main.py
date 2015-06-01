@@ -65,7 +65,7 @@ def d_dstM(D_icode, D_ra):
 
 def d_valA(D_icode, d_valA, srcA, D_valP, e_dstE, M_dstM, M_dstE, W_dstM, W_dstE, e_valE, m_valM, M_valE, W_valM, W_valE):
     #   DONE
-    #   srcA or d_srcA
+    #   可能有两种，valA, valP, 还可以forward
     if D_icode in [ICALL, IJXX]: return D_valP
     if srcA == e_dstE: return e_valE
     if srcA == M_dstM: return m_valM
@@ -120,7 +120,7 @@ def e_dstE(E_icode, e_Cnd, E_dstE):
     return E_dstE
 
 def e_Cnd(E_icode, E_ifun, CC):
-    #   TODO should CHECK
+    #   CHECK
     ZF, SF, OF = (CC & 4) >> 2, (CC & 2) >> 1, CC & 1
     if E_ifun == 0: return 1
     if E_ifun == 1: return (SF ^ OF) | ZF
@@ -150,6 +150,8 @@ def m_stat(dmem_error, M_stat):
     #   TODO dmem_error
     if dmem_error: return SADR
     return M_stat
+
+#   以下是功能模块
 
 def alu(aluA=1, aluB=1, aluFun=0):
     #   DONE
@@ -195,6 +197,24 @@ def decode(pc=0):
     else: valC = 0
     return icode, ifun, rA, rB, valC, valP, False
 
+def rf_read(srcA, srcB):
+    global register_file
+
+    return read_reg(register_file[srcA]), read_reg(register_file[srcB])
+
+def rf_write(dstM, valM, dstE, valE):
+    #   CHECK valM优先
+    global register_file
+
+    prepare_reg(register_file[dstM], valM)
+    if dstE != dstM: prepare_reg(register_file[dstE], valE)
+
+def dm_read(addr):
+    return read_data(addr, 4)
+
+def dm_write(addr, val):
+    prepare_mem(addr, val)
+
 def sim_main():
     while f_pc(read_reg('F_predPC'),
                read_reg('M_icode'),
@@ -203,6 +223,7 @@ def sim_main():
                read_reg('W_valM'),
                read_reg('M_Cnd')) < 0x010:
 
+        #   出现两次的表达式基本上用临时变量存储
         #   ---FETCH connection---
         tf_pc = f_pc(read_reg('F_predPC'), read_reg('M_icode'), read_reg('M_valA'), read_reg('W_icode'), read_reg('W_valM'), read_reg('M_Cnd'))
         tf_icode, tf_ifun, tf_rA, tf_rB, tf_valC, tf_valP, imem_error = decode(tf_pc)
@@ -250,25 +271,27 @@ def sim_main():
         #   ---MEMORY connection---
         #   dmem_error here
         tm_stat = m_stat(False, read_reg('M_stat'))
+        tm_addr = mem_addr(read_reg('M_icode'), read_reg('M_valA'), read_reg('M_valE'))
+
         prepare_reg('W_stat', tm_stat)
         prepare_reg('W_icode', read_reg('M_icode'))
         prepare_reg('W_valE', read_reg('M_valE'))
-        #   TODO valM
+        if mem_read(read_reg('M_icode')): tm_valM = dm_read(tm_addr)
+        else: tm_valM = 0
+        if mem_write(read_reg('M_icode')): dm_write(tm_addr, read_reg('M_valA'))
         prepare_reg('W_dstE', read_reg('M_dstE'))
         prepare_reg('W_dstM', read_reg('M_dstM'))
 
         #   forward comes at last
         #   valA
-        #   TODO valM
         td_valA = d_valA(read_reg('D_icode'), read_reg(register_name[srcA]), srcA,
                          read_reg('D_valP'), e_dstE(read_reg('E_icode'), te_Cnd, read_reg('E_dstE')),
                          read_reg('M_dstM'), read_reg('M_dstE'), read_reg('W_dstM'), read_reg('W_dstE'),
-                         te_valE, m_valM, read_reg('M_valE'), read_reg('W_valM'), read_reg('W_valE'))
+                         te_valE, tm_valM, read_reg('M_valE'), read_reg('W_valM'), read_reg('W_valE'))
         #   valB
-        #   TODO valM
         td_valB = d_valB(srcB, read_reg(register_name[srcB]), e_dstE(read_reg('E_icode'), te_Cnd, read_reg('E_dstE')),
                          read_reg('M_dstM'), read_reg('M_dstE'), read_reg('W_dstM'), read_reg('W_dstE'),
-                         te_valE, m_valM,  read_reg('M_valE'), read_reg('W_valM'), read_reg('W_valE'))
+                         te_valE, tm_valM,  read_reg('M_valE'), read_reg('W_valM'), read_reg('W_valE'))
     return 0
 
 def init():
@@ -279,30 +302,6 @@ def init():
     global CC_mask, CC_result
 
     mem_init();
-    #   TEST
-    #
-    #   mem
-    # mem = [0x30, 0x84, 0x00, 0x01, 0x00, 0x00, 0x30, 0x85, 0x00, 0x01, 0x00, 0x00]
-    # for i in range(100):
-    #     mem.append(0)
-    #
-    #   mem-alias
-    #   alias for register
-    # register_alias = {'REAX':1, 'RECX':2, 'REDX':3, 'REBX':4, 'RESP':5, 'REBP':6, 'RESI':6, 'REDI':7}
-    #   alias for pipeline-register
-    # F_alias = {'F_predPC':8}
-    # D_alias = {'D_stat':9, 'D_icode':10, 'D_ifun':11, 'D_rA':12, 'D_rB':13, 'D_valC':14, 'D_valP':15}
-    # E_alias = {'E_stat':16, 'E_icode':17, 'E_ifun':18, 'E_valC':19, 'E_valA':20, 'E_valB':21, 'E_dstE':22, 'E_dstM':23, 'E_srcA':24, 'E_srcB':25}
-    # M_alias = {'M_stat':26, 'M_icode':27, 'M_Cnd':28, 'M_valE':39, 'M_valA':30, 'M_dstE':31, 'M_dstM':32}
-    # W_alias = {'W_stat':33, 'W_icode':34, 'W_valE':35, 'W_valM':36, 'W_dstE':37, 'W_dstM':38}
-    # mem_alias = dict(register_alias.items() + F_alias.items() + D_alias.items() + E_alias.items() + M_alias.items() + W_alias.items());
-    # #   assign mem address
-    # cnt = 0
-    # for key, value in mem_alias.items():
-    #     mem_alias[key] = cnt
-    #     cnt = cnt + 1
-
-    #   icode
     INOP = 0x0
     IHALT = 0x1
     IRRMOVL = 0x2
@@ -323,13 +322,10 @@ def init():
     ALUADD = 0x0
 
     #   status code
-    SAOK = 0x1
-    SADR = 0x2
-    SINS = 0x3
-    SHLT = 0x4
+    SAOK = 0x1; SADR = 0x2; SINS = 0x3; SHLT = 0x4;
 
-    #ZF|SF|OF
-    register_name = ['REAX', 'RECX', 'REDX', 'REBX', 'RESP', 'REBP', 'RESI', 'REDI']
+    #   id-name index for register
+    register_name = {0:'REAX', 1:'RECX', 2:'REDX', 3:'REBX', 4:'RESP', 5:'REBP', 6:'RESI', 7:'REDI'}
 
 if __name__ == "__main__":
     init()
