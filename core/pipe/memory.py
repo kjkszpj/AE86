@@ -42,7 +42,7 @@ def read_reg(name):
 
 
 def read_instr(pc, data_len = 1):
-    if addr > inst_addr: return 'mem_error'
+    if pc > inst_addr: return 'mem_error'
     if data_len == 1:
         temp = mem[pc]
         high = (temp >> 4) & 0xF
@@ -95,7 +95,7 @@ def mem_init():
     stage_list = {};
     #   mem
     mem = [0x30, 0x84, 0x00, 0x01, 0x00, 0x00, 0x30, 0x85, 0x00, 0x01, 0x00, 0x00]
-    inst_addr = 0x00C
+    inst_addr = 0x0CC
     for i in range(200):
         mem.append(0)
 
@@ -114,8 +114,8 @@ def mem_init():
     for key, value in mem_alias.items():
         cnt = cnt + 1
         mem_alias[key] = cnt
-    print mem_alias
-    print len(mem_alias)
+    # print mem_alias
+    # print len(mem_alias)
 
 if __name__ == "__main__":
     mem_init()
