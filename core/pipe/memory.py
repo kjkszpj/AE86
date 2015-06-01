@@ -1,10 +1,10 @@
 # -*- coding: cp936 -*-
 
 def little_endian(val):
-    b0 = val & 0xF
-    b1 = (val >> 8) & 0xF
-    b2 = (val >> 16) & 0xF
-    b3 = (val >> 24) & 0xF
+    b0 = val & 0xFF
+    b1 = (val >> 8) & 0xFF
+    b2 = (val >> 16) & 0xFF
+    b3 = (val >> 24) & 0xFF
     return b0, b1, b2, b3
 
 
@@ -107,7 +107,7 @@ def mem_init():
 
 if __name__ == "__main__":
     mem_init()
-    prepare_reg('RESP', 10)
+    prepare_reg('RESP', 0x12345678)
     print read_reg('RESP')
     commit()
     print read_reg('RESP')
