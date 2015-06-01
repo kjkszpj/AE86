@@ -1,6 +1,6 @@
 # -*- coding: cp936 -*-
 
-#   imem_error, JXX的ifun
+#   mem_error
 
 from memory import *
 #   以下是小函数
@@ -147,7 +147,7 @@ def mem_write(M_icode):
     return M_icode in [IRMMOVL, IPUSHL, ICALL]
 
 def m_stat(dmem_error, M_stat):
-    #   TODO dmem_error
+    #   DONE
     if dmem_error: return SADR
     return M_stat
 
@@ -171,31 +171,40 @@ def alu(aluA=1, aluB=1, aluFun=0):
     return result, CC
 
 def decode(pc=0):
-    #   TODO, 异常处理
-    #   TODO, imem_error
     #   icode, ifun, rA, rB, valC, valP
 
     #   get icode & ifun
     valP = pc
-    temp = mem[valP]
-    valP = valP + 1
-    icode = (temp >> 4) & 0xF
-    ifun = (temp >> 0) & 0xF
+    if read_instr(valP) == 'mem_error': return 0, 0, 0, 0, 0, 0, True
+    icode, ifun = read_instr(valP)
+    valP += 1
 
     #   get rA & rB
     if need_regids(ifun):
-        temp = mem[valP]
-        valP = valP + 1
-        rA = (temp >> 4) & 0xF
-        rB = (temp >> 0) & 0xF
+        if read_instr(valP) == 'mem_error': return 0, 0, 0, 0, 0, 0, True
+        rA, rB = read_instr(valP)
+        valP += 1
     else: rA, rB = 0xF, 0xF
 
     #   get valC
     if need_valC(ifun):
-        valC = little_endian(mem, valP)
+        if read_instr(valP) == 'mem_error': return 0, 0, 0, 0, 0, 0, True
+        valC = read_instr(valP, 4)
         valP = valP + 4
     else: valC = 0
-    return icode, ifun, rA, rB, valC, valP, False
+
+    #   invalid instruction detection
+    #   invalid icode
+    imem_error = not instr_valid(icode)
+    #   invalid ifun
+    imem_error = imem_error or ifun < 0
+    if icode in [IOPL]: imem_error = imem_error or ifun > 3
+    elif icode in [IRRMOVL, IJXX]: imem_error = imem_error or ifun > 6
+    else: imem_error = imem_error or (ifun != 0)
+    #   invalid rA, rB
+    imem_error = imem_error or not rA in register_name.keys()
+    imem_error = imem_error or not rB in register_name.keys()
+    return icode, ifun, rA, rB, valC, valP, imem_error
 
 def rf_read(srcA, srcB):
     global register_file
@@ -226,7 +235,7 @@ def sim_main():
         #   出现两次的表达式基本上用临时变量存储
         #   ---FETCH connection---
         tf_pc = f_pc(read_reg('F_predPC'), read_reg('M_icode'), read_reg('M_valA'), read_reg('W_icode'), read_reg('W_valM'), read_reg('M_Cnd'))
-        tf_icode, tf_ifun, tf_rA, tf_rB, tf_valC, tf_valP, imem_error = decode(tf_pc)
+        tf_icode, tf_ifun, tf_rA, tf_rB, tf_valC, tf_valP, timem_error = decode(tf_pc)
 
         prepare_reg('D_icode', tf_icode)
         prepare_reg('D_ifun', tf_ifun)
@@ -235,7 +244,7 @@ def sim_main():
         prepare_reg('D_valC', tf_valC)
         prepare_reg('D_valP', tf_valP)
         prepare_reg('F_predPC', f_predPC(tf_icode, tf_valC, tf_valP))
-        prepare_reg('D_stat', f_stat(tf_icode, imem_error))
+        prepare_reg('D_stat', f_stat(tf_icode, timem_error))
 
         #   ---DECODE connection---
         td_valA = 0
@@ -269,14 +278,15 @@ def sim_main():
         prepare_reg('M_dstM', read_reg('D_dstM'))
 
         #   ---MEMORY connection---
-        #   dmem_error here
         tm_stat = m_stat(False, read_reg('M_stat'))
         tm_addr = mem_addr(read_reg('M_icode'), read_reg('M_valA'), read_reg('M_valE'))
 
         prepare_reg('W_stat', tm_stat)
         prepare_reg('W_icode', read_reg('M_icode'))
         prepare_reg('W_valE', read_reg('M_valE'))
-        if mem_read(read_reg('M_icode')): tm_valM = dm_read(tm_addr)
+        if mem_read(read_reg('M_icode')):
+            tm_valM = dm_read(tm_addr)
+            dmem_error = tm_valM == 'mem_error'
         else: tm_valM = 0
         if mem_write(read_reg('M_icode')): dm_write(tm_addr, read_reg('M_valA'))
         prepare_reg('W_dstE', read_reg('M_dstE'))
@@ -292,6 +302,10 @@ def sim_main():
         td_valB = d_valB(srcB, read_reg(register_name[srcB]), e_dstE(read_reg('E_icode'), te_Cnd, read_reg('E_dstE')),
                          read_reg('M_dstM'), read_reg('M_dstE'), read_reg('W_dstM'), read_reg('W_dstE'),
                          te_valE, tm_valM,  read_reg('M_valE'), read_reg('W_valM'), read_reg('W_valE'))
+
+        #   OK to change
+        #   TODO what?
+        commit()
     return 0
 
 def init():
@@ -325,7 +339,7 @@ def init():
     SAOK = 0x1; SADR = 0x2; SINS = 0x3; SHLT = 0x4;
 
     #   id-name index for register
-    register_name = {0:'REAX', 1:'RECX', 2:'REDX', 3:'REBX', 4:'RESP', 5:'REBP', 6:'RESI', 7:'REDI'}
+    register_name = {0:'REAX', 1:'RECX', 2:'REDX', 3:'REBX', 4:'RESP', 5:'REBP', 6:'RESI', 7:'REDI', 0xF:'RNONE'}
 
 if __name__ == "__main__":
     init()

@@ -56,7 +56,6 @@ def read_instr(pc, data_len = 1):
 
 
 def read_data(addr, data_len = 1):
-    #   TODO, exception
     if addr <= inst_addr: return 'mem_error'
     if data_len == 1: return mem[addr]
     if data_len == 4:
@@ -68,7 +67,7 @@ def read_data(addr, data_len = 1):
 
 def commit():
     #   DONE
-    #   TODO, memory exception
+    #   memory exception
     #   what about memory write(4-bits)
     global mem, stage_list
 
