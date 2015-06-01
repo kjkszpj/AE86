@@ -26,7 +26,7 @@ def prepare_reg(name, val, data_len = 1):
 def prepare_mem(addr, val, data_len = 4):
     global mem_alias, stage_list
 
-    print "Ready to write memory, NAME=%s\t ADDR=%d \tVALUE=%d" % (name, mem_alias[name], val)
+    print "Ready to write memory, ADDR=%d \tVALUE=%d" % (addr, val)
     stage_list[addr] = (val, data_len)
     return 0
 
@@ -44,7 +44,7 @@ def read_reg(name):
 
 def read_instr(pc, data_len = 1):
     if pc > inst_addr:
-        print 'mem_error'
+        print 'mem_error in read_instr %d' % pc
         n = raw_input()
         return 'mem_error'
     if data_len == 1:
@@ -61,7 +61,7 @@ def read_instr(pc, data_len = 1):
 
 def read_data(addr, data_len = 1):
     if addr <= inst_addr:
-        print 'mem_error'
+        print 'mem_error in read_data %d' % addr
         n = raw_input()
         return 'mem_error'
     if data_len == 1: return mem[addr]
@@ -89,7 +89,7 @@ def commit():
 def write_data(addr, val, data_len = 1):
     #   需要更合理判断地址非法
     if addr <= inst_addr:
-        print 'invalid addr'
+        print 'invalid addr in write_data %d' % addr
         n = raw_input()
         return True
     if data_len == 1: mem[addr] = val
@@ -104,11 +104,10 @@ def mem_init():
 
     stage_list = {};
     #   mem
-    mem = [0x30, 0x84, 0x00, 0x01, 0x00, 0x00]
+    mem = [0x30, 0x84, 0x00, 0x01, 0x00, 0x00, 0x10, 0x10, 0x10, 0x10, 0xA0, 0x0F, 0x10, 0x10, 0x10, 0x10]
     inst_addr = 0x050
-    for i in range(200):
+    for i in range(1000):
         mem.append(0)
-
     #   mem-alias, should have 40? items
     #   alias for register
     register_alias = {'REAX':1, 'RECX':2, 'REDX':3, 'REBX':4, 'RESP':5, 'REBP':6, 'RESI':6, 'REDI':7}

@@ -89,8 +89,8 @@ def aluA(E_icode, E_valA, E_valC):
     #   DONE
     if E_icode in [IRRMOVL, IOPL]: return E_valA
     if E_icode in [IIRMOVL, IRMMOVL, IMRMOVL]: return E_valC
-    if E_icode in [ICALL, IPUSHL]: -4
-    if E_icode in [IRET, IPOPL]: 4
+    if E_icode in [ICALL, IPUSHL]: return -4
+    if E_icode in [IRET, IPOPL]: return 4
     return 0
 
 def aluB(E_icode, E_valB):
@@ -170,8 +170,8 @@ def alu(aluA=1, aluB=1, aluFun=0):
     return result, CC
 
 def decode(pc=0):
+    #   TODO debug decode here
     #   icode, ifun, rA, rB, valC, valP
-
     #   get icode & ifun
     valP = pc
     if read_instr(valP) == 'mem_error': return 0, 0, 0, 0, 0, 0, True
@@ -226,8 +226,12 @@ def dm_write(addr, val):
 
 def sim_main():
     cnt = 0
-    while cnt < 5:
+    while cnt < 10:
+        #   TODO debug sim_main here
         cnt = cnt + 1
+
+        if cnt == 8:
+            print 'good'
         #   出现两次的表达式基本上用临时变量存储
         #   ---FETCH connection---
         tf_pc = f_pc(read_reg('F_predPC'), read_reg('M_icode'), read_reg('M_valA'), read_reg('W_icode'), read_reg('W_valM'), read_reg('M_Cnd'))
@@ -251,8 +255,6 @@ def sim_main():
         prepare_reg('E_icode', read_reg('D_icode'))
         prepare_reg('E_ifun', read_reg('D_ifun'))
         prepare_reg('E_valC', read_reg('D_valC'))
-        prepare_reg('E_valA', td_valA)
-        prepare_reg('E_valB', td_valB)
         prepare_reg('E_dstE', d_dstE(read_reg('D_icode'), read_reg('D_rB')))
         prepare_reg('E_dstM', d_dstM(read_reg('D_icode'), read_reg('D_rA')))
         prepare_reg('E_srcA', srcA)
@@ -302,7 +304,8 @@ def sim_main():
         td_valB = d_valB(srcB, tvalB, e_dstE(read_reg('E_icode'), te_Cnd, read_reg('E_dstE')),
                          read_reg('M_dstM'), read_reg('M_dstE'), read_reg('W_dstM'), read_reg('W_dstE'),
                          te_valE, tm_valM,  read_reg('M_valE'), read_reg('W_valM'), read_reg('W_valE'))
-
+        prepare_reg('E_valA', td_valA)
+        prepare_reg('E_valB', td_valB)
         #   OK to change
         commit()
         my_print()
