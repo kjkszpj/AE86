@@ -6,25 +6,9 @@
 ###最近TODO
 
 -    exception检测及处理
+-    做成pipeline
 -    加上global声明咯
 -    写完差不多开始检查和debug了
-
-###已查命令
--    irmovl
--    jmp
--    call
--    pushl
--    popl
--    rrmovl
--    rmmovl
--    mrmovl
-
-###待查命令
--    halt
--    nop
--    opl
--    jxx
--    cmovl
 
 ##功能列表
 
