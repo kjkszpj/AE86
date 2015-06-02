@@ -1,6 +1,19 @@
 # -*- coding: cp936 -*-
 #   在prepare就检测mem_error
 
+def string2instr(s):
+    global mem
+    mem = []
+    for i in range(len(s) / 2):
+        mem.append(int(s[i * 2 : i * 2 + 2], 16))
+
+def instr_init():
+    global mem, inst_addr
+    s_instr = '30840001000010101010a02F10101010b05F10101010'
+    #s_instr = '30840001000030850001000070240000000d000000c0000000000b000000a00000308004000000a008308214000000a028803a00000000a058204550150800000050250c00000030800000000062227374000000506100000000606030830400000060313083ffffffff60327457000000b05890'
+    string2instr(s_instr)
+    inst_addr = 0x080
+
 def little_endian(val):
     b0 = val & 0xFF
     b1 = (val >> 8) & 0xFF
@@ -14,11 +27,12 @@ def prepare_reg(name, val, data_len = 1):
     global mem_alias, stage_list
 
     if name == 'RNONE': return False
+
     if not name in mem_alias.keys():
         print "No exist register alias %s......" % name
         n = raw_input()
         return True
-    print "Ready to write memory, NAME=%s\t ADDR=%d \tVALUE=%d" % (name, mem_alias[name], val)
+    if name[0] == 'R': print "Ready to write memory, NAME=%s\t ADDR=%d \tVALUE=%d" % (name, mem_alias[name], val)
     stage_list[mem_alias[name]] = (val, data_len)
     return False
 
@@ -104,9 +118,8 @@ def mem_init():
 
     stage_list = {};
     #   mem
-    mem = [0x30, 0x84, 0x00, 0x01, 0x00, 0x00, 0x10, 0x10, 0x10, 0x10, 0xA0, 0x0F, 0x10, 0x10, 0x10, 0x10]
-    inst_addr = 0x050
-    for i in range(1000):
+    instr_init()
+    for i in range(0x1000):
         mem.append(0)
     #   mem-alias, should have 40? items
     #   alias for register
@@ -119,7 +132,7 @@ def mem_init():
     W_alias = {'W_stat':33, 'W_icode':34, 'W_valE':35, 'W_valM':36, 'W_dstE':37, 'W_dstM':38}
     mem_alias = dict(register_alias.items() + F_alias.items() + D_alias.items() + E_alias.items() + M_alias.items() + W_alias.items())
     #   assign mem address
-    cnt = 100
+    cnt = 0x200
     for key, value in mem_alias.items():
         cnt = cnt + 1
         mem_alias[key] = cnt
