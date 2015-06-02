@@ -9,8 +9,9 @@ def string2instr(s):
 
 def instr_init():
     global mem, inst_addr
-    s_instr = '3084000100000000000040440000000000000000614000000000'
-    #s_instr = '30840001000030850001000070240000000d000000c0000000000b000000a00000308004000000a008308214000000a028803a00000000a058204550150800000050250c00000030800000000062227374000000506100000000606030830400000060313083ffffffff60327457000000b05890'
+    # s_instr = '3084000100000000000040440000000000000000614000000000'
+    #   align QAQ 000000inserted(6 zeros)
+    s_instr = '30840001000030850001000070240000000000000d000000c0000000000b000000a00000308004000000a008308214000000a028803a00000000a058204550150800000050250c00000030800000000062227374000000506100000000606030830400000060313083ffffffff60327457000000b05890'
     string2instr(s_instr)
     inst_addr = 0x080
 
@@ -22,26 +23,26 @@ def little_endian(val):
     return b0, b1, b2, b3
 
 
-def prepare_reg(name, val, data_len = 1):
+def prepare_reg(name, val, stall = 0, bubble = 0):
     #   DONE
-    global mem_alias, stage_list
+    global mem_alias, stage_list, register_default
 
     if name == 'RNONE': return False
-
     if not name in mem_alias.keys():
         print "No exist register alias %s......" % name
         n = raw_input()
         return True
     if name[0] in ['R', 'C']: print "Ready to write memory, NAME=%s\t ADDR=%d \tVALUE=%d" % (name, mem_alias[name], val)
-    stage_list[mem_alias[name]] = (val, data_len)
+    if not stall and not bubble: stage_list[mem_alias[name]] = (val, 1)
+    elif bubble and not stall: stage_list[mem_alias[name]] = (register_default[name], 1)
     return False
 
 
-def prepare_mem(addr, val, data_len = 4):
+def prepare_mem(addr, val, data_len = 4, stall = 0, bubble = 0):
     global mem_alias, stage_list
 
     print "Ready to write memory, ADDR=%d \tVALUE=%d" % (addr, val)
-    stage_list[addr] = (val, data_len)
+    if not stall and not bubble: stage_list[addr] = (val, data_len)
     return 0
 
 
@@ -53,6 +54,8 @@ def read_reg(name):
         print "No exist register alias %s......" % name
         n = raw_input()
         return True
+    if name[0] == 'R':
+        print 'OK, now read %s\t, VALUE = %d' % (name, mem[mem_alias[name]])
     return mem[mem_alias[name]]
 
 
@@ -78,6 +81,7 @@ def read_data(addr, data_len = 1):
         print 'mem_error in read_data %d' % addr
         n = raw_input()
         return 'mem_error'
+    print 'OK, now read %d\t, start with%d' % (addr, mem[addr])
     if data_len == 1: return mem[addr]
     if data_len == 4:
         return (mem[addr + 3] << 24) +\
@@ -112,7 +116,7 @@ def write_data(addr, val, data_len = 1):
 
 
 def mem_init():
-    global mem_alias, mem, stage_list, inst_addr
+    global mem_alias, mem, stage_list, inst_addr, register_default
 
     #   TEST
 
@@ -131,16 +135,29 @@ def mem_init():
     M_alias = {'M_stat':26, 'M_icode':27, 'M_Cnd':28, 'M_valE':39, 'M_valA':30, 'M_dstE':31, 'M_dstM':32, 'CC':39}
     W_alias = {'W_stat':33, 'W_icode':34, 'W_valE':35, 'W_valM':36, 'W_dstE':37, 'W_dstM':38}
     mem_alias = dict(register_alias.items() + F_alias.items() + D_alias.items() + E_alias.items() + M_alias.items() + W_alias.items())
-    #   assign mem address
+
+    register_default = {'REAX':0, 'RECX':0, 'REDX':0, 'REBX':0, 'RESP':0, 'REBP':0, 'RESI':0, 'REDI':0}
+    #   default value for pipeline-register, used for bubble
+    F_default = {'F_predPC':0}
+    D_default = {'D_stat':1, 'D_icode':0, 'D_ifun':0, 'D_rA':0xF, 'D_rB':0xF, 'D_valC':0, 'D_valP':0}
+    E_default = {'E_stat':1, 'E_icode':0, 'E_ifun':0, 'E_valC':0, 'E_valA':0, 'E_valB':0, 'E_dstE':0xF, 'E_dstM':0xF, 'E_srcA':0, 'E_srcB':0}
+    M_default = {'M_stat':1, 'M_icode':0, 'M_Cnd':1, 'M_valE':0, 'M_valA':0, 'M_dstE':0xF, 'M_dstM':0xF, 'CC':0}
+    W_default = {'W_stat':1, 'W_icode':0, 'W_valE':0, 'W_valM':0, 'W_dstE':0xF, 'W_dstM':0xF}
+    register_default = dict(register_default.items() + F_default.items() + D_default.items() + E_default.items() + M_default.items() + W_default.items())
+    #   给寄存器分配实际内存地址
     cnt = 0x200
     for key, value in mem_alias.items():
         cnt = cnt + 1
         mem_alias[key] = cnt
+    #   开始应该设置register初始值
+    for name, defalut_value in register_default.items():
+        mem[mem_alias[name]] = defalut_value
     # print mem_alias
     # print len(mem_alias)
 
 if __name__ == "__main__":
     mem_init()
+    print mem[0x24]
     prepare_reg('RESP', 0x12345678)
     print read_reg('RESP')
     commit()

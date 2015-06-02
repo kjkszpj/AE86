@@ -4,10 +4,8 @@
 
 ---
 ###最近TODO
--    exception检测及处理
--    做成pipeline
--    加上global声明咯
--    写完差不多开始检查和debug了
+-    debug pipeline
+
 
 ##功能列表
 
