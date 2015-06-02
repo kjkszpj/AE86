@@ -223,7 +223,7 @@ def dm_read(addr):
     return read_data(addr, 4)
 
 def dm_write(addr, val, stall = 0, bubble = 0):
-    prepare_mem(addr, val, stall, bubble)
+    prepare_mem(addr, val, 4, stall, bubble)
 
 #   finally stall here
 #   exception arise
@@ -240,10 +240,10 @@ def D_bubble(sret, sluh, smis, sexc): return smis or not sluh and sret
 def D_stall (sret, sluh, smis, sexc): return sluh
 
 def E_stall (sret, sluh, smis, sexc): return 0
-def E_bubble(sret, sluh, smis, sexc): smis or sluh
+def E_bubble(sret, sluh, smis, sexc): return smis or sluh
 
 def M_stall (sret, sluh, smis, sexc): return 0
-def M_bubble(sret, sluh, smis, sexc): sexc
+def M_bubble(sret, sluh, smis, sexc): return sexc
 
 def W_stall (W_stat)                : return W_stat in [SADR, SINS, SHLT]
 def W_bubble(sret, sluh, smis, sexc): return 0
@@ -253,7 +253,8 @@ def sim_main():
     while cnt < 15:
         #   TODO debug sim_main here
         cnt = cnt + 1
-        if cnt >= 4:
+        print '------cycle\t%d!------' % cnt
+        if cnt >= 15:
             print 'good'
         #   出现两次的表达式基本上用临时变量存储
         tf_pc = f_pc(read_reg('F_predPC'), read_reg('M_icode'), read_reg('M_valA'), read_reg('W_icode'), read_reg('W_valM'), read_reg('M_Cnd'))
@@ -354,14 +355,14 @@ def sim_main():
         prepare_reg('E_valB', td_valB, d_stall, d_bubble)
         #   OK to change
         commit()
-        if cnt > 0:
+        if cnt >= 14:
             my_print(cnt)
+        print '------may the force be with you------\n\n'
     return 0
 
 #   以下是调试模块
 def my_print(cnt):
     #   NO stat here
-    print '------cycle\t%d!------' % cnt
     print "FETCH:"
     print '\tF_predPC 	= 0x%x' % read_reg('F_predPC')
 
@@ -442,3 +443,4 @@ if __name__ == "__main__":
     init()
     sim_main()
     print read_reg('RESP')
+    print read_data(240+8)

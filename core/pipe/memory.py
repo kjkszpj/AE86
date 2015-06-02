@@ -54,6 +54,8 @@ def read_reg(name):
         print "No exist register alias %s......" % name
         n = raw_input()
         return True
+    if name[0] == 'R':
+        print 'OK, now read %s\t, VALUE = %d' % (name, mem[mem_alias[name]])
     return mem[mem_alias[name]]
 
 
@@ -79,6 +81,7 @@ def read_data(addr, data_len = 1):
         print 'mem_error in read_data %d' % addr
         n = raw_input()
         return 'mem_error'
+    print 'OK, now read %d\t, start with%d' % (addr, mem[addr])
     if data_len == 1: return mem[addr]
     if data_len == 4:
         return (mem[addr + 3] << 24) +\
