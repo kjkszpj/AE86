@@ -9,6 +9,23 @@
 -    加上global声明咯
 -    写完差不多开始检查和debug了
 
+###已查命令
+-    irmovl
+-    jmp
+-    call
+-    pushl
+
+###待查命令
+-    halt
+-    nop
+-    rrmovl
+-    rmmovl
+-    mrmovl
+-    opl
+-    jxx
+-    cmovl
+-    popl
+
 ##功能列表
 
 -    内核

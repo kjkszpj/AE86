@@ -60,7 +60,7 @@ def d_dstE(D_icode, D_rB):
 
 def d_dstM(D_icode, D_rA):
     #   DONE
-    if D_icode in [IMRMOVL, IPOPL]: D_rA
+    if D_icode in [IMRMOVL, IPOPL]: return D_rA
     return RNONE
 
 def d_valA(D_icode, d_valA, srcA, D_valP, e_dstE, M_dstM, M_dstE, W_dstM, W_dstE, e_valE, m_valM, M_valE, W_valM, W_valE):
@@ -226,11 +226,11 @@ def dm_write(addr, val):
 
 def sim_main():
     cnt = 0
-    while cnt < 10:
+    while cnt < 15:
         #   TODO debug sim_main here
         cnt = cnt + 1
 
-        if cnt == 8:
+        if cnt == 12:
             print 'good'
         #   出现两次的表达式基本上用临时变量存储
         #   ---FETCH connection---
@@ -308,12 +308,13 @@ def sim_main():
         prepare_reg('E_valB', td_valB)
         #   OK to change
         commit()
-        my_print()
+        if cnt > 0:
+            my_print(cnt)
     return 0
 
-def my_print():
+def my_print(cnt):
     #   NO stat here
-    print '------cycle!------'
+    print '------cycle\t%d!------' % cnt
     print "FETCH:"
     print '\tF_predPC 	= 0x%x' % read_reg('F_predPC')
 
