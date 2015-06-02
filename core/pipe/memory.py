@@ -27,6 +27,7 @@ def prepare_reg(name, val, stall = 0, bubble = 0):
     #   DONE
     global mem_alias, stage_list, register_default
 
+    val = val & 0xFFFFFFFF
     if name == 'RNONE': return False
     if not name in mem_alias.keys():
         print "No exist register alias %s......" % name
@@ -41,6 +42,7 @@ def prepare_reg(name, val, stall = 0, bubble = 0):
 def prepare_mem(addr, val, data_len = 4, stall = 0, bubble = 0):
     global mem_alias, stage_list
 
+    val = val & 0xFFFFFFFF
     print "Ready to write memory, ADDR=%d \tVALUE=%d" % (addr, val)
     if not stall and not bubble: stage_list[addr] = (val, data_len)
     return 0
@@ -77,7 +79,7 @@ def read_instr(pc, data_len = 1):
 
 
 def read_data(addr, data_len = 1):
-    if addr <= inst_addr:
+    if addr < 0 or addr >= len(mem):
         print 'mem_error in read_data %d' % addr
         n = raw_input()
         return 'mem_error'

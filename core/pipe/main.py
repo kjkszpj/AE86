@@ -125,9 +125,9 @@ def e_Cnd(E_icode, E_ifun, CC):
     if E_ifun == 1: return (SF ^ OF) | ZF
     if E_ifun == 2: return SF ^ OF
     if E_ifun == 3: return ZF
-    if E_ifun == 4: return ~ZF
-    if E_ifun == 5: return ~(SF ^ OF)
-    if E_ifun == 6: return ~(SF ^ OF) & ~ZF
+    if E_ifun == 4: return not ZF
+    if E_ifun == 5: return not (SF ^ OF)
+    if E_ifun == 6: return not (SF ^ OF) and not ZF
 
 #   ---about MEMORY stage---
 
@@ -170,7 +170,6 @@ def alu(aluA=1, aluB=1, aluFun=0):
     return result, CC
 
 def decode(pc=0):
-    #   TODO debug decode here
     #   icode, ifun, rA, rB, valC, valP
     #   get icode & ifun
     valP = pc
@@ -212,7 +211,6 @@ def rf_read(srcA, srcB):
 
 def rf_write(dstM, valM, dstE, valE, stall = 0, bubble = 0):
     #   CHECK valM优先
-    #   TODO stall, bubble every where
     global register_name
 
     prepare_reg(register_name[dstM], valM, stall, bubble)
@@ -251,8 +249,8 @@ def W_bubble(sret, sluh, smis, sexc): return 0
 def sim_main():
     cnt = 0
     #   (假装)正确运行的周期数
-    currect = 21
-    while cnt < 30:
+    currect = 49
+    while cnt < 70:
         #   TODO debug sim_main here
         cnt = cnt + 1
         print '------cycle\t%d!------' % cnt
