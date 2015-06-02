@@ -265,7 +265,7 @@ def int2big(x):
 def sim_main():
     cnt = 0
     #   (假装)正确运行的周期数
-    currect = 57
+    currect = 233
     while cnt < 70:
         #   TODO debug sim_main here
         cnt = cnt + 1
@@ -369,10 +369,29 @@ def sim_main():
         print read_reg('W_dstM')
         rf_write(read_reg('W_dstM'), read_reg('W_valM'), read_reg('W_dstE'), read_reg('W_valE'), w_stall, w_bubble)
 
+        #   commit changes
         commit()
+        #   output status
+        stat = read_reg('W_stat')
+        if stat not in [SAOK, SADR, SINS, SHLT]:
+            print 'status code error!'
+            raw_input('continue')
+            return
+        if stat == SADR:
+            print 'memory error!'
+            raw_input('continue')
+            return
+        if stat == SINS:
+            print 'instruction error!'
+            raw_input('continue')
+            return
+        if stat == SHLT:
+            print 'HLT encounter!'
+            raw_input('continue')
+            return
+
         if cnt >= currect:
             my_print(cnt)
-        print '------may the force be with you------\n\n'
     return 0
 
 #   以下是调试模块
@@ -419,7 +438,7 @@ def my_print(cnt):
     print '\tW_dstE   	= 0x%x' % read_reg('W_dstE')
     print '\tW_dstM   	= 0x%x' % read_reg('W_dstM')
     print '\tW_stat   	= 0x%x' % read_reg('W_stat')
-    n = raw_input()
+    raw_input('continue')
 
 def init():
     #   double check this function
@@ -457,5 +476,5 @@ def init():
 if __name__ == "__main__":
     init()
     sim_main()
-    print read_reg('RESP')
+    print read_reg('REAX')
     print read_data(240+8)
