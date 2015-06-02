@@ -230,7 +230,7 @@ def sim_main():
         #   TODO debug sim_main here
         cnt = cnt + 1
 
-        if cnt == 14:
+        if cnt == 13:
             print 'good'
         #   出现两次的表达式基本上用临时变量存储
         #   ---FETCH connection---
@@ -270,7 +270,6 @@ def sim_main():
         prepare_reg('M_icode', read_reg('E_icode'))
         prepare_reg('M_valE', te_valE)
         prepare_reg('M_valA', read_reg('E_valA'))
-        if set_CC(read_reg('E_icode'), m_stat, read_reg('W_stat')): prepare_reg('CC', tCC)
         prepare_reg('M_Cnd', te_Cnd)
         prepare_reg('M_dstE', e_dstE(read_reg('E_icode'), te_Cnd, read_reg('E_dstE')))
         prepare_reg('M_dstM', read_reg('E_dstM'))
@@ -279,6 +278,7 @@ def sim_main():
         tm_stat = m_stat(False, read_reg('M_stat'))
         tm_addr = mem_addr(read_reg('M_icode'), read_reg('M_valA'), read_reg('M_valE'))
 
+        if set_CC(read_reg('E_icode'), tm_stat, read_reg('W_stat')): prepare_reg('CC', tCC)
         prepare_reg('W_stat', tm_stat)
         prepare_reg('W_icode', read_reg('M_icode'))
         prepare_reg('W_valE', read_reg('M_valE'))
@@ -309,10 +309,11 @@ def sim_main():
         prepare_reg('E_valB', td_valB)
         #   OK to change
         commit()
-        if cnt > 0:
+        if cnt > 10:
             my_print(cnt)
     return 0
 
+#   以下是调试模块
 def my_print(cnt):
     #   NO stat here
     print '------cycle\t%d!------' % cnt
@@ -326,6 +327,7 @@ def my_print(cnt):
     print '\tD_rB     	= 0x%x' % read_reg('D_rB')
     print '\tD_valC   	= 0x%x' % read_reg('D_valC')
     print '\tD_valP   	= 0x%x' % read_reg('D_valP')
+    print '\tD_stat   	= 0x%x' % read_reg('D_stat')
 
     print 'EXECUTE:'
     print '\tE_icode  	= 0x%x' % read_reg('E_icode')
@@ -337,6 +339,7 @@ def my_print(cnt):
     print '\tE_dstM   	= 0x%x' % read_reg('E_dstM')
     print '\tE_srcA   	= 0x%x' % read_reg('E_srcA')
     print '\tE_srcB   	= 0x%x' % read_reg('E_srcB')
+    print '\tE_stat   	= 0x%x' % read_reg('E_stat')
 
     print 'MEMORY:'
     print '\tM_icode  	= 0x%x' % read_reg('M_icode')
@@ -345,6 +348,8 @@ def my_print(cnt):
     print '\tM_valA   	= 0x%x' % read_reg('M_valA')
     print '\tM_dstE   	= 0x%x' % read_reg('M_dstE')
     print '\tM_dstM   	= 0x%x' % read_reg('M_dstM')
+    print '\tCC         = %x'   % read_reg('CC')
+    print '\tM_stat   	= 0x%x' % read_reg('M_stat')
 
     print 'WRITE BACK:'
     print '\tW_icode  	= 0x%x' % read_reg('W_icode')
@@ -352,6 +357,7 @@ def my_print(cnt):
     print '\tW_valM   	= 0x%x' % read_reg('W_valM')
     print '\tW_dstE   	= 0x%x' % read_reg('W_dstE')
     print '\tW_dstM   	= 0x%x' % read_reg('W_dstM')
+    print '\tW_stat   	= 0x%x' % read_reg('W_stat')
 
 def init():
     #   double check this function

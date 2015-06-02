@@ -9,7 +9,7 @@ def string2instr(s):
 
 def instr_init():
     global mem, inst_addr
-    s_instr = '30840001000010101010a02F10101010b05F10101010'
+    s_instr = '3084000100000000000040440000000000000000614000000000'
     #s_instr = '30840001000030850001000070240000000d000000c0000000000b000000a00000308004000000a008308214000000a028803a00000000a058204550150800000050250c00000030800000000062227374000000506100000000606030830400000060313083ffffffff60327457000000b05890'
     string2instr(s_instr)
     inst_addr = 0x080
@@ -32,7 +32,7 @@ def prepare_reg(name, val, data_len = 1):
         print "No exist register alias %s......" % name
         n = raw_input()
         return True
-    if name[0] == 'R': print "Ready to write memory, NAME=%s\t ADDR=%d \tVALUE=%d" % (name, mem_alias[name], val)
+    if name[0] in ['R', 'C']: print "Ready to write memory, NAME=%s\t ADDR=%d \tVALUE=%d" % (name, mem_alias[name], val)
     stage_list[mem_alias[name]] = (val, data_len)
     return False
 
