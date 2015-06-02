@@ -25,7 +25,7 @@ def little_endian(val):
 
 def prepare_reg(name, val, stall = 0, bubble = 0):
     #   DONE
-    global mem_alias, stage_list
+    global mem_alias, stage_list, register_default
 
     if name == 'RNONE': return False
     if not name in mem_alias.keys():
@@ -34,7 +34,7 @@ def prepare_reg(name, val, stall = 0, bubble = 0):
         return True
     if name[0] in ['R', 'C']: print "Ready to write memory, NAME=%s\t ADDR=%d \tVALUE=%d" % (name, mem_alias[name], val)
     if not stall and not bubble: stage_list[mem_alias[name]] = (val, 1)
-    elif bubble and not stall: stall_list[mem_alias[name]] = (default_val[names], 1)
+    elif bubble and not stall: stage_list[mem_alias[name]] = (register_default[name], 1)
     return False
 
 
@@ -116,7 +116,7 @@ def write_data(addr, val, data_len = 1):
 
 
 def mem_init():
-    global mem_alias, mem, stage_list, inst_addr
+    global mem_alias, mem, stage_list, inst_addr, register_default
 
     #   TEST
 

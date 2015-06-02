@@ -250,11 +250,11 @@ def W_bubble(sret, sluh, smis, sexc): return 0
 
 def sim_main():
     cnt = 0
-    while cnt < 15:
+    while cnt < 30:
         #   TODO debug sim_main here
         cnt = cnt + 1
         print '------cycle\t%d!------' % cnt
-        if cnt >= 15:
+        if cnt >= 17:
             print 'good'
         #   出现两次的表达式基本上用临时变量存储
         tf_pc = f_pc(read_reg('F_predPC'), read_reg('M_icode'), read_reg('M_valA'), read_reg('W_icode'), read_reg('W_valM'), read_reg('M_Cnd'))
@@ -303,47 +303,49 @@ def sim_main():
 
         #   ---FETCH connection---
         #   用的是f_stall, f_bubble, 来看能不能更新fetch阶段的结果
-        prepare_reg('D_icode', tf_icode, f_stall, f_bubble)
-        prepare_reg('D_ifun', tf_ifun, f_stall, f_bubble)
-        prepare_reg('D_rA', tf_rA, f_stall, f_bubble)
-        prepare_reg('D_rB', tf_rB, f_stall, f_bubble)
-        prepare_reg('D_valC', tf_valC, f_stall, f_bubble)
-        prepare_reg('D_valP', tf_valP, f_stall, f_bubble)
+
         prepare_reg('F_predPC', f_predPC(tf_icode, tf_valC, tf_valP), f_stall, f_bubble)
-        prepare_reg('D_stat', f_stat(tf_icode, timem_error), f_stall, f_bubble)
+
+        prepare_reg('D_icode', tf_icode, d_stall, d_bubble)
+        prepare_reg('D_ifun', tf_ifun, d_stall, d_bubble)
+        prepare_reg('D_rA', tf_rA, d_stall, d_bubble)
+        prepare_reg('D_rB', tf_rB, d_stall, d_bubble)
+        prepare_reg('D_valC', tf_valC, d_stall, d_bubble)
+        prepare_reg('D_valP', tf_valP, d_stall, d_bubble)
+        prepare_reg('D_stat', f_stat(tf_icode, timem_error), d_stall, d_bubble)
 
         #   ---DECODE connection---
-        prepare_reg('E_stat', read_reg('D_stat'), d_stall, d_bubble)
-        prepare_reg('E_icode', read_reg('D_icode'), d_stall, d_bubble)
-        prepare_reg('E_ifun', read_reg('D_ifun'), d_stall, d_bubble)
-        prepare_reg('E_valC', read_reg('D_valC'), d_stall, d_bubble)
-        prepare_reg('E_dstE', d_dstE(read_reg('D_icode'), read_reg('D_rB')), d_stall, d_bubble)
-        prepare_reg('E_dstM', d_dstM(read_reg('D_icode'), read_reg('D_rA')), d_stall, d_bubble)
-        prepare_reg('E_srcA', srcA, d_stall, d_bubble)
-        prepare_reg('E_srcB', srcB, d_stall, d_bubble)
+        prepare_reg('E_stat', read_reg('D_stat'), e_stall, e_bubble)
+        prepare_reg('E_icode', read_reg('D_icode'), e_stall, e_bubble)
+        prepare_reg('E_ifun', read_reg('D_ifun'), e_stall, e_bubble)
+        prepare_reg('E_valC', read_reg('D_valC'), e_stall, e_bubble)
+        prepare_reg('E_dstE', d_dstE(read_reg('D_icode'), read_reg('D_rB')), e_stall, d_bubble)
+        prepare_reg('E_dstM', d_dstM(read_reg('D_icode'), read_reg('D_rA')), e_stall, d_bubble)
+        prepare_reg('E_srcA', srcA, e_stall, d_bubble)
+        prepare_reg('E_srcB', srcB, e_stall, d_bubble)
 
         #   ---EXECUTE connection---
-        prepare_reg('M_stat', read_reg('E_stat'), e_stall, e_bubble)
-        prepare_reg('M_icode', read_reg('E_icode'), e_stall, e_bubble)
-        prepare_reg('M_valE', te_valE, e_stall, e_bubble)
-        prepare_reg('M_valA', read_reg('E_valA'), e_stall, e_bubble)
-        prepare_reg('M_Cnd', te_Cnd, e_stall, e_bubble)
-        prepare_reg('M_dstE', e_dstE(read_reg('E_icode'), te_Cnd, read_reg('E_dstE')), e_stall, e_bubble)
-        prepare_reg('M_dstM', read_reg('E_dstM'), e_stall, e_bubble)
-        if set_CC(read_reg('E_icode'), tm_stat, read_reg('W_stat')): prepare_reg('CC', tCC, e_stall, e_bubble)
+        prepare_reg('M_stat', read_reg('E_stat'), m_stall, m_bubble)
+        prepare_reg('M_icode', read_reg('E_icode'), m_stall, m_bubble)
+        prepare_reg('M_valE', te_valE, m_stall, m_bubble)
+        prepare_reg('M_valA', read_reg('E_valA'), m_stall, m_bubble)
+        prepare_reg('M_Cnd', te_Cnd, m_stall, m_bubble)
+        prepare_reg('M_dstE', e_dstE(read_reg('E_icode'), te_Cnd, read_reg('E_dstE')), m_stall, m_bubble)
+        prepare_reg('M_dstM', read_reg('E_dstM'), m_stall, m_bubble)
+        if set_CC(read_reg('E_icode'), tm_stat, read_reg('W_stat')): prepare_reg('CC', tCC, m_stall, m_bubble)
 
         #   ---MEMORY connection---
-        prepare_reg('W_stat', tm_stat, m_stall, m_bubble)
-        prepare_reg('W_icode', read_reg('M_icode'), m_stall, m_bubble)
+        prepare_reg('W_stat', tm_stat, w_stall, w_bubble)
+        prepare_reg('W_icode', read_reg('M_icode'), w_stall, w_bubble)
         prepare_reg('W_valE', read_reg('M_valE'))
         # if mem_read(read_reg('M_icode')):
         #     tm_valM = dm_read(tm_addr)
         #     dmem_error = tm_valM == 'mem_error'
         # else: tm_valM = 0
-        prepare_reg('W_valM', tm_valM, m_stall, m_bubble)
-        if mem_write(read_reg('M_icode')): dm_write(tm_addr, read_reg('M_valA'), m_stall, m_bubble)
-        prepare_reg('W_dstE', read_reg('M_dstE'), m_stall, m_bubble)
-        prepare_reg('W_dstM', read_reg('M_dstM'), m_stall, m_bubble)
+        prepare_reg('W_valM', tm_valM, w_stall, w_bubble)
+        if mem_write(read_reg('M_icode')): dm_write(tm_addr, read_reg('M_valA'), w_stall, w_bubble)
+        prepare_reg('W_dstE', read_reg('M_dstE'), w_stall, w_bubble)
+        prepare_reg('W_dstM', read_reg('M_dstM'), w_stall, w_bubble)
 
         #   ---WRITE BACK connection---
         print read_reg('W_dstM')
