@@ -3,18 +3,11 @@
 计算机原理(ICS)课程项目，pipeline处理器模拟咯。
 
 ---
-![AE86](http://i.ytimg.com/vi/Gah8FnYSypk/maxresdefault.jpg)
-
-曾经也是追过头文字D的
-
-想到这种项目名字
-
-觉得自己真机智
-
-......
-
 ###最近TODO
--    debug pipeline
+-    exception检测及处理
+-    做成pipeline
+-    加上global声明咯
+-    写完差不多开始检查和debug了
 
 ##功能列表
 
@@ -25,6 +18,8 @@
 -    report
 -    输入文件解析器
 -    单条语句执行程序
+
+##so good
 
 ##联系我
 Peijie You
