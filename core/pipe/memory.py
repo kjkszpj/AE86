@@ -9,7 +9,6 @@ def string2instr(s):
 
 def instr_init():
     global mem, inst_addr
-    # s_instr = '3084000100000000000040440000000000000000614000000000'
     #   align QAQ 000000inserted(6 zeros)
     s_instr = '30840001000030850001000070240000000000000d000000c0000000000b000000a00000308004000000a008308214000000a028803a00000010a058204550150800000050250c00000030800000000062227374000000506100000000606030830400000060313083ffffffff60327457000000b05890'
     string2instr(s_instr)
@@ -30,7 +29,7 @@ def prepare_reg(name, val, stall = 0, bubble = 0):
     if name == 'RNONE': return False
     if not name in mem_alias.keys():
         print "No exist register alias %s......" % name
-        n = raw_input()
+        raw_input('continue')
         return True
     if name[0] in ['R', 'C']: print "Ready to write memory, NAME=%s\t ADDR=%d \tVALUE=%d" % (name, mem_alias[name], val)
     if not stall and not bubble: stage_list[mem_alias[name]] = (val, 1)
@@ -52,7 +51,7 @@ def read_reg(name):
     if name == 'RNONE': return 0
     if not name in mem_alias.keys():
         print "No exist register alias %s......" % name
-        n = raw_input()
+        raw_input('continue')
         return True
     if name[0] == 'R':
         print 'OK, now read %s\t, VALUE = %d' % (name, mem[mem_alias[name]])
@@ -62,7 +61,7 @@ def read_reg(name):
 def read_instr(pc, data_len = 1):
     if pc > inst_addr:
         print 'mem_error in read_instr %d' % pc
-        n = raw_input()
+        raw_input('continue')
         return 'mem_error'
     if data_len == 1:
         temp = mem[pc]
@@ -79,7 +78,7 @@ def read_instr(pc, data_len = 1):
 def read_data(addr, data_len = 1):
     if addr < 0 or addr >= len(mem):
         print 'mem_error in read_data %d' % addr
-        n = raw_input()
+        raw_input('continue')
         return 'mem_error'
     print 'OK, now read %d\t, start with%d' % (addr, mem[addr])
     if data_len == 1: return mem[addr]
@@ -108,7 +107,7 @@ def write_data(addr, val, data_len = 1):
     #   需要更合理判断地址非法
     if addr <= inst_addr:
         print 'invalid addr in write_data %d' % addr
-        n = raw_input()
+        raw_input('continue')
         return True
     if data_len == 1: mem[addr] = val
     if data_len == 4: mem[addr], mem[addr + 1], mem[addr + 2], mem[addr + 3] = little_endian(val)
