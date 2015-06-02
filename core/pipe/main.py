@@ -107,7 +107,7 @@ def alufun(E_icode, E_ifun):
 
 def set_CC(E_icode, m_stat, W_stat):
     #   DONE
-    return E_icode == IOPL and not m_stat in [SADR, SINS, SHLT] and not W_stat in [SADR, SINS, SHLT]
+    return E_icode == IOPL and not exception(m_stat, W_stat)
 
 def e_valA(E_valA):
     #   应该单独开一个函数么...
@@ -223,6 +223,29 @@ def dm_read(addr):
 
 def dm_write(addr, val):
     prepare_mem(addr, val)
+
+#   finally stall here
+#   exception arise
+def processing_ret(D_icode, E_icode, M_icode): return IRET in [D_icode, E_icode, M_icode]
+def load_use(E_icode, E_dstM, srcA, srcB): return E_icode in [IMRMOVL, IPOPL] and E_dstM in [srcA, srcB]
+def mispredict(E_icode, Cnd): return E_icode == IJXX and not Cnd
+def exception(m_stat, W_stat): return m_stat in [SADR, SINS, SHLT] or W_stat in [SADR, SINS, SHLT]
+
+#   stall / bubble
+def F_bubble(sret, sluh, smis, sexc): return 0
+def F_stall (sret, sluh, smis, sexc): return sluh or sret
+
+def D_bubble(sret, sluh, smis, sexc): return smis or not sluh and sret
+def D_stall (sret, sluh, smis, sexc): return sluh
+
+def E_stall (sret, sluh, smis, sexc): return 0
+def E_bubble(sret, sluh, smis, sexc): smis or sluh
+
+def M_stall (sret, sluh, smis, sexc): return 0
+def M_bubble(sret, sluh, smis, sexc): sexc
+
+def W_stall (W_stat)                : return W_stat in [SADR, SINS, SHLT]
+def W_bubble(sret, sluh, smis, sexc): return 0
 
 def sim_main():
     cnt = 0
