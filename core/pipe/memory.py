@@ -11,7 +11,7 @@ def instr_init():
     global mem, inst_addr
     # s_instr = '3084000100000000000040440000000000000000614000000000'
     #   align QAQ 000000inserted(6 zeros)
-    s_instr = '30840001000030850001000070240000000000000d000000c0000000000b000000a00000308004000000a008308214000000a028803a00000000a058204550150800000050250c00000030800000000062227374000000506100000000606030830400000060313083ffffffff60327457000000b05890'
+    s_instr = '30840001000030850001000070240000000000000d000000c0000000000b000000a00000308004000000a008308214000000a028803a00000010a058204550150800000050250c00000030800000000062227374000000506100000000606030830400000060313083ffffffff60327457000000b05890'
     string2instr(s_instr)
     inst_addr = 0x080
 
@@ -27,7 +27,6 @@ def prepare_reg(name, val, stall = 0, bubble = 0):
     #   DONE
     global mem_alias, stage_list, register_default
 
-    val = val & 0xFFFFFFFF
     if name == 'RNONE': return False
     if not name in mem_alias.keys():
         print "No exist register alias %s......" % name
@@ -42,7 +41,6 @@ def prepare_reg(name, val, stall = 0, bubble = 0):
 def prepare_mem(addr, val, data_len = 4, stall = 0, bubble = 0):
     global mem_alias, stage_list
 
-    val = val & 0xFFFFFFFF
     print "Ready to write memory, ADDR=%d \tVALUE=%d" % (addr, val)
     if not stall and not bubble: stage_list[addr] = (val, data_len)
     return 0

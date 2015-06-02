@@ -4,7 +4,6 @@ from memory import *
 #   以下是小函数
 #   ---about FETCH stage---
 
-#   ---bug free---
 def need_regids(f_icode):
     #   DONE
     return f_icode in [IRRMOVL, IOPL, IPUSHL, IPOPL, IIRMOVL, IRMMOVL, IMRMOVL]
@@ -155,6 +154,8 @@ def m_stat(dmem_error, M_stat):
 def alu(aluA=1, aluB=1, aluFun=0):
     #   DONE
     #   alu result
+    aluA = big2int(aluA)
+    aluB = big2int(aluB)
     if aluFun not in [0, 1, 2, 3]: print "alu_fun error! %d" % aluFun
     if aluFun == 0:   result = aluA + aluB
     elif aluFun == 1: result = aluB - aluA
@@ -166,7 +167,7 @@ def alu(aluA=1, aluB=1, aluFun=0):
     SF = result < 0
     OF = (aluA < 0 == aluB < 0) and ((result < 0) != (aluA < 0))
     CC = (ZF << 2) | (SF << 1) | OF
-
+    result = int2big(result)
     return result, CC
 
 def decode(pc=0):
@@ -246,10 +247,25 @@ def M_bubble(sret, sluh, smis, sexc): return sexc
 def W_stall (W_stat)                : return W_stat in [SADR, SINS, SHLT]
 def W_bubble(sret, sluh, smis, sexc): return 0
 
+def big2int(x):
+    #   用在哪里好呢
+    #   overflow
+    x = x & 0xFFFFFFFF
+    #   negative
+    if x > 0x7FFFFFFF: x = x - 0x100000000
+    return x
+
+def int2big(x):
+    #   overflow
+    x = x & 0xFFFFFFFF
+    #   negative
+    if x < 0: x = x + 0x100000000
+    return x
+
 def sim_main():
     cnt = 0
     #   (假装)正确运行的周期数
-    currect = 49
+    currect = 57
     while cnt < 70:
         #   TODO debug sim_main here
         cnt = cnt + 1
