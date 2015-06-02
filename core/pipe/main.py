@@ -230,7 +230,7 @@ def sim_main():
         #   TODO debug sim_main here
         cnt = cnt + 1
 
-        if cnt == 12:
+        if cnt == 14:
             print 'good'
         #   出现两次的表达式基本上用临时变量存储
         #   ---FETCH connection---
@@ -286,6 +286,7 @@ def sim_main():
             tm_valM = dm_read(tm_addr)
             dmem_error = tm_valM == 'mem_error'
         else: tm_valM = 0
+        prepare_reg('W_valM', tm_valM)
         if mem_write(read_reg('M_icode')): dm_write(tm_addr, read_reg('M_valA'))
         prepare_reg('W_dstE', read_reg('M_dstE'))
         prepare_reg('W_dstM', read_reg('M_dstM'))

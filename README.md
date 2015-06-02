@@ -14,17 +14,17 @@
 -    jmp
 -    call
 -    pushl
+-    popl
+-    rrmovl
+-    rmmovl
+-    mrmovl
 
 ###待查命令
 -    halt
 -    nop
--    rrmovl
--    rmmovl
--    mrmovl
 -    opl
 -    jxx
 -    cmovl
--    popl
 
 ##功能列表
 
