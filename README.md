@@ -14,11 +14,11 @@
 ......
 
 ###最近TODO
--    debug pipeline
+-    学习UI（PyQt？）
 
 ##功能列表
 
--    内核
+-    内核    (DONE)
 -    UI
 -    内存管理
 -    拓展功能？
