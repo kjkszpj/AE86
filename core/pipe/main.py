@@ -210,13 +210,14 @@ def rf_read(srcA, srcB):
 
     return read_reg(register_name[srcA]), read_reg(register_name[srcB])
 
-def rf_write(dstM, valM, dstE, valE):
+def rf_write(dstM, valM, dstE, valE, stall = 0, bubble = 0):
     #   CHECK valM优先
+    #   TODO stall, bubble every where
     global register_name
 
-    prepare_reg(register_name[dstM], valM)
+    prepare_reg(register_name[dstM], valM, stall, bubble)
     if dstE != dstM:
-        prepare_reg(register_name[dstE], valE)
+        prepare_reg(register_name[dstE], valE, stall, bubble)
 
 def dm_read(addr):
     return read_data(addr, 4)
@@ -256,80 +257,101 @@ def sim_main():
         if cnt == 13:
             print 'good'
         #   出现两次的表达式基本上用临时变量存储
-        #   ---FETCH connection---
         tf_pc = f_pc(read_reg('F_predPC'), read_reg('M_icode'), read_reg('M_valA'), read_reg('W_icode'), read_reg('W_valM'), read_reg('M_Cnd'))
         tf_icode, tf_ifun, tf_rA, tf_rB, tf_valC, tf_valP, timem_error = decode(tf_pc)
 
-        prepare_reg('D_icode', tf_icode)
-        prepare_reg('D_ifun', tf_ifun)
-        prepare_reg('D_rA', tf_rA)
-        prepare_reg('D_rB', tf_rB)
-        prepare_reg('D_valC', tf_valC)
-        prepare_reg('D_valP', tf_valP)
-        prepare_reg('F_predPC', f_predPC(tf_icode, tf_valC, tf_valP))
-        prepare_reg('D_stat', f_stat(tf_icode, timem_error))
-
-        #   ---DECODE connection---
-        td_valA = 0
-        td_valB = 0
         srcA = d_srcA(read_reg('D_icode'), read_reg('D_rA'))
         srcB = d_srcB(read_reg('D_icode'), read_reg('D_rB'))
-        prepare_reg('E_stat', read_reg('D_stat'))
-        prepare_reg('E_icode', read_reg('D_icode'))
-        prepare_reg('E_ifun', read_reg('D_ifun'))
-        prepare_reg('E_valC', read_reg('D_valC'))
-        prepare_reg('E_dstE', d_dstE(read_reg('D_icode'), read_reg('D_rB')))
-        prepare_reg('E_dstM', d_dstM(read_reg('D_icode'), read_reg('D_rA')))
-        prepare_reg('E_srcA', srcA)
-        prepare_reg('E_srcB', srcB)
 
-        #   ---EXECUTE connection---
         taluA = aluA(read_reg('E_icode'), read_reg('E_valA'), read_reg('E_valC'))
         taluB = aluB(read_reg('E_icode'), read_reg('E_valB'))
         te_valE, tCC = alu(taluA, taluB, alufun(read_reg('E_icode'), read_reg('E_ifun')))
         te_Cnd = e_Cnd(read_reg('E_icode'), read_reg('E_ifun'), read_reg('CC'))
 
-        prepare_reg('M_stat', read_reg('E_stat'))
-        prepare_reg('M_icode', read_reg('E_icode'))
-        prepare_reg('M_valE', te_valE)
-        prepare_reg('M_valA', read_reg('E_valA'))
-        prepare_reg('M_Cnd', te_Cnd)
-        prepare_reg('M_dstE', e_dstE(read_reg('E_icode'), te_Cnd, read_reg('E_dstE')))
-        prepare_reg('M_dstM', read_reg('E_dstM'))
-
-        #   ---MEMORY connection---
         tm_stat = m_stat(False, read_reg('M_stat'))
         tm_addr = mem_addr(read_reg('M_icode'), read_reg('M_valA'), read_reg('M_valE'))
 
-        if set_CC(read_reg('E_icode'), tm_stat, read_reg('W_stat')): prepare_reg('CC', tCC)
-        prepare_reg('W_stat', tm_stat)
-        prepare_reg('W_icode', read_reg('M_icode'))
-        prepare_reg('W_valE', read_reg('M_valE'))
-        if mem_read(read_reg('M_icode')):
-            tm_valM = dm_read(tm_addr)
-            dmem_error = tm_valM == 'mem_error'
-        else: tm_valM = 0
-        prepare_reg('W_valM', tm_valM)
-        if mem_write(read_reg('M_icode')): dm_write(tm_addr, read_reg('M_valA'))
-        prepare_reg('W_dstE', read_reg('M_dstE'))
-        prepare_reg('W_dstM', read_reg('M_dstM'))
-
-        #   ---WRITE BACK connection---
-        rf_write(read_reg('W_dstM'), read_reg('W_valM'), read_reg('W_dstE'), read_reg('W_valE'))
-
-        #   forward comes at last
-        #   valA
         tvalA, tvalB = rf_read(srcA, srcB)
         td_valA = d_valA(read_reg('D_icode'), tvalA, srcA,
                          read_reg('D_valP'), e_dstE(read_reg('E_icode'), te_Cnd, read_reg('E_dstE')),
                          read_reg('M_dstM'), read_reg('M_dstE'), read_reg('W_dstM'), read_reg('W_dstE'),
                          te_valE, tm_valM, read_reg('M_valE'), read_reg('W_valM'), read_reg('W_valE'))
-        #   valB
         td_valB = d_valB(srcB, tvalB, e_dstE(read_reg('E_icode'), te_Cnd, read_reg('E_dstE')),
                          read_reg('M_dstM'), read_reg('M_dstE'), read_reg('W_dstM'), read_reg('W_dstE'),
                          te_valE, tm_valM,  read_reg('M_valE'), read_reg('W_valM'), read_reg('W_valE'))
-        prepare_reg('E_valA', td_valA)
-        prepare_reg('E_valB', td_valB)
+        if mem_read(read_reg('M_icode')):
+            tm_valM = dm_read(tm_addr)
+            dmem_error = tm_valM == 'mem_error'
+        else: tm_valM = 0
+        #   order ok?
+        #   enough to generate stat?
+        ts_ret = processing_ret(read_reg('D_icode'), read_reg('E_icode'), read_reg('M_icode'))
+        ts_luh = load_use(read_reg('E_icode'), read_reg('E_dstM'), srcA, srcB)
+        ts_mis = mispredict(read_reg('E_icode'), te_Cnd)
+        ts_exc = exception(tm_stat, read_reg('W_stat'))
+
+        f_stall = F_stall(tsret, ts_luh, ts_mis, ts_exc)
+        f_bubble = F_bubble(ts_ret, ts_luh, ts_mis, ts_exc)
+        d_stall = D_stall(tsret, ts_luh, ts_mis, ts_exc)
+        d_bubble = D_bubble(tsret, ts_luh, ts_mis, ts_exc)
+        e_stall = E_stall(tsret, ts_luh, ts_mis, ts_exc)
+        e_bubble = E_bubble(tsret, ts_luh, ts_mis, ts_exc)
+        m_stall = M_stall(tsret, ts_luh, ts_mis, ts_exc)
+        m_bubble = M_bubble(tsret, ts_luh, ts_mis, ts_exc)
+        w_stall = W_stall(W_stat)
+        w_bubble = W_bubble(tsret, ts_luh, ts_mis, ts_exc)
+
+        #   ---FETCH connection---
+        #   用的是f_stall, f_bubble, 来看能不能更新fetch阶段的结果
+        prepare_reg('D_icode', tf_icode, f_stall, f_bubble)
+        prepare_reg('D_ifun', tf_ifun, f_stall, f_bubble)
+        prepare_reg('D_rA', tf_rA, f_stall, f_bubble)
+        prepare_reg('D_rB', tf_rB, f_stall, f_bubble)
+        prepare_reg('D_valC', tf_valC, f_stall, f_bubble)
+        prepare_reg('D_valP', tf_valP, f_stall, f_bubble)
+        prepare_reg('F_predPC', f_predPC(tf_icode, tf_valC, tf_valP), f_stall, f_bubble)
+        prepare_reg('D_stat', f_stat(tf_icode, timem_error), f_stall, f_bubble)
+
+        #   ---DECODE connection---
+        prepare_reg('E_stat', read_reg('D_stat'), d_stall, d_bubble)
+        prepare_reg('E_icode', read_reg('D_icode'), d_stall, d_bubble)
+        prepare_reg('E_ifun', read_reg('D_ifun'), d_stall, d_bubble)
+        prepare_reg('E_valC', read_reg('D_valC'), d_stall, d_bubble)
+        prepare_reg('E_dstE', d_dstE(read_reg('D_icode'), read_reg('D_rB')), d_stall, d_bubble)
+        prepare_reg('E_dstM', d_dstM(read_reg('D_icode'), read_reg('D_rA')), d_stall, d_bubble)
+        prepare_reg('E_srcA', srcA, d_stall, d_bubble)
+        prepare_reg('E_srcB', srcB, d_stall, d_bubble)
+
+        #   ---EXECUTE connection---
+        prepare_reg('M_stat', read_reg('E_stat'), e_stall, e_bubble)
+        prepare_reg('M_icode', read_reg('E_icode'), e_stall, e_bubble)
+        prepare_reg('M_valE', te_valE, e_stall, e_bubble)
+        prepare_reg('M_valA', read_reg('E_valA'), e_stall, e_bubble)
+        prepare_reg('M_Cnd', te_Cnd, e_stall, e_bubble)
+        prepare_reg('M_dstE', e_dstE(read_reg('E_icode'), te_Cnd, read_reg('E_dstE')), e_stall, e_bubble)
+        prepare_reg('M_dstM', read_reg('E_dstM'), e_stall, e_bubble)
+        if set_CC(read_reg('E_icode'), tm_stat, read_reg('W_stat')): prepare_reg('CC', tCC, e_stall, e_bubble)
+
+        #   ---MEMORY connection---
+        prepare_reg('W_stat', tm_stat, m_stall, m_bubble)
+        prepare_reg('W_icode', read_reg('M_icode'), m_stall, m_bubble)
+        # prepare_reg('W_valE', read_reg('M_valE'))
+        # if mem_read(read_reg('M_icode')):
+        #     tm_valM = dm_read(tm_addr)
+        #     dmem_error = tm_valM == 'mem_error'
+        # else: tm_valM = 0
+        prepare_reg('W_valM', tm_valM, m_stall, m_bubble)
+        if mem_write(read_reg('M_icode')): dm_write(tm_addr, read_reg('M_valA'), m_stall, m_bubble)
+        prepare_reg('W_dstE', read_reg('M_dstE'), m_stall, m_bubble)
+        prepare_reg('W_dstM', read_reg('M_dstM'), m_stall, m_bubble)
+
+        #   ---WRITE BACK connection---
+        rf_write(read_reg('W_dstM'), read_reg('W_valM'), read_reg('W_dstE'), read_reg('W_valE'), w_stall, w_bubble)
+
+        #   forward comes at last
+        #   valA
+        prepare_reg('E_valA', td_valA, d_stall, d_bubble)
+        prepare_reg('E_valB', td_valB, d_stall, d_bubble)
         #   OK to change
         commit()
         if cnt > 10:

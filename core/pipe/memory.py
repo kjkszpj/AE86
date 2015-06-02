@@ -22,26 +22,26 @@ def little_endian(val):
     return b0, b1, b2, b3
 
 
-def prepare_reg(name, val, data_len = 1):
+def prepare_reg(name, val, stall = 0, bubble = 0):
     #   DONE
     global mem_alias, stage_list
 
     if name == 'RNONE': return False
-
     if not name in mem_alias.keys():
         print "No exist register alias %s......" % name
         n = raw_input()
         return True
     if name[0] in ['R', 'C']: print "Ready to write memory, NAME=%s\t ADDR=%d \tVALUE=%d" % (name, mem_alias[name], val)
-    stage_list[mem_alias[name]] = (val, data_len)
+    if not stall and not bubble: stage_list[mem_alias[name]] = (val, 1)
+    elif bubble and not stall: stall_list[mem_alias[name]] = (default_val[names], 1)
     return False
 
 
-def prepare_mem(addr, val, data_len = 4):
+def prepare_mem(addr, val, data_len = 4, stall = 0, bubble = 0):
     global mem_alias, stage_list
 
     print "Ready to write memory, ADDR=%d \tVALUE=%d" % (addr, val)
-    stage_list[addr] = (val, data_len)
+    if not stall and not bubble: stage_list[addr] = (val, data_len)
     return 0
 
 
@@ -131,6 +131,16 @@ def mem_init():
     M_alias = {'M_stat':26, 'M_icode':27, 'M_Cnd':28, 'M_valE':39, 'M_valA':30, 'M_dstE':31, 'M_dstM':32, 'CC':39}
     W_alias = {'W_stat':33, 'W_icode':34, 'W_valE':35, 'W_valM':36, 'W_dstE':37, 'W_dstM':38}
     mem_alias = dict(register_alias.items() + F_alias.items() + D_alias.items() + E_alias.items() + M_alias.items() + W_alias.items())
+
+    register_default = {'REAX':0, 'RECX':0, 'REDX':0, 'REBX':0, 'RESP':0, 'REBP':0, 'RESI':0, 'REDI':0}
+    #   default value for pipeline-register, used for bubble
+    F_default = {'F_predPC':0}
+    D_default = {'D_stat':1, 'D_icode':0, 'D_ifun':0, 'D_rA':0xF, 'D_rB':0xF, 'D_valC':0, 'D_valP':0}
+    E_default = {'E_stat':1, 'E_icode':0, 'E_ifun':0, 'E_valC':0, 'E_valA':0, 'E_valB':0, 'E_dstE':0xF, 'E_dstM':0xF, 'E_srcA':0, 'E_srcB':0}
+    M_default = {'M_stat':1, 'M_icode':0, 'M_Cnd':1, 'M_valE':0, 'M_valA':0, 'M_dstE':0xF, 'M_dstM':0xF, 'CC':0}
+    W_default = {'W_stat':1, 'W_icode':0, 'W_valE':0, 'W_valM':0, 'W_dstE':0xF, 'W_dstM':0xF}
+    register_default = dict(register_default.items() + F_default.items() + D_default.items() + E_default.items() + M_default.items() + W_default.items())
+
     #   assign mem address
     cnt = 0x200
     for key, value in mem_alias.items():
