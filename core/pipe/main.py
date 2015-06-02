@@ -250,11 +250,13 @@ def W_bubble(sret, sluh, smis, sexc): return 0
 
 def sim_main():
     cnt = 0
+    #   (假装)正确运行的周期数
+    currect = 21
     while cnt < 30:
         #   TODO debug sim_main here
         cnt = cnt + 1
         print '------cycle\t%d!------' % cnt
-        if cnt >= 17:
+        if cnt >= currect:
             print 'good'
         #   出现两次的表达式基本上用临时变量存储
         tf_pc = f_pc(read_reg('F_predPC'), read_reg('M_icode'), read_reg('M_valA'), read_reg('W_icode'), read_reg('W_valM'), read_reg('M_Cnd'))
@@ -319,10 +321,12 @@ def sim_main():
         prepare_reg('E_icode', read_reg('D_icode'), e_stall, e_bubble)
         prepare_reg('E_ifun', read_reg('D_ifun'), e_stall, e_bubble)
         prepare_reg('E_valC', read_reg('D_valC'), e_stall, e_bubble)
-        prepare_reg('E_dstE', d_dstE(read_reg('D_icode'), read_reg('D_rB')), e_stall, d_bubble)
-        prepare_reg('E_dstM', d_dstM(read_reg('D_icode'), read_reg('D_rA')), e_stall, d_bubble)
-        prepare_reg('E_srcA', srcA, e_stall, d_bubble)
-        prepare_reg('E_srcB', srcB, e_stall, d_bubble)
+        prepare_reg('E_dstE', d_dstE(read_reg('D_icode'), read_reg('D_rB')), e_stall, e_bubble)
+        prepare_reg('E_dstM', d_dstM(read_reg('D_icode'), read_reg('D_rA')), e_stall, e_bubble)
+        prepare_reg('E_srcA', srcA, e_stall, e_bubble)
+        prepare_reg('E_srcB', srcB, e_stall, e_bubble)
+        prepare_reg('E_valA', td_valA, e_stall, e_bubble)
+        prepare_reg('E_valB', td_valB, e_stall, e_bubble)
 
         #   ---EXECUTE connection---
         prepare_reg('M_stat', read_reg('E_stat'), m_stall, m_bubble)
@@ -351,13 +355,8 @@ def sim_main():
         print read_reg('W_dstM')
         rf_write(read_reg('W_dstM'), read_reg('W_valM'), read_reg('W_dstE'), read_reg('W_valE'), w_stall, w_bubble)
 
-        #   forward comes at last
-        #   valA
-        prepare_reg('E_valA', td_valA, d_stall, d_bubble)
-        prepare_reg('E_valB', td_valB, d_stall, d_bubble)
-        #   OK to change
         commit()
-        if cnt >= 14:
+        if cnt >= currect:
             my_print(cnt)
         print '------may the force be with you------\n\n'
     return 0
