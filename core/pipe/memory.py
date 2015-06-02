@@ -9,8 +9,9 @@ def string2instr(s):
 
 def instr_init():
     global mem, inst_addr
-    s_instr = '3084000100000000000040440000000000000000614000000000'
-    #s_instr = '30840001000030850001000070240000000d000000c0000000000b000000a00000308004000000a008308214000000a028803a00000000a058204550150800000050250c00000030800000000062227374000000506100000000606030830400000060313083ffffffff60327457000000b05890'
+    # s_instr = '3084000100000000000040440000000000000000614000000000'
+    #   align QAQ 000000inserted(6 zeros)
+    s_instr = '30840001000030850001000070240000000000000d000000c0000000000b000000a00000308004000000a008308214000000a028803a00000000a058204550150800000050250c00000030800000000062227374000000506100000000606030830400000060313083ffffffff60327457000000b05890'
     string2instr(s_instr)
     inst_addr = 0x080
 
@@ -140,17 +141,20 @@ def mem_init():
     M_default = {'M_stat':1, 'M_icode':0, 'M_Cnd':1, 'M_valE':0, 'M_valA':0, 'M_dstE':0xF, 'M_dstM':0xF, 'CC':0}
     W_default = {'W_stat':1, 'W_icode':0, 'W_valE':0, 'W_valM':0, 'W_dstE':0xF, 'W_dstM':0xF}
     register_default = dict(register_default.items() + F_default.items() + D_default.items() + E_default.items() + M_default.items() + W_default.items())
-
-    #   assign mem address
+    #   给寄存器分配实际内存地址
     cnt = 0x200
     for key, value in mem_alias.items():
         cnt = cnt + 1
         mem_alias[key] = cnt
+    #   开始应该设置register初始值
+    for name, defalut_value in register_default.items():
+        mem[mem_alias[name]] = defalut_value
     # print mem_alias
     # print len(mem_alias)
 
 if __name__ == "__main__":
     mem_init()
+    print mem[0x24]
     prepare_reg('RESP', 0x12345678)
     print read_reg('RESP')
     commit()

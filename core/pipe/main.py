@@ -222,8 +222,8 @@ def rf_write(dstM, valM, dstE, valE, stall = 0, bubble = 0):
 def dm_read(addr):
     return read_data(addr, 4)
 
-def dm_write(addr, val):
-    prepare_mem(addr, val)
+def dm_write(addr, val, stall = 0, bubble = 0):
+    prepare_mem(addr, val, stall, bubble)
 
 #   finally stall here
 #   exception arise
@@ -253,8 +253,7 @@ def sim_main():
     while cnt < 15:
         #   TODO debug sim_main here
         cnt = cnt + 1
-
-        if cnt == 13:
+        if cnt >= 4:
             print 'good'
         #   出现两次的表达式基本上用临时变量存储
         tf_pc = f_pc(read_reg('F_predPC'), read_reg('M_icode'), read_reg('M_valA'), read_reg('W_icode'), read_reg('W_valM'), read_reg('M_Cnd'))
@@ -270,6 +269,10 @@ def sim_main():
 
         tm_stat = m_stat(False, read_reg('M_stat'))
         tm_addr = mem_addr(read_reg('M_icode'), read_reg('M_valA'), read_reg('M_valE'))
+        if mem_read(read_reg('M_icode')):
+            tm_valM = dm_read(tm_addr)
+            dmem_error = tm_valM == 'mem_error'
+        else: tm_valM = 0
 
         tvalA, tvalB = rf_read(srcA, srcB)
         td_valA = d_valA(read_reg('D_icode'), tvalA, srcA,
@@ -279,10 +282,6 @@ def sim_main():
         td_valB = d_valB(srcB, tvalB, e_dstE(read_reg('E_icode'), te_Cnd, read_reg('E_dstE')),
                          read_reg('M_dstM'), read_reg('M_dstE'), read_reg('W_dstM'), read_reg('W_dstE'),
                          te_valE, tm_valM,  read_reg('M_valE'), read_reg('W_valM'), read_reg('W_valE'))
-        if mem_read(read_reg('M_icode')):
-            tm_valM = dm_read(tm_addr)
-            dmem_error = tm_valM == 'mem_error'
-        else: tm_valM = 0
         #   order ok?
         #   enough to generate stat?
         ts_ret = processing_ret(read_reg('D_icode'), read_reg('E_icode'), read_reg('M_icode'))
@@ -290,16 +289,16 @@ def sim_main():
         ts_mis = mispredict(read_reg('E_icode'), te_Cnd)
         ts_exc = exception(tm_stat, read_reg('W_stat'))
 
-        f_stall = F_stall(tsret, ts_luh, ts_mis, ts_exc)
+        f_stall = F_stall(ts_ret, ts_luh, ts_mis, ts_exc)
         f_bubble = F_bubble(ts_ret, ts_luh, ts_mis, ts_exc)
-        d_stall = D_stall(tsret, ts_luh, ts_mis, ts_exc)
-        d_bubble = D_bubble(tsret, ts_luh, ts_mis, ts_exc)
-        e_stall = E_stall(tsret, ts_luh, ts_mis, ts_exc)
-        e_bubble = E_bubble(tsret, ts_luh, ts_mis, ts_exc)
-        m_stall = M_stall(tsret, ts_luh, ts_mis, ts_exc)
-        m_bubble = M_bubble(tsret, ts_luh, ts_mis, ts_exc)
-        w_stall = W_stall(W_stat)
-        w_bubble = W_bubble(tsret, ts_luh, ts_mis, ts_exc)
+        d_stall = D_stall(ts_ret, ts_luh, ts_mis, ts_exc)
+        d_bubble = D_bubble(ts_ret, ts_luh, ts_mis, ts_exc)
+        e_stall = E_stall(ts_ret, ts_luh, ts_mis, ts_exc)
+        e_bubble = E_bubble(ts_ret, ts_luh, ts_mis, ts_exc)
+        m_stall = M_stall(ts_ret, ts_luh, ts_mis, ts_exc)
+        m_bubble = M_bubble(ts_ret, ts_luh, ts_mis, ts_exc)
+        w_stall = W_stall(read_reg('W_stat'))
+        w_bubble = W_bubble(ts_ret, ts_luh, ts_mis, ts_exc)
 
         #   ---FETCH connection---
         #   用的是f_stall, f_bubble, 来看能不能更新fetch阶段的结果
@@ -335,7 +334,7 @@ def sim_main():
         #   ---MEMORY connection---
         prepare_reg('W_stat', tm_stat, m_stall, m_bubble)
         prepare_reg('W_icode', read_reg('M_icode'), m_stall, m_bubble)
-        # prepare_reg('W_valE', read_reg('M_valE'))
+        prepare_reg('W_valE', read_reg('M_valE'))
         # if mem_read(read_reg('M_icode')):
         #     tm_valM = dm_read(tm_addr)
         #     dmem_error = tm_valM == 'mem_error'
@@ -346,6 +345,7 @@ def sim_main():
         prepare_reg('W_dstM', read_reg('M_dstM'), m_stall, m_bubble)
 
         #   ---WRITE BACK connection---
+        print read_reg('W_dstM')
         rf_write(read_reg('W_dstM'), read_reg('W_valM'), read_reg('W_dstE'), read_reg('W_valE'), w_stall, w_bubble)
 
         #   forward comes at last
@@ -354,7 +354,7 @@ def sim_main():
         prepare_reg('E_valB', td_valB, d_stall, d_bubble)
         #   OK to change
         commit()
-        if cnt > 10:
+        if cnt > 0:
             my_print(cnt)
     return 0
 
@@ -403,6 +403,7 @@ def my_print(cnt):
     print '\tW_dstE   	= 0x%x' % read_reg('W_dstE')
     print '\tW_dstM   	= 0x%x' % read_reg('W_dstM')
     print '\tW_stat   	= 0x%x' % read_reg('W_stat')
+    n = raw_input()
 
 def init():
     #   double check this function
@@ -435,7 +436,7 @@ def init():
     SAOK = 0x1; SADR = 0x2; SINS = 0x3; SHLT = 0x4;
 
     #   id-name index for register
-    register_name = {0:'REAX', 1:'RECX', 2:'REDX', 3:'REBX', 4:'RESP', 5:'REBP', 6:'RESI', 7:'REDI', 0xF:'RNONE'}
+    register_name = {0:'REAX', 1:'RECX', 2:'REDX', 3:'REBX', 4:'RESP', 5:'REBP', 6:'RESI', 7:'REDI', 8:'RNONE', 0xF:'RNONE'}
 
 if __name__ == "__main__":
     init()
