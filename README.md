@@ -2,6 +2,8 @@
 
 计算机原理(ICS)课程项目，pipeline处理器模拟咯。
 
+争取在周六前做完PJ，周日(6-7日，表弟高考)要去复旦微软俱乐部\_(:зゝ∠)_
+
 ---
 ![AE86](http://i.ytimg.com/vi/Gah8FnYSypk/maxresdefault.jpg)
 
@@ -14,7 +16,7 @@
 ......
 
 ###最近TODO
--    学习UI，应该使用PyQt吧
+-    快速学习PyQt啊...
 
 ##功能列表
 
