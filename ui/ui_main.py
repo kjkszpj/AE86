@@ -8,36 +8,21 @@ from component.AboutDialog import *
 from component.load_instruction import *
 from component.ips import *
 from component.pause_fun import *
+from component.table_register import *
 
 import sys
 sys.path.append('C:\\Users\\You\\Documents\\GitHub\\AE86\\core\\pipe')
 from main import *
+from memory import *
 
 class Widow(QtGui.QMainWindow):
 
     def __init__(self):
+        init()
         super(Widow, self).__init__()
         self.ui=Ui_total()
         self.ui.setupUi(self)
-
-        self.ui.table_register.setRowCount(8)
-        self.ui.table_register.setRowHeight(5, 5)
-        self.ui.table_register.resizeRowsToContents()
-        self.ui.table_register.resizeColumnsToContents()
-        treg = ['REAX', 'RECX', 'REDX', 'REBX', 'RESP', 'REBP', 'RESI', 'REDI']
-        self.ui.table_register.verticalHeader().setVisible(False)
-        for i in range(8):
-            item = QtGui.QTableWidgetItem(treg[i])
-            item.setFlags(QtCore.Qt.ItemIsEnabled)
-            item.setTextAlignment(QtCore.Qt.AlignCenter)
-            self.ui.table_register.setItem(i, 0, item)
-            item = QtGui.QTableWidgetItem('0x00000000')
-            item.setFlags(QtCore.Qt.ItemIsEnabled)
-            self.ui.table_register.setItem(i, 1, item)
-
-        self.ui.table_register.resizeRowsToContents()
-        self.ui.table_register.resizeColumnsToContents()
-
+        init_table_register(self.ui.table_register)
         self.show()
         #   connect here
         self.connect(self.ui.action_about, QtCore.SIGNAL('triggered()'), self.run_about)
@@ -59,10 +44,9 @@ class Widow(QtGui.QMainWindow):
         load_data()
         sim_main(self.sleep_fun, self.pause_fun, self.update_fun)
 
+
     def update(self, addr, value):
-        if addr == 533:
-            self.ui.test_reax.setText('%d' % value)
-            self.ui.test_reax.repaint()
+        refresh_reg(self.ui.table_register, addr, value)
 
 
 def main():
