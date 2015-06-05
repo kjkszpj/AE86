@@ -265,11 +265,11 @@ def int2big(x):
     return x
 
 def sim_main():
+    #   TODO 要改！
     cnt = 0
     #   (假装)正确运行的周期数
     currect = 233
     while cnt < 70:
-        #   TODO debug sim_main here
         cnt = cnt + 1
         print '------cycle\t%d!------' % cnt
         if cnt >= currect:
@@ -442,7 +442,7 @@ def my_print(cnt):
     print '\tW_stat   	= 0x%x' % read_reg('W_stat')
     raw_input('continue')
 
-def init(save_instruction = True):
+def init(save_instruction = False):
     #   double check this function
     global INOP, IHALT, IRRMOVL, IIRMOVL, IRMMOVL, IMRMOVL, IOPL, IJXX, ICALL, IRET, IPUSHL, IPOPL
     global FNONE, RNONE, RESP, ALUADD, SAOK, SADR, SINS, SHLT

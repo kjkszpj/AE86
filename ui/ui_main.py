@@ -5,6 +5,7 @@ from PyQt4 import QtGui
 from PyQt4 import QtCore
 from total import Ui_total
 from component.AboutDialog import *
+from component.load_instruction import *
 
 
 class Widow(QtGui.QMainWindow):
@@ -17,10 +18,14 @@ class Widow(QtGui.QMainWindow):
 
         #   connect here
         self.connect(self.ui.action_about, QtCore.SIGNAL('triggered()'), self.run_about)
+        self.connect(self.ui.action_load_file, QtCore.SIGNAL('triggered()'), self.run_load_instruction)
 
     #   about
     def run_about(self):
         AboutDialog(parent = self)
+
+    def run_load_instruction(self):
+        load_instruction(self)
 
 
 def main():
