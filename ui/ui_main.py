@@ -19,8 +19,26 @@ class Widow(QtGui.QMainWindow):
         super(Widow, self).__init__()
         self.ui=Ui_total()
         self.ui.setupUi(self)
-        self.show()
 
+        self.ui.table_register.setRowCount(8)
+        self.ui.table_register.setRowHeight(5, 5)
+        self.ui.table_register.resizeRowsToContents()
+        self.ui.table_register.resizeColumnsToContents()
+        treg = ['REAX', 'RECX', 'REDX', 'REBX', 'RESP', 'REBP', 'RESI', 'REDI']
+        self.ui.table_register.verticalHeader().setVisible(False)
+        for i in range(8):
+            item = QtGui.QTableWidgetItem(treg[i])
+            item.setFlags(QtCore.Qt.ItemIsEnabled)
+            item.setTextAlignment(QtCore.Qt.AlignCenter)
+            self.ui.table_register.setItem(i, 0, item)
+            item = QtGui.QTableWidgetItem('0x00000000')
+            item.setFlags(QtCore.Qt.ItemIsEnabled)
+            self.ui.table_register.setItem(i, 1, item)
+
+        self.ui.table_register.resizeRowsToContents()
+        self.ui.table_register.resizeColumnsToContents()
+
+        self.show()
         #   connect here
         self.connect(self.ui.action_about, QtCore.SIGNAL('triggered()'), self.run_about)
         self.connect(self.ui.action_load_file, QtCore.SIGNAL('triggered()'), self.run_load_instruction)
@@ -45,8 +63,6 @@ class Widow(QtGui.QMainWindow):
         if addr == 533:
             self.ui.test_reax.setText('%d' % value)
             self.ui.test_reax.repaint()
-        print 'wtf'
-        pass
 
 
 def main():
