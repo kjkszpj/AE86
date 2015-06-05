@@ -265,11 +265,11 @@ def int2big(x):
     return x
 
 def sim_main():
-    #   TODO 要改！
+    #   TODO 什么时候运行
     cnt = 0
     #   (假装)正确运行的周期数
     currect = 233
-    while cnt < 70:
+    while cnt < 30:
         cnt = cnt + 1
         print '------cycle\t%d!------' % cnt
         if cnt >= currect:
@@ -391,9 +391,10 @@ def sim_main():
             print 'HLT encounter!'
             raw_input('continue')
             return
-
-        if cnt >= currect:
-            my_print(cnt)
+        #   TODO sleep多少
+        #   TODO 是否输出（到文件）
+        # if cnt >= currect:
+        #     my_print(cnt)
     return 0
 
 #   以下是调试模块
@@ -479,5 +480,6 @@ if __name__ == "__main__":
     init()
     load_data()
     sim_main()
+    save_data()
     print read_reg('REAX')
     print read_data(240+8)
