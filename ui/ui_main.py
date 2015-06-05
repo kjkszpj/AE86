@@ -44,6 +44,7 @@ class Widow(QtGui.QMainWindow):
     def update(self, addr, value):
         if addr == 533:
             self.ui.test_reax.setText('%d' % value)
+            self.ui.test_reax.repaint()
         print 'wtf'
         pass
 

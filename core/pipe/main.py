@@ -278,9 +278,9 @@ def sim_main(sleep_fun = default_sleep, pause_fun = default_pause, update_fun = 
     currect = 233
     while cnt < 30:
         cnt = cnt + 1
-        print '------cycle\t%d!------' % cnt
-        if cnt >= currect:
-            print 'good'
+        # print '------cycle\t%d!------' % cnt
+        # if cnt >= currect:
+        #     print 'good'
         #   出现两次的表达式基本上用临时变量存储
         tf_pc = f_pc(read_reg('F_predPC'), read_reg('M_icode'), read_reg('M_valA'), read_reg('W_icode'), read_reg('W_valM'), read_reg('M_Cnd'))
         tf_icode, tf_ifun, tf_rA, tf_rB, tf_valC, tf_valP, timem_error = decode(tf_pc)
@@ -375,7 +375,6 @@ def sim_main(sleep_fun = default_sleep, pause_fun = default_pause, update_fun = 
         prepare_reg('W_dstM', read_reg('M_dstM'), w_stall, w_bubble)
 
         #   ---WRITE BACK connection---
-        print read_reg('W_dstM')
         rf_write(read_reg('W_dstM'), read_reg('W_valM'), read_reg('W_dstE'), read_reg('W_valE'), w_stall, w_bubble)
         prepare_reg('CYCLE', cnt)
 
