@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'total.ui'
 #
-# Created: Fri Jun 05 20:50:26 2015
+# Created: Fri Jun 05 21:12:04 2015
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -31,7 +31,7 @@ class Ui_total(object):
         self.centralWidget = QtGui.QWidget(total)
         self.centralWidget.setObjectName(_fromUtf8("centralWidget"))
         self.verticalLayoutWidget = QtGui.QWidget(self.centralWidget)
-        self.verticalLayoutWidget.setGeometry(QtCore.QRect(620, 0, 381, 201))
+        self.verticalLayoutWidget.setGeometry(QtCore.QRect(470, 0, 531, 201))
         self.verticalLayoutWidget.setObjectName(_fromUtf8("verticalLayoutWidget"))
         self.verticalLayout_2 = QtGui.QVBoxLayout(self.verticalLayoutWidget)
         self.verticalLayout_2.setMargin(0)
@@ -43,7 +43,7 @@ class Ui_total(object):
         self.gridLayout_3.setMargin(0)
         self.gridLayout_3.setObjectName(_fromUtf8("gridLayout_3"))
         self.groupBox = QtGui.QGroupBox(self.centralWidget)
-        self.groupBox.setGeometry(QtCore.QRect(80, 230, 171, 261))
+        self.groupBox.setGeometry(QtCore.QRect(80, 270, 171, 261))
         self.groupBox.setObjectName(_fromUtf8("groupBox"))
         self.table_register = QtGui.QTableWidget(self.groupBox)
         self.table_register.setGeometry(QtCore.QRect(10, 20, 144, 227))
@@ -55,23 +55,23 @@ class Ui_total(object):
         self.table_register.setShowGrid(True)
         self.table_register.setWordWrap(True)
         self.table_register.setCornerButtonEnabled(True)
+        self.table_register.setRowCount(8)
         self.table_register.setObjectName(_fromUtf8("table_register"))
         self.table_register.setColumnCount(2)
-        self.table_register.setRowCount(0)
         item = QtGui.QTableWidgetItem()
         self.table_register.setHorizontalHeaderItem(0, item)
         item = QtGui.QTableWidgetItem()
         self.table_register.setHorizontalHeaderItem(1, item)
         self.groupBox_2 = QtGui.QGroupBox(self.centralWidget)
-        self.groupBox_2.setGeometry(QtCore.QRect(80, 10, 201, 191))
+        self.groupBox_2.setGeometry(QtCore.QRect(130, 10, 201, 191))
         self.groupBox_2.setObjectName(_fromUtf8("groupBox_2"))
         self.line = QtGui.QFrame(self.centralWidget)
-        self.line.setGeometry(QtCore.QRect(60, 210, 241, 16))
+        self.line.setGeometry(QtCore.QRect(110, 210, 241, 16))
         self.line.setFrameShape(QtGui.QFrame.HLine)
         self.line.setFrameShadow(QtGui.QFrame.Sunken)
         self.line.setObjectName(_fromUtf8("line"))
         self.verticalLayoutWidget_2 = QtGui.QWidget(self.centralWidget)
-        self.verticalLayoutWidget_2.setGeometry(QtCore.QRect(300, 230, 160, 251))
+        self.verticalLayoutWidget_2.setGeometry(QtCore.QRect(300, 270, 160, 251))
         self.verticalLayoutWidget_2.setObjectName(_fromUtf8("verticalLayoutWidget_2"))
         self.verticalLayout_3 = QtGui.QVBoxLayout(self.verticalLayoutWidget_2)
         self.verticalLayout_3.setMargin(0)

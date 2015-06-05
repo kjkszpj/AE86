@@ -28,6 +28,9 @@ class Widow(QtGui.QMainWindow):
         self.connect(self.ui.action_about, QtCore.SIGNAL('triggered()'), self.run_about)
         self.connect(self.ui.action_load_file, QtCore.SIGNAL('triggered()'), self.run_load_instruction)
         self.connect(self.ui.action_1_IPS, QtCore.SIGNAL('triggered()'), self.run_1_IPS)
+        self.connect(self.ui.action_2_IPS, QtCore.SIGNAL('triggered()'), self.run_2_IPS)
+        self.connect(self.ui.action_4_IPS, QtCore.SIGNAL('triggered()'), self.run_4_IPS)
+        self.connect(self.ui.action_8_IPS, QtCore.SIGNAL('triggered()'), self.run_8_IPS)
 
     #   about
     def run_about(self):
@@ -37,13 +40,36 @@ class Widow(QtGui.QMainWindow):
         load_instruction(self)
 
     def run_1_IPS(self):
-        self.sleep_fun = ips8
+        self.sleep_fun = ips1
         self.pause_fun = pause_no
         self.update_fun = self.update
         init()
         load_data()
         sim_main(self.sleep_fun, self.pause_fun, self.update_fun)
 
+    def run_2_IPS(self):
+        self.sleep_fun = ips2
+        self.pause_fun = pause_no
+        self.update_fun = self.update
+        init()
+        load_data()
+        sim_main(self.sleep_fun, self.pause_fun, self.update_fun)
+
+    def run_4_IPS(self):
+        self.sleep_fun = ips4
+        self.pause_fun = pause_no
+        self.update_fun = self.update
+        init()
+        load_data()
+        sim_main(self.sleep_fun, self.pause_fun, self.update_fun)
+
+    def run_8_IPS(self):
+        self.sleep_fun = ips8
+        self.pause_fun = pause_no
+        self.update_fun = self.update
+        init()
+        load_data()
+        sim_main(self.sleep_fun, self.pause_fun, self.update_fun)
 
     def update(self, addr, value):
         refresh_reg(self.ui.table_register, addr, value)

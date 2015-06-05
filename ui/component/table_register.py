@@ -8,8 +8,6 @@ import memory
 
 def init_table_register(tb):
     global treg
-    tb.setRowCount(8)
-    tb.setRowHeight(5, 5)
     tb.resizeRowsToContents()
     tb.resizeColumnsToContents()
     tb.verticalHeader().setVisible(False)
@@ -31,6 +29,6 @@ def refresh_reg(tb, addr, value, color = True):
             if color:
                 tb.item(i, 1).setBackgroundColor(QtGui.QColor(0xFA, 0xD3, 0xD3))
                 tb.repaint()
-                sleep(0.1)
+                sleep(0.2)
                 tb.item(i, 1).setBackgroundColor(QtGui.QColor(0xFA, 0xFF, 0xFF))
                 tb.repaint()
