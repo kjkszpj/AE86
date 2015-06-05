@@ -158,6 +158,12 @@ def mem_init(instruction = '30840001000030850001000070240000000000000d000000c000
         outf = file('C:\\Users\\You\\Documents\\GitHub\\AE86\\data\\runtime\\mem.pk', 'w');
         pickle.dump(mem, outf)
 
+def load_data(mem_file = '../../data/runtime/mem.pk'):
+    global mem
+    mem_file = file(mem_file)
+    mem = pickle.load(mem_file)
+    print mem
+
 if __name__ == "__main__":
     mem_init()
     print mem[0x24]
