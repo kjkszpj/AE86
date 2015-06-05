@@ -1,6 +1,7 @@
 # -*- coding: cp936 -*-
 
 import pickle
+import time
 from memory import *
 
 #   以下是小函数
@@ -370,6 +371,7 @@ def sim_main():
         #   ---WRITE BACK connection---
         print read_reg('W_dstM')
         rf_write(read_reg('W_dstM'), read_reg('W_valM'), read_reg('W_dstE'), read_reg('W_valE'), w_stall, w_bubble)
+        prepare_reg('CYCLE', cnt)
 
         #   commit changes
         commit()
@@ -392,6 +394,7 @@ def sim_main():
             raw_input('continue')
             return
         #   TODO sleep多少
+        time.sleep(0.1)
         #   TODO 是否输出（到文件）
         # if cnt >= currect:
         #     my_print(cnt)

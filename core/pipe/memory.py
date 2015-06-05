@@ -125,7 +125,7 @@ def mem_init(instruction = '30840001000030850001000070240000000000000d000000c000
     instr_init(instruction)
     for i in range(0x1000):
         mem.append(0)
-    #   mem-alias, should have 40? items
+    #   mem-alias, should have 41? items
     #   alias for register
     register_alias = {'REAX':1, 'RECX':2, 'REDX':3, 'REBX':4, 'RESP':5, 'REBP':6, 'RESI':6, 'REDI':7}
     #   alias for pipeline-register
@@ -134,7 +134,8 @@ def mem_init(instruction = '30840001000030850001000070240000000000000d000000c000
     E_alias = {'E_stat':16, 'E_icode':17, 'E_ifun':18, 'E_valC':19, 'E_valA':20, 'E_valB':21, 'E_dstE':22, 'E_dstM':23, 'E_srcA':24, 'E_srcB':25}
     M_alias = {'M_stat':26, 'M_icode':27, 'M_Cnd':28, 'M_valE':39, 'M_valA':30, 'M_dstE':31, 'M_dstM':32, 'CC':39}
     W_alias = {'W_stat':33, 'W_icode':34, 'W_valE':35, 'W_valM':36, 'W_dstE':37, 'W_dstM':38}
-    mem_alias = dict(register_alias.items() + F_alias.items() + D_alias.items() + E_alias.items() + M_alias.items() + W_alias.items())
+    circle_alias = {'CYCLE':40}
+    mem_alias = dict(register_alias.items() + F_alias.items() + D_alias.items() + E_alias.items() + M_alias.items() + W_alias.items() + circle_alias.items())
 
     register_default = {'REAX':0, 'RECX':0, 'REDX':0, 'REBX':0, 'RESP':0, 'REBP':0, 'RESI':0, 'REDI':0}
     #   default value for pipeline-register, used for bubble
