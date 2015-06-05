@@ -9,11 +9,13 @@ def string2instr(s):
     for i in range(len(s) / 2):
         mem.append(int(s[i * 2 : i * 2 + 2], 16))
 
+
 def instr_init(s_instr):
     global mem, inst_addr
     #   align QAQ 000000inserted(6 zeros)
     string2instr(s_instr)
     inst_addr = 0x087
+
 
 def little_endian(val):
     b0 = val & 0xFF
@@ -90,7 +92,7 @@ def read_data(addr, data_len = 1):
                 mem[addr]
 
 
-def commit():
+def commit(update_fun = None):
     #   DONE
     #   memory exception
     #   what about memory write(4-bits)
@@ -100,6 +102,8 @@ def commit():
     for addr, tvalue in stage_list.items():
         value, data_len = tvalue
         mem_error = mem_error | write_data(addr, value, data_len)
+        if update_fun != None:
+            update_fun(addr, value)
     stage_list = {}
     return mem_error
 
@@ -159,12 +163,12 @@ def mem_init(instruction = '30840001000030850001000070240000000000000d000000c000
         outf = file('C:\\Users\\You\\Documents\\GitHub\\AE86\\data\\runtime\\mem.pk', 'w');
         pickle.dump(mem, outf)
 
-def load_data(mem_file = '../../data/runtime/mem.pk'):
+def load_data(mem_file = '../data/runtime/mem.pk'):
     global mem
     mem = pickle.load(file(mem_file))
     print mem
 
-def save_data(mem_file = '../../data/runtime/mem.pk'):
+def save_data(mem_file = '../data/runtime/mem.pk'):
     global mem
 
     pickle.dump(mem, file(mem_file, 'w'))

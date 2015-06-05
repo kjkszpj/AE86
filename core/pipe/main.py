@@ -265,7 +265,13 @@ def int2big(x):
     if x < 0: x = x + 0x100000000
     return x
 
-def sim_main():
+def default_sleep():
+    return 0
+
+def default_pause():
+    return False
+
+def sim_main(sleep_fun = default_sleep, pause_fun = default_pause, update_fun = None):
     #   TODO 什么时候运行
     cnt = 0
     #   (假装)正确运行的周期数
@@ -374,7 +380,7 @@ def sim_main():
         prepare_reg('CYCLE', cnt)
 
         #   commit changes
-        commit()
+        commit(update_fun)
         #   output status
         stat = read_reg('W_stat')
         if stat not in [SAOK, SADR, SINS, SHLT]:
@@ -394,7 +400,11 @@ def sim_main():
             raw_input('continue')
             return
         #   TODO sleep多少
-        time.sleep(0.1)
+        print sleep_fun()
+        time.sleep(sleep_fun())
+        while pause_fun():
+            time.sleep(0.05)
+        #   TODO n = raw_input()
         #   TODO 是否输出（到文件）
         # if cnt >= currect:
         #     my_print(cnt)
@@ -445,6 +455,9 @@ def my_print(cnt):
     print '\tW_dstM   	= 0x%x' % read_reg('W_dstM')
     print '\tW_stat   	= 0x%x' % read_reg('W_stat')
     raw_input('continue')
+
+def sleep_time(f):
+    return f()
 
 def init(save_instruction = False):
     #   double check this function

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'total.ui'
 #
-# Created: Thu Jun 04 22:31:21 2015
+# Created: Fri Jun 05 16:14:11 2015
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -30,6 +30,9 @@ class Ui_total(object):
         total.resize(1000, 500)
         self.centralWidget = QtGui.QWidget(total)
         self.centralWidget.setObjectName(_fromUtf8("centralWidget"))
+        self.test_reax = QtGui.QLabel(self.centralWidget)
+        self.test_reax.setGeometry(QtCore.QRect(260, 200, 241, 61))
+        self.test_reax.setObjectName(_fromUtf8("test_reax"))
         total.setCentralWidget(self.centralWidget)
         self.menuBar = QtGui.QMenuBar(total)
         self.menuBar.setGeometry(QtCore.QRect(0, 0, 1000, 23))
@@ -109,8 +112,11 @@ class Ui_total(object):
         self.action_21.setObjectName(_fromUtf8("action_21"))
         self.action_about = QtGui.QAction(total)
         self.action_about.setObjectName(_fromUtf8("action_about"))
+        self.action = QtGui.QAction(total)
+        self.action.setObjectName(_fromUtf8("action"))
         self.menuMain.addAction(self.action_load_file)
         self.menuMain.addSeparator()
+        self.menuMain.addAction(self.action)
         self.menuMain.addAction(self.action_save_process)
         self.menuMain.addAction(self.action_load_process)
         self.menuMain.addSeparator()
@@ -145,6 +151,7 @@ class Ui_total(object):
 
     def retranslateUi(self, total):
         total.setWindowTitle(_translate("total", "total", None))
+        self.test_reax.setText(_translate("total", "here", None))
         self.menuMain.setTitle(_translate("total", "菜单", None))
         self.menuRun.setTitle(_translate("total", "运行", None))
         self.menuTool.setTitle(_translate("total", "小工具", None))
@@ -176,3 +183,5 @@ class Ui_total(object):
         self.action_stop.setText(_translate("total", "停止", None))
         self.action_21.setText(_translate("total", "y86编辑器", None))
         self.action_about.setText(_translate("total", "about", None))
+        self.action.setText(_translate("total", "新增进度", None))
+
