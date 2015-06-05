@@ -1,18 +1,19 @@
 # -*- coding: cp936 -*-
 #   在prepare就检测mem_error
 
+import pickle
+
 def string2instr(s):
     global mem
     mem = []
     for i in range(len(s) / 2):
         mem.append(int(s[i * 2 : i * 2 + 2], 16))
 
-def instr_init():
+def instr_init(s_instr):
     global mem, inst_addr
     #   align QAQ 000000inserted(6 zeros)
-    s_instr = '30840001000030850001000070240000000000000d000000c0000000000b000000a00000308004000000a008308214000000a028803a00000010a058204550150800000050250c00000030800000000062227374000000506100000000606030830400000060313083ffffffff60327457000000b05890'
     string2instr(s_instr)
-    inst_addr = 0x080
+    inst_addr = 0x087
 
 def little_endian(val):
     b0 = val & 0xFF
@@ -114,14 +115,14 @@ def write_data(addr, val, data_len = 1):
     return False
 
 
-def mem_init():
-    global mem_alias, mem, stage_list, inst_addr, register_default
+def mem_init(instruction = '30840001000030850001000070240000000000000d000000c0000000000b000000a00000308004000000a008308214000000a028803a00000010a058204550150800000050250c00000030800000000062227374000000506100000000606030830400000060313083ffffffff60327457000000b05890', save = True):
+    global mem_alias, mem, stage_list, register_default
 
     #   TEST
 
     stage_list = {};
     #   mem
-    instr_init()
+    instr_init(instruction)
     for i in range(0x1000):
         mem.append(0)
     #   mem-alias, should have 40? items
@@ -153,6 +154,9 @@ def mem_init():
         mem[mem_alias[name]] = defalut_value
     # print mem_alias
     # print len(mem_alias)
+    if save:
+        outf = file('C:\\Users\\You\\Documents\\GitHub\\AE86\\data\\runtime\\mem.pk', 'w');
+        pickle.dump(mem, outf)
 
 if __name__ == "__main__":
     mem_init()
