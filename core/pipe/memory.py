@@ -101,8 +101,9 @@ def commit(update_fun = None):
     mem_error = False
     for addr, tvalue in stage_list.items():
         value, data_len = tvalue
+        past_data = read_data(addr, data_len)
         mem_error = mem_error | write_data(addr, value, data_len)
-        if update_fun != None:
+        if update_fun != None and past_data != value:
             update_fun(addr, value)
     stage_list = {}
     return mem_error

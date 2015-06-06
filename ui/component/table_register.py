@@ -6,6 +6,7 @@ sys.path.append('C:\\Users\\You\\Documents\\GitHub\\AE86\\core\\pipe')
 import main
 import memory
 
+
 def init_table_register(tb):
     global treg
     tb.resizeRowsToContents()
@@ -22,6 +23,7 @@ def init_table_register(tb):
     tb.resizeRowsToContents()
     tb.resizeColumnsToContents()
 
+
 def refresh_reg(tb, addr, value, color = True):
     value = '0x%08x' % value
     for i in range(8):
@@ -30,6 +32,10 @@ def refresh_reg(tb, addr, value, color = True):
             if color:
                 tb.item(i, 1).setBackgroundColor(QtGui.QColor(0xFA, 0xD3, 0xD3))
                 tb.repaint()
-                sleep(0.2)
-                tb.item(i, 1).setBackgroundColor(QtGui.QColor(0xFA, 0xFF, 0xFF))
-                tb.repaint()
+                return (cool_down_reg, (tb, i, 1))
+    return None
+
+
+def cool_down_reg(args):
+                args[0].item(args[1], args[2]).setBackgroundColor(QtGui.QColor(0xFA, 0xFF, 0xFF))
+                args[0].repaint()

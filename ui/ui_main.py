@@ -22,6 +22,7 @@ class Widow(QtGui.QMainWindow):
     def __init__(self):
         init()
         super(Widow, self).__init__()
+        self.cd_paint = []
         self.ui=Ui_total()
         self.ui.setupUi(self)
         init_table_register(self.ui.table_register)
@@ -47,7 +48,7 @@ class Widow(QtGui.QMainWindow):
         self.update_fun = self.notify
         init()
         load_data()
-        msg = sim_main(self.sleep_fun, self.pause_fun, self.update_fun)
+        msg = sim_main(self.sleep_fun, self.pause_fun, self.update_fun, self.cd_fun)
         QtGui.QMessageBox.information(self, u'程序终止了', msg)
 
     def run_2_IPS(self):
@@ -56,7 +57,7 @@ class Widow(QtGui.QMainWindow):
         self.update_fun = self.notify
         init()
         load_data()
-        msg = sim_main(self.sleep_fun, self.pause_fun, self.update_fun)
+        msg = sim_main(self.sleep_fun, self.pause_fun, self.update_fun, self.cd_fun)
         QtGui.QMessageBox.information(self, u'程序终止了', msg)
 
     def run_4_IPS(self):
@@ -65,7 +66,7 @@ class Widow(QtGui.QMainWindow):
         self.update_fun = self.notify
         init()
         load_data()
-        msg = sim_main(self.sleep_fun, self.pause_fun, self.update_fun)
+        msg = sim_main(self.sleep_fun, self.pause_fun, self.update_fun, self.cd_fun)
         QtGui.QMessageBox.information(self, u'程序终止了', msg)
 
     def run_8_IPS(self):
@@ -74,13 +75,24 @@ class Widow(QtGui.QMainWindow):
         self.update_fun = self.notify
         init()
         load_data()
-        msg = sim_main(self.sleep_fun, self.pause_fun, self.update_fun)
+        msg = sim_main(self.sleep_fun, self.pause_fun, self.update_fun, self.cd_fun)
         QtGui.QMessageBox.information(self, u'程序终止了', msg)
 
     def notify(self, addr, value):
-        refresh_reg(self.ui.table_register, addr, value)
-        refresh_pipe(self.ui, addr, value)
+        cd_register = refresh_reg(self.ui.table_register, addr, value)
+        cd_pipeline = refresh_pipe(self.ui, addr, value)
+        if cd_register != None:
+            func, args = cd_register
+            self.cd_paint.append((func, args))
+        if cd_pipeline != None:
+            func, args = cd_pipeline
+            self.cd_paint.append((func, args))
 
+    def cd_fun(self):
+        time.sleep(2)
+        for func, args in self.cd_paint:
+            func(args)
+        self.cd_paint = []
 
 def main():
     app = QtGui.QApplication(sys.argv)
