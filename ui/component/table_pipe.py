@@ -1,5 +1,6 @@
 from PyQt4 import QtGui
 from PyQt4 import QtCore
+from time import sleep
 import memory
 from memory import read_reg
 
@@ -14,7 +15,7 @@ except AttributeError:
 def combine(name1, name2):
     return (read_reg(name1) << 4) + read_reg(name2)
 
-def refresh_pipe(ui, addr, value):
+def refresh_pipe(ui, addr, value, color = True):
     if addr in memory.mem_alias.values():
         prpr = memory.mem_alias.keys()[memory.mem_alias.values().index(addr)]
         value_len = 0
@@ -70,13 +71,21 @@ def refresh_pipe(ui, addr, value):
             elif value_len == 8: value = '0x' + ('%08x' % value).upper()
             QtGui.QTextBrowser.setText(tb, head + '\n' + value)
             # what the html
+            if color:
+                tb.setHtml(_translate("total", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+                                               "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+                                               "p, li { white-space: pre-wrap; }\n"
+                                               "</style></head><body style=\" font-family:\'Courier New\'; font-size:9pt; font-weight:400; font-style:normal; background-color:aliceblue;\">\n"
+                                               "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'courier\';\">%s</span></p>\n"
+                                               "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'courier\';\">%s</span></p></body></html>" % (head, value), None))
+                tb.repaint()
+                sleep(0.2)
             tb.setHtml(_translate("total", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Courier New\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'courier\';\">%s</span></p>\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'courier\';\">%s</span></p></body></html>" % (head, value), None))
-            #   color
+                                           "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+                                           "p, li { white-space: pre-wrap; }\n"
+                                           "</style></head><body style=\" font-family:\'Courier New\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+                                           "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'courier\';\">%s</span></p>\n"
+                                           "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'courier\';\">%s</span></p></body></html>" % (head, value), None))
             tb.repaint()
     else:
         pass
