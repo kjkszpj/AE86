@@ -30,7 +30,8 @@ class Widow(QtGui.QMainWindow):
         init_table_register(self.ui.table_register)
         self.show()
         self.run_thread = MyThread()
-        self.run_thread.render(Simulator())
+        self.sim = Simulator()
+        self.run_thread.render(self.sim)
         self.run_thread.sim.init()
 
         init()
@@ -60,7 +61,7 @@ class Widow(QtGui.QMainWindow):
 
     def run_sim(self):
         self.run_thread.sim.is_terminated = False
-        self.run_thread.run()
+        self.run_thread.start()
 
     def run_1_IPS(self):
         self.run_thread.interval = 0.7 / 1
@@ -102,16 +103,18 @@ class Widow(QtGui.QMainWindow):
 
     def step(self):
         msg = self.run_thread.sim.step(self.notify, self.cd_fun)
+        # msg = self.run_thread.sim.step()
         if msg != None:
             QtGui.QMessageBox.information(self, u'³ÌĞòÖÕÖ¹ÁË', msg)
 
     def pause(self):
+        self.run_thread.sim.is_terminated = True
         self.run_thread.terminate()
         pass
 
     def terminate(self):
+        self.run_thread.sim.is_terminated = True
         self.run_thread.terminate()
-        self.run_thread.render(Simulator())
         pass
 
 def main():

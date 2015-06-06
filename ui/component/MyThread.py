@@ -6,13 +6,13 @@ class MyThread(QtCore.QThread):
         QtCore.QThread.__init__(self, parent)
         self.exiting = False
         self.sim = None
-        self.interval = 0.1
+        self.interval = 0.7
 
     def __del__(self):
         self.exiting = True
         self.wait()
 
-    def render(self, sim, interval = 0.1):
+    def render(self, sim, interval = 0.7):
         self.sim = sim
         self.interval = interval
         self.start()
