@@ -10,7 +10,6 @@ def refresh_pipe(ui, addr, value):
     if addr in memory.mem_alias.values():
         prpr = memory.mem_alias.keys()[memory.mem_alias.values().index(addr)]
         value_len = 0
-        print prpr
         tb = None
         if prpr[1] != '_':
             #   not interested

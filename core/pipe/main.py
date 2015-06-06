@@ -276,7 +276,7 @@ def sim_main(sleep_fun = default_sleep, pause_fun = default_pause, update_fun = 
     cnt = 0
     #   (假装)正确运行的周期数
     currect = 233
-    while cnt < 30:
+    while cnt < 60:
         cnt = cnt + 1
         # print '------cycle\t%d!------' % cnt
         # if cnt >= currect:
@@ -387,17 +387,14 @@ def sim_main(sleep_fun = default_sleep, pause_fun = default_pause, update_fun = 
             raw_input('continue')
             return
         if stat == SADR:
-            print 'memory error!'
-            raw_input('continue')
-            return
+            print '---at cycle\t%d, memory error!---' % cnt
+            return '---at cycle\t%d, memory error!---' % cnt
         if stat == SINS:
-            print 'instruction error!'
-            raw_input('continue')
-            return
+            print '---at cycle\t%d, instruction error!---' % cnt
+            return '---at cycle\t%d, instruction error!---' % cnt
         if stat == SHLT:
-            print 'HLT encounter!'
-            raw_input('continue')
-            return
+            print '---at cycle\t%d, HLT encounter!---' % cnt
+            return '---at cycle\t%d, HLT encounter, terminated---' % cnt
         #   TODO sleep多少
         time.sleep(sleep_fun())
         while pause_fun():
@@ -406,7 +403,7 @@ def sim_main(sleep_fun = default_sleep, pause_fun = default_pause, update_fun = 
         #   TODO 是否输出（到文件）
         # if cnt >= currect:
         #     my_print(cnt)
-    return 0
+    return u'并没有执行完'
 
 #   以下是调试模块
 def my_print(cnt):

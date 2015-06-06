@@ -46,7 +46,8 @@ class Widow(QtGui.QMainWindow):
         self.update_fun = self.notify
         init()
         load_data()
-        sim_main(self.sleep_fun, self.pause_fun, self.update_fun)
+        msg = sim_main(self.sleep_fun, self.pause_fun, self.update_fun)
+        QtGui.QMessageBox.information(self, u'程序终止了', msg)
 
     def run_2_IPS(self):
         self.sleep_fun = ips2
@@ -54,7 +55,8 @@ class Widow(QtGui.QMainWindow):
         self.update_fun = self.notify
         init()
         load_data()
-        sim_main(self.sleep_fun, self.pause_fun, self.update_fun)
+        msg = sim_main(self.sleep_fun, self.pause_fun, self.update_fun)
+        QtGui.QMessageBox.information(self, u'程序终止了', msg)
 
     def run_4_IPS(self):
         self.sleep_fun = ips4
@@ -62,7 +64,8 @@ class Widow(QtGui.QMainWindow):
         self.update_fun = self.notify
         init()
         load_data()
-        sim_main(self.sleep_fun, self.pause_fun, self.update_fun)
+        msg = sim_main(self.sleep_fun, self.pause_fun, self.update_fun)
+        QtGui.QMessageBox.information(self, u'程序终止了', msg)
 
     def run_8_IPS(self):
         self.sleep_fun = ips8
@@ -70,7 +73,8 @@ class Widow(QtGui.QMainWindow):
         self.update_fun = self.notify
         init()
         load_data()
-        sim_main(self.sleep_fun, self.pause_fun, self.update_fun)
+        msg = sim_main(self.sleep_fun, self.pause_fun, self.update_fun)
+        QtGui.QMessageBox.information(self, u'程序终止了', msg)
 
     def notify(self, addr, value):
         refresh_reg(self.ui.table_register, addr, value)
