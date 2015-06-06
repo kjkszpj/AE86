@@ -1,6 +1,8 @@
 # -*- coding: cp936 -*-
 
 import sys
+import time
+import thread
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 from total import Ui_total
@@ -11,7 +13,6 @@ from component.pause_fun import *
 from component.table_register import *
 from component.table_pipe import *
 
-import sys
 sys.path.append('C:\\Users\\You\\Documents\\GitHub\\AE86\\core\\pipe')
 from main import *
 from memory import *
