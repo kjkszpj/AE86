@@ -23,9 +23,10 @@ def init_table_register(tb):
     tb.resizeColumnsToContents()
 
 def refresh_reg(tb, addr, value, color = True):
+    value = '0x%08x' % value
     for i in range(8):
         if memory.mem_alias[main.register_name[i]] == addr:
-            QtGui.QTableWidgetItem.setText(tb.item(i, 1), '0x%08x' % value)
+            QtGui.QTableWidgetItem.setText(tb.item(i, 1), value)
             if color:
                 tb.item(i, 1).setBackgroundColor(QtGui.QColor(0xFA, 0xD3, 0xD3))
                 tb.repaint()

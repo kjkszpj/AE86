@@ -399,7 +399,6 @@ def sim_main(sleep_fun = default_sleep, pause_fun = default_pause, update_fun = 
             raw_input('continue')
             return
         #   TODO sleep∂‡…Ÿ
-        print sleep_fun()
         time.sleep(sleep_fun())
         while pause_fun():
             time.sleep(0.05)
