@@ -24,6 +24,7 @@ class Widow(QtGui.QMainWindow):
         init()
         super(Widow, self).__init__()
         self.cd_paint = []
+        self.colorful = True
         self.color_interval = 0.2
         self.ui=Ui_total()
         self.ui.setupUi(self)
@@ -87,8 +88,8 @@ class Widow(QtGui.QMainWindow):
         self.run_sim()
 
     def notify(self, addr, value):
-        cd_register = refresh_reg(self.ui.table_register, addr, value)
-        cd_pipeline = refresh_pipe(self.ui, addr, value)
+        cd_register = refresh_reg(self.ui.table_register, addr, value, self.colorful)
+        cd_pipeline = refresh_pipe(self.ui, addr, value, self.colorful)
         if cd_register != None:
             func, args = cd_register
             self.cd_paint.append((func, args))
@@ -102,7 +103,11 @@ class Widow(QtGui.QMainWindow):
         self.cd_paint = []
 
     def step(self):
-        msg = self.run_thread.sim.step(self.notify, self.cd_fun)
+        self.colorful = self.run_thread.interval >= self.color_interval
+        if self.colorful:
+            msg = self.run_thread.sim.step(self.notify, self.cd_fun)
+        else:
+            msg = self.run_thread.sim.step(self.notify)
         # msg = self.run_thread.sim.step()
         if msg != None:
             QtGui.QMessageBox.information(self, u'≥Ã–Ú÷’÷π¡À', msg)
