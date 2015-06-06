@@ -9,6 +9,7 @@ from component.load_instruction import *
 from component.ips import *
 from component.pause_fun import *
 from component.table_register import *
+from component.table_pipe import *
 
 import sys
 sys.path.append('C:\\Users\\You\\Documents\\GitHub\\AE86\\core\\pipe')
@@ -42,7 +43,7 @@ class Widow(QtGui.QMainWindow):
     def run_1_IPS(self):
         self.sleep_fun = ips1
         self.pause_fun = pause_no
-        self.update_fun = self.update
+        self.update_fun = self.notify
         init()
         load_data()
         sim_main(self.sleep_fun, self.pause_fun, self.update_fun)
@@ -50,7 +51,7 @@ class Widow(QtGui.QMainWindow):
     def run_2_IPS(self):
         self.sleep_fun = ips2
         self.pause_fun = pause_no
-        self.update_fun = self.update
+        self.update_fun = self.notify
         init()
         load_data()
         sim_main(self.sleep_fun, self.pause_fun, self.update_fun)
@@ -58,7 +59,7 @@ class Widow(QtGui.QMainWindow):
     def run_4_IPS(self):
         self.sleep_fun = ips4
         self.pause_fun = pause_no
-        self.update_fun = self.update
+        self.update_fun = self.notify
         init()
         load_data()
         sim_main(self.sleep_fun, self.pause_fun, self.update_fun)
@@ -66,13 +67,14 @@ class Widow(QtGui.QMainWindow):
     def run_8_IPS(self):
         self.sleep_fun = ips8
         self.pause_fun = pause_no
-        self.update_fun = self.update
+        self.update_fun = self.notify
         init()
         load_data()
         sim_main(self.sleep_fun, self.pause_fun, self.update_fun)
 
-    def update(self, addr, value):
+    def notify(self, addr, value):
         refresh_reg(self.ui.table_register, addr, value)
+        refresh_pipe(self.ui, addr, value)
 
 
 def main():
