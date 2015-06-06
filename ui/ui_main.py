@@ -30,16 +30,23 @@ class Widow(QtGui.QMainWindow):
         init_table_register(self.ui.table_register)
         self.show()
         self.run_thread = MyThread()
+        self.run_thread.render(Simulator())
+        self.run_thread.sim.init()
 
         init()
         load_data()
         #   connect here
-        self.connect(self.ui.action_about, QtCore.SIGNAL('triggered()'), self.run_about)
         self.connect(self.ui.action_load_file, QtCore.SIGNAL('triggered()'), self.run_load_instruction)
+        self.connect(self.ui.action_about, QtCore.SIGNAL('triggered()'), self.run_about)
+
         self.connect(self.ui.action_1_IPS, QtCore.SIGNAL('triggered()'), self.run_1_IPS)
         self.connect(self.ui.action_2_IPS, QtCore.SIGNAL('triggered()'), self.run_2_IPS)
         self.connect(self.ui.action_4_IPS, QtCore.SIGNAL('triggered()'), self.run_4_IPS)
         self.connect(self.ui.action_8_IPS, QtCore.SIGNAL('triggered()'), self.run_8_IPS)
+
+        self.connect(self.ui.button_step, QtCore.SIGNAL('clicked()'), self.step)
+        self.connect(self.ui.button_pause, QtCore.SIGNAL('clicked()'), self.pause)
+        self.connect(self.ui.button_continue, QtCore.SIGNAL('clicked()'), self.run_sim)
 
         self.connect(self.run_thread, QtCore.SIGNAL('next()'), self.step)
         self.connect(self.run_thread, QtCore.SIGNAL('terminate()'), self.terminate)
@@ -51,43 +58,32 @@ class Widow(QtGui.QMainWindow):
     def run_load_instruction(self):
         load_instruction(self)
 
+    def run_sim(self):
+        self.run_thread.sim.is_terminated = False
+        self.run_thread.run()
+
     def run_1_IPS(self):
         self.run_thread.interval = 0.7 / 1
+        self.run_sim()
         # self.sleep_fun = ips1
         # self.pause_fun = pause_no
         # self.update_fun = self.notify
-        self.run_thread.run()
         # init()
         # load_data()
         # msg = sim_main(self.sleep_fun, self.pause_fun, self.update_fun, self.cd_fun)
         # QtGui.QMessageBox.information(self, u'程序终止了', msg)
 
     def run_2_IPS(self):
-        self.sleep_fun = ips2
-        self.pause_fun = pause_no
-        self.update_fun = self.notify
-        init()
-        load_data()
-        msg = sim_main(self.sleep_fun, self.pause_fun, self.update_fun, self.cd_fun)
-        QtGui.QMessageBox.information(self, u'程序终止了', msg)
+        self.run_thread.interval = 1.0 / 10
+        self.run_sim()
 
     def run_4_IPS(self):
-        self.sleep_fun = ips4
-        self.pause_fun = pause_no
-        self.update_fun = self.notify
-        init()
-        load_data()
-        msg = sim_main(self.sleep_fun, self.pause_fun, self.update_fun, self.cd_fun)
-        QtGui.QMessageBox.information(self, u'程序终止了', msg)
+        self.run_thread.interval = 1.0 / 4
+        self.run_sim()
 
     def run_8_IPS(self):
-        self.sleep_fun = ips8
-        self.pause_fun = pause_no
-        self.update_fun = self.notify
-        init()
-        load_data()
-        msg = sim_main(self.sleep_fun, self.pause_fun, self.update_fun, self.cd_fun)
-        QtGui.QMessageBox.information(self, u'程序终止了', msg)
+        self.run_thread.interval = 1.0 / 8
+        self.run_sim()
 
     def notify(self, addr, value):
         cd_register = refresh_reg(self.ui.table_register, addr, value)
@@ -105,12 +101,17 @@ class Widow(QtGui.QMainWindow):
         self.cd_paint = []
 
     def step(self):
-        msg = sim_step(self.notify, self.cd_fun)
+        msg = self.run_thread.sim.step(self.notify, self.cd_fun)
         if msg != None:
             QtGui.QMessageBox.information(self, u'程序终止了', msg)
 
+    def pause(self):
+        self.run_thread.terminate()
+        pass
+
     def terminate(self):
-        #   TODO
+        self.run_thread.terminate()
+        self.run_thread.render(Simulator())
         pass
 
 def main():

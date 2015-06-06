@@ -271,139 +271,138 @@ def default_sleep():
 def default_pause():
     return False
 
-def sim_step(update_fun = None, cd_fun = None):
-    cnt = read_reg('CYCLE') + 1
-    tf_pc = f_pc(read_reg('F_predPC'), read_reg('M_icode'), read_reg('M_valA'), read_reg('W_icode'), read_reg('W_valM'), read_reg('M_Cnd'))
-    tf_icode, tf_ifun, tf_rA, tf_rB, tf_valC, tf_valP, timem_error = decode(tf_pc)
+class Simulator():
+    def init(self):
+        #   TODO what to init?
+        self.is_terminated = True
 
-    srcA = d_srcA(read_reg('D_icode'), read_reg('D_rA'))
-    srcB = d_srcB(read_reg('D_icode'), read_reg('D_rB'))
+    def step(self, update_fun = None, cd_fun = None):
+        cnt = read_reg('CYCLE') + 1
+        tf_pc = f_pc(read_reg('F_predPC'), read_reg('M_icode'), read_reg('M_valA'), read_reg('W_icode'), read_reg('W_valM'), read_reg('M_Cnd'))
+        tf_icode, tf_ifun, tf_rA, tf_rB, tf_valC, tf_valP, timem_error = decode(tf_pc)
 
-    taluA = aluA(read_reg('E_icode'), read_reg('E_valA'), read_reg('E_valC'))
-    taluB = aluB(read_reg('E_icode'), read_reg('E_valB'))
-    te_valE, tCC = alu(taluA, taluB, alufun(read_reg('E_icode'), read_reg('E_ifun')))
-    te_Cnd = e_Cnd(read_reg('E_icode'), read_reg('E_ifun'), read_reg('CC'))
+        srcA = d_srcA(read_reg('D_icode'), read_reg('D_rA'))
+        srcB = d_srcB(read_reg('D_icode'), read_reg('D_rB'))
 
-    tm_stat = m_stat(False, read_reg('M_stat'))
-    tm_addr = mem_addr(read_reg('M_icode'), read_reg('M_valA'), read_reg('M_valE'))
-    if mem_read(read_reg('M_icode')):
-        tm_valM = dm_read(tm_addr)
-        dmem_error = tm_valM == 'mem_error'
-    else: tm_valM = 0
+        taluA = aluA(read_reg('E_icode'), read_reg('E_valA'), read_reg('E_valC'))
+        taluB = aluB(read_reg('E_icode'), read_reg('E_valB'))
+        te_valE, tCC = alu(taluA, taluB, alufun(read_reg('E_icode'), read_reg('E_ifun')))
+        te_Cnd = e_Cnd(read_reg('E_icode'), read_reg('E_ifun'), read_reg('CC'))
 
-    tvalA, tvalB = rf_read(srcA, srcB)
-    td_valA = d_valA(read_reg('D_icode'), tvalA, srcA,
-                     read_reg('D_valP'), e_dstE(read_reg('E_icode'), te_Cnd, read_reg('E_dstE')),
-                     read_reg('M_dstM'), read_reg('M_dstE'), read_reg('W_dstM'), read_reg('W_dstE'),
-                     te_valE, tm_valM, read_reg('M_valE'), read_reg('W_valM'), read_reg('W_valE'))
-    td_valB = d_valB(srcB, tvalB, e_dstE(read_reg('E_icode'), te_Cnd, read_reg('E_dstE')),
-                     read_reg('M_dstM'), read_reg('M_dstE'), read_reg('W_dstM'), read_reg('W_dstE'),
-                     te_valE, tm_valM,  read_reg('M_valE'), read_reg('W_valM'), read_reg('W_valE'))
-    #   order ok?
-    #   enough to generate stat?
-    ts_ret = processing_ret(read_reg('D_icode'), read_reg('E_icode'), read_reg('M_icode'))
-    ts_luh = load_use(read_reg('E_icode'), read_reg('E_dstM'), srcA, srcB)
-    ts_mis = mispredict(read_reg('E_icode'), te_Cnd)
-    ts_exc = exception(tm_stat, read_reg('W_stat'))
+        tm_stat = m_stat(False, read_reg('M_stat'))
+        tm_addr = mem_addr(read_reg('M_icode'), read_reg('M_valA'), read_reg('M_valE'))
+        if mem_read(read_reg('M_icode')):
+            tm_valM = dm_read(tm_addr)
+            dmem_error = tm_valM == 'mem_error'
+        else: tm_valM = 0
 
-    f_stall = F_stall(ts_ret, ts_luh, ts_mis, ts_exc)
-    f_bubble = F_bubble(ts_ret, ts_luh, ts_mis, ts_exc)
-    d_stall = D_stall(ts_ret, ts_luh, ts_mis, ts_exc)
-    d_bubble = D_bubble(ts_ret, ts_luh, ts_mis, ts_exc)
-    e_stall = E_stall(ts_ret, ts_luh, ts_mis, ts_exc)
-    e_bubble = E_bubble(ts_ret, ts_luh, ts_mis, ts_exc)
-    m_stall = M_stall(ts_ret, ts_luh, ts_mis, ts_exc)
-    m_bubble = M_bubble(ts_ret, ts_luh, ts_mis, ts_exc)
-    w_stall = W_stall(read_reg('W_stat'))
-    w_bubble = W_bubble(ts_ret, ts_luh, ts_mis, ts_exc)
+        tvalA, tvalB = rf_read(srcA, srcB)
+        td_valA = d_valA(read_reg('D_icode'), tvalA, srcA,
+                         read_reg('D_valP'), e_dstE(read_reg('E_icode'), te_Cnd, read_reg('E_dstE')),
+                         read_reg('M_dstM'), read_reg('M_dstE'), read_reg('W_dstM'), read_reg('W_dstE'),
+                         te_valE, tm_valM, read_reg('M_valE'), read_reg('W_valM'), read_reg('W_valE'))
+        td_valB = d_valB(srcB, tvalB, e_dstE(read_reg('E_icode'), te_Cnd, read_reg('E_dstE')),
+                         read_reg('M_dstM'), read_reg('M_dstE'), read_reg('W_dstM'), read_reg('W_dstE'),
+                         te_valE, tm_valM,  read_reg('M_valE'), read_reg('W_valM'), read_reg('W_valE'))
+        #   order ok?
+        #   enough to generate stat?
+        ts_ret = processing_ret(read_reg('D_icode'), read_reg('E_icode'), read_reg('M_icode'))
+        ts_luh = load_use(read_reg('E_icode'), read_reg('E_dstM'), srcA, srcB)
+        ts_mis = mispredict(read_reg('E_icode'), te_Cnd)
+        ts_exc = exception(tm_stat, read_reg('W_stat'))
 
-    #   ---FETCH connection---
-    #   用的是f_stall, f_bubble, 来看能不能更新fetch阶段的结果
+        f_stall = F_stall(ts_ret, ts_luh, ts_mis, ts_exc)
+        f_bubble = F_bubble(ts_ret, ts_luh, ts_mis, ts_exc)
+        d_stall = D_stall(ts_ret, ts_luh, ts_mis, ts_exc)
+        d_bubble = D_bubble(ts_ret, ts_luh, ts_mis, ts_exc)
+        e_stall = E_stall(ts_ret, ts_luh, ts_mis, ts_exc)
+        e_bubble = E_bubble(ts_ret, ts_luh, ts_mis, ts_exc)
+        m_stall = M_stall(ts_ret, ts_luh, ts_mis, ts_exc)
+        m_bubble = M_bubble(ts_ret, ts_luh, ts_mis, ts_exc)
+        w_stall = W_stall(read_reg('W_stat'))
+        w_bubble = W_bubble(ts_ret, ts_luh, ts_mis, ts_exc)
 
-    prepare_reg('F_predPC', f_predPC(tf_icode, tf_valC, tf_valP), f_stall, f_bubble)
+        #   ---FETCH connection---
+        #   用的是f_stall, f_bubble, 来看能不能更新fetch阶段的结果
 
-    prepare_reg('D_icode', tf_icode, d_stall, d_bubble)
-    prepare_reg('D_ifun', tf_ifun, d_stall, d_bubble)
-    prepare_reg('D_rA', tf_rA, d_stall, d_bubble)
-    prepare_reg('D_rB', tf_rB, d_stall, d_bubble)
-    prepare_reg('D_valC', tf_valC, d_stall, d_bubble)
-    prepare_reg('D_valP', tf_valP, d_stall, d_bubble)
-    prepare_reg('D_stat', f_stat(tf_icode, timem_error), d_stall, d_bubble)
+        prepare_reg('F_predPC', f_predPC(tf_icode, tf_valC, tf_valP), f_stall, f_bubble)
 
-    #   ---DECODE connection---
-    prepare_reg('E_stat', read_reg('D_stat'), e_stall, e_bubble)
-    prepare_reg('E_icode', read_reg('D_icode'), e_stall, e_bubble)
-    prepare_reg('E_ifun', read_reg('D_ifun'), e_stall, e_bubble)
-    prepare_reg('E_valC', read_reg('D_valC'), e_stall, e_bubble)
-    prepare_reg('E_dstE', d_dstE(read_reg('D_icode'), read_reg('D_rB')), e_stall, e_bubble)
-    prepare_reg('E_dstM', d_dstM(read_reg('D_icode'), read_reg('D_rA')), e_stall, e_bubble)
-    prepare_reg('E_srcA', srcA, e_stall, e_bubble)
-    prepare_reg('E_srcB', srcB, e_stall, e_bubble)
-    prepare_reg('E_valA', td_valA, e_stall, e_bubble)
-    prepare_reg('E_valB', td_valB, e_stall, e_bubble)
+        prepare_reg('D_icode', tf_icode, d_stall, d_bubble)
+        prepare_reg('D_ifun', tf_ifun, d_stall, d_bubble)
+        prepare_reg('D_rA', tf_rA, d_stall, d_bubble)
+        prepare_reg('D_rB', tf_rB, d_stall, d_bubble)
+        prepare_reg('D_valC', tf_valC, d_stall, d_bubble)
+        prepare_reg('D_valP', tf_valP, d_stall, d_bubble)
+        prepare_reg('D_stat', f_stat(tf_icode, timem_error), d_stall, d_bubble)
 
-    #   ---EXECUTE connection---
-    prepare_reg('M_stat', read_reg('E_stat'), m_stall, m_bubble)
-    prepare_reg('M_icode', read_reg('E_icode'), m_stall, m_bubble)
-    prepare_reg('M_valE', te_valE, m_stall, m_bubble)
-    prepare_reg('M_valA', read_reg('E_valA'), m_stall, m_bubble)
-    prepare_reg('M_Cnd', te_Cnd, m_stall, m_bubble)
-    prepare_reg('M_dstE', e_dstE(read_reg('E_icode'), te_Cnd, read_reg('E_dstE')), m_stall, m_bubble)
-    prepare_reg('M_dstM', read_reg('E_dstM'), m_stall, m_bubble)
-    if set_CC(read_reg('E_icode'), tm_stat, read_reg('W_stat')): prepare_reg('CC', tCC, m_stall, m_bubble)
+        #   ---DECODE connection---
+        prepare_reg('E_stat', read_reg('D_stat'), e_stall, e_bubble)
+        prepare_reg('E_icode', read_reg('D_icode'), e_stall, e_bubble)
+        prepare_reg('E_ifun', read_reg('D_ifun'), e_stall, e_bubble)
+        prepare_reg('E_valC', read_reg('D_valC'), e_stall, e_bubble)
+        prepare_reg('E_dstE', d_dstE(read_reg('D_icode'), read_reg('D_rB')), e_stall, e_bubble)
+        prepare_reg('E_dstM', d_dstM(read_reg('D_icode'), read_reg('D_rA')), e_stall, e_bubble)
+        prepare_reg('E_srcA', srcA, e_stall, e_bubble)
+        prepare_reg('E_srcB', srcB, e_stall, e_bubble)
+        prepare_reg('E_valA', td_valA, e_stall, e_bubble)
+        prepare_reg('E_valB', td_valB, e_stall, e_bubble)
 
-    #   ---MEMORY connection---
-    prepare_reg('W_stat', tm_stat, w_stall, w_bubble)
-    prepare_reg('W_icode', read_reg('M_icode'), w_stall, w_bubble)
-    prepare_reg('W_valE', read_reg('M_valE'))
-    prepare_reg('W_valM', tm_valM, w_stall, w_bubble)
-    if mem_write(read_reg('M_icode')): dm_write(tm_addr, read_reg('M_valA'), w_stall, w_bubble)
-    prepare_reg('W_dstE', read_reg('M_dstE'), w_stall, w_bubble)
-    prepare_reg('W_dstM', read_reg('M_dstM'), w_stall, w_bubble)
+        #   ---EXECUTE connection---
+        prepare_reg('M_stat', read_reg('E_stat'), m_stall, m_bubble)
+        prepare_reg('M_icode', read_reg('E_icode'), m_stall, m_bubble)
+        prepare_reg('M_valE', te_valE, m_stall, m_bubble)
+        prepare_reg('M_valA', read_reg('E_valA'), m_stall, m_bubble)
+        prepare_reg('M_Cnd', te_Cnd, m_stall, m_bubble)
+        prepare_reg('M_dstE', e_dstE(read_reg('E_icode'), te_Cnd, read_reg('E_dstE')), m_stall, m_bubble)
+        prepare_reg('M_dstM', read_reg('E_dstM'), m_stall, m_bubble)
+        if set_CC(read_reg('E_icode'), tm_stat, read_reg('W_stat')): prepare_reg('CC', tCC, m_stall, m_bubble)
 
-    #   ---WRITE BACK connection---
-    rf_write(read_reg('W_dstM'), read_reg('W_valM'), read_reg('W_dstE'), read_reg('W_valE'), w_stall, w_bubble)
-    prepare_reg('CYCLE', cnt)
+        #   ---MEMORY connection---
+        prepare_reg('W_stat', tm_stat, w_stall, w_bubble)
+        prepare_reg('W_icode', read_reg('M_icode'), w_stall, w_bubble)
+        prepare_reg('W_valE', read_reg('M_valE'))
+        prepare_reg('W_valM', tm_valM, w_stall, w_bubble)
+        if mem_write(read_reg('M_icode')): dm_write(tm_addr, read_reg('M_valA'), w_stall, w_bubble)
+        prepare_reg('W_dstE', read_reg('M_dstE'), w_stall, w_bubble)
+        prepare_reg('W_dstM', read_reg('M_dstM'), w_stall, w_bubble)
 
-    #   commit changes
-    commit(update_fun)
-    if cd_fun != None: cd_fun()
-    #   output status
-    stat = read_reg('W_stat')
-    if stat not in [SAOK, SADR, SINS, SHLT]:
-        print 'status code error!'
-        raw_input('continue')
-        return
-    if stat == SADR:
-        print '---at cycle\t%d, memory error!---' % cnt
-        return '---at cycle\t%d, memory error!---' % cnt
-    if stat == SINS:
-        print '---at cycle\t%d, instruction error!---' % cnt
-        return '---at cycle\t%d, instruction error!---' % cnt
-    if stat == SHLT:
-        print '---at cycle\t%d, HLT encounter!---' % cnt
-        return '---at cycle\t%d, HLT encounter, terminated---' % cnt
-    return None
+        #   ---WRITE BACK connection---
+        rf_write(read_reg('W_dstM'), read_reg('W_valM'), read_reg('W_dstE'), read_reg('W_valE'), w_stall, w_bubble)
+        prepare_reg('CYCLE', cnt)
 
-def sim_main(sleep_fun = default_sleep, pause_fun = default_pause, update_fun = None, cd_fun = None):
-    #   TODO 什么时候运行
-    cnt = 0
-    #   (假装)正确运行的周期数
-    currect = 233
-    while cnt < 60:
-        cnt = cnt + 1
-        result = sim_step(update_fun, cd_fun)
-        if type(result) == type('gogo'):
-            return result
-        #   TODO sleep多少
-        time.sleep(sleep_fun())
-        while pause_fun():
-            time.sleep(0.05)
-        #   TODO n = raw_input()
-        #   TODO 是否输出（到文件）
-        # if cnt >= currect:
-        #     my_print(cnt)
-    return u'并没有执行完'
+        #   commit changes
+        commit(update_fun)
+        if cd_fun != None: cd_fun()
+        #   output status
+        stat = read_reg('W_stat')
+        if stat not in [SAOK, SADR, SINS, SHLT]:
+            raw_input('continue')
+            self.is_terminated = True
+            return 'status code error!'
+        elif stat == SADR:
+            self.is_terminated = True
+            return '---at cycle\t%d, memory error!---' % cnt
+        elif stat == SINS:
+            self.is_terminated = True
+            return '---at cycle\t%d, instruction error!---' % cnt
+        elif stat == SHLT:
+            self.is_terminated = True
+            return '---at cycle\t%d, HLT encounter, terminated---' % cnt
+        return None
+
+    def run_all(self, sleep_fun = default_sleep, pause_fun = default_pause, update_fun = None, cd_fun = None):
+        while True:
+            result = self.step(update_fun, cd_fun)
+            if type(result) == str: return result
+            #   TODO sleep多少
+            # time.sleep(sleep_fun())
+            # while pause_fun():
+            #     time.sleep(0.05)
+            #   TODO n = raw_input()
+            #   TODO 是否输出（到文件）
+            # if cnt >= currect:
+            #     my_print(cnt)
+        return u'并没有执行完'
 
 #   以下是调试模块
 def my_print(cnt):

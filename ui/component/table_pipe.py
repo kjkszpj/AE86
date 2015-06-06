@@ -84,7 +84,6 @@ def refresh_pipe(ui, addr, value, color = True):
         pass
 
 def cool_down_pipe(args):
-    print args
     args[0].setHtml(_translate("total", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
                                    "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
                                    "p, li { white-space: pre-wrap; }\n"
