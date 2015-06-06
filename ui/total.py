@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'total.ui'
 #
-# Created: Sat Jun 06 09:08:54 2015
+# Created: Sat Jun 06 09:31:42 2015
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -39,51 +39,51 @@ class Ui_total(object):
         self.stage_write_back = QtGui.QGridLayout()
         self.stage_write_back.setContentsMargins(0, -1, -1, -1)
         self.stage_write_back.setObjectName(_fromUtf8("stage_write_back"))
-        self.text_D_valC_7 = QtGui.QTextBrowser(self.verticalLayoutWidget)
+        self.text_W_valE = QtGui.QTextBrowser(self.verticalLayoutWidget)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Ignored, QtGui.QSizePolicy.Ignored)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.text_D_valC_7.sizePolicy().hasHeightForWidth())
-        self.text_D_valC_7.setSizePolicy(sizePolicy)
-        self.text_D_valC_7.setMaximumSize(QtCore.QSize(110, 16777215))
+        sizePolicy.setHeightForWidth(self.text_W_valE.sizePolicy().hasHeightForWidth())
+        self.text_W_valE.setSizePolicy(sizePolicy)
+        self.text_W_valE.setMaximumSize(QtCore.QSize(110, 16777215))
         font = QtGui.QFont()
         font.setFamily(_fromUtf8("Courier New"))
         font.setUnderline(False)
-        self.text_D_valC_7.setFont(font)
-        self.text_D_valC_7.setObjectName(_fromUtf8("text_D_valC_7"))
-        self.stage_write_back.addWidget(self.text_D_valC_7, 0, 4, 1, 1)
-        self.text_D_icode_ifun_8 = QtGui.QTextBrowser(self.verticalLayoutWidget)
+        self.text_W_valE.setFont(font)
+        self.text_W_valE.setObjectName(_fromUtf8("text_W_valE"))
+        self.stage_write_back.addWidget(self.text_W_valE, 0, 4, 1, 1)
+        self.text_W_dstE_dstM = QtGui.QTextBrowser(self.verticalLayoutWidget)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Ignored, QtGui.QSizePolicy.Ignored)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.text_D_icode_ifun_8.sizePolicy().hasHeightForWidth())
-        self.text_D_icode_ifun_8.setSizePolicy(sizePolicy)
-        self.text_D_icode_ifun_8.setMaximumSize(QtCore.QSize(65, 16777215))
+        sizePolicy.setHeightForWidth(self.text_W_dstE_dstM.sizePolicy().hasHeightForWidth())
+        self.text_W_dstE_dstM.setSizePolicy(sizePolicy)
+        self.text_W_dstE_dstM.setMaximumSize(QtCore.QSize(65, 16777215))
         font = QtGui.QFont()
         font.setFamily(_fromUtf8("Courier New"))
         font.setUnderline(False)
-        self.text_D_icode_ifun_8.setFont(font)
-        self.text_D_icode_ifun_8.setObjectName(_fromUtf8("text_D_icode_ifun_8"))
-        self.stage_write_back.addWidget(self.text_D_icode_ifun_8, 0, 7, 1, 1)
+        self.text_W_dstE_dstM.setFont(font)
+        self.text_W_dstE_dstM.setObjectName(_fromUtf8("text_W_dstE_dstM"))
+        self.stage_write_back.addWidget(self.text_W_dstE_dstM, 0, 7, 1, 1)
         spacerItem = QtGui.QSpacerItem(25, 20, QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Minimum)
         self.stage_write_back.addItem(spacerItem, 0, 6, 1, 1)
         spacerItem1 = QtGui.QSpacerItem(60, 20, QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Minimum)
         self.stage_write_back.addItem(spacerItem1, 0, 1, 1, 1)
         spacerItem2 = QtGui.QSpacerItem(15, 20, QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Minimum)
         self.stage_write_back.addItem(spacerItem2, 0, 3, 1, 1)
-        self.text_D_icode_ifun_6 = QtGui.QTextBrowser(self.verticalLayoutWidget)
+        self.text_W_icode = QtGui.QTextBrowser(self.verticalLayoutWidget)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Ignored, QtGui.QSizePolicy.Ignored)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.text_D_icode_ifun_6.sizePolicy().hasHeightForWidth())
-        self.text_D_icode_ifun_6.setSizePolicy(sizePolicy)
-        self.text_D_icode_ifun_6.setMaximumSize(QtCore.QSize(50, 16777215))
+        sizePolicy.setHeightForWidth(self.text_W_icode.sizePolicy().hasHeightForWidth())
+        self.text_W_icode.setSizePolicy(sizePolicy)
+        self.text_W_icode.setMaximumSize(QtCore.QSize(50, 16777215))
         font = QtGui.QFont()
         font.setFamily(_fromUtf8("Courier New"))
         font.setUnderline(False)
-        self.text_D_icode_ifun_6.setFont(font)
-        self.text_D_icode_ifun_6.setObjectName(_fromUtf8("text_D_icode_ifun_6"))
-        self.stage_write_back.addWidget(self.text_D_icode_ifun_6, 0, 2, 1, 1)
+        self.text_W_icode.setFont(font)
+        self.text_W_icode.setObjectName(_fromUtf8("text_W_icode"))
+        self.stage_write_back.addWidget(self.text_W_icode, 0, 2, 1, 1)
         self.label_decode_2 = QtGui.QLabel(self.verticalLayoutWidget)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
@@ -97,77 +97,77 @@ class Ui_total(object):
         self.label_decode_2.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
         self.label_decode_2.setObjectName(_fromUtf8("label_decode_2"))
         self.stage_write_back.addWidget(self.label_decode_2, 0, 0, 1, 1)
-        self.text_D_valC_8 = QtGui.QTextBrowser(self.verticalLayoutWidget)
+        self.text_W_valM = QtGui.QTextBrowser(self.verticalLayoutWidget)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Ignored, QtGui.QSizePolicy.Ignored)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.text_D_valC_8.sizePolicy().hasHeightForWidth())
-        self.text_D_valC_8.setSizePolicy(sizePolicy)
-        self.text_D_valC_8.setMaximumSize(QtCore.QSize(110, 16777215))
+        sizePolicy.setHeightForWidth(self.text_W_valM.sizePolicy().hasHeightForWidth())
+        self.text_W_valM.setSizePolicy(sizePolicy)
+        self.text_W_valM.setMaximumSize(QtCore.QSize(110, 16777215))
         font = QtGui.QFont()
         font.setFamily(_fromUtf8("Courier New"))
         font.setUnderline(False)
-        self.text_D_valC_8.setFont(font)
-        self.text_D_valC_8.setObjectName(_fromUtf8("text_D_valC_8"))
-        self.stage_write_back.addWidget(self.text_D_valC_8, 0, 5, 1, 1)
+        self.text_W_valM.setFont(font)
+        self.text_W_valM.setObjectName(_fromUtf8("text_W_valM"))
+        self.stage_write_back.addWidget(self.text_W_valM, 0, 5, 1, 1)
         self.layout_pipeline.addLayout(self.stage_write_back)
         self.stage_memory = QtGui.QGridLayout()
         self.stage_memory.setContentsMargins(0, -1, -1, -1)
         self.stage_memory.setObjectName(_fromUtf8("stage_memory"))
-        self.text_D_icode_ifun_5 = QtGui.QTextBrowser(self.verticalLayoutWidget)
+        self.text_M_icode_Cnd = QtGui.QTextBrowser(self.verticalLayoutWidget)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Ignored, QtGui.QSizePolicy.Ignored)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.text_D_icode_ifun_5.sizePolicy().hasHeightForWidth())
-        self.text_D_icode_ifun_5.setSizePolicy(sizePolicy)
-        self.text_D_icode_ifun_5.setMaximumSize(QtCore.QSize(64, 16777215))
+        sizePolicy.setHeightForWidth(self.text_M_icode_Cnd.sizePolicy().hasHeightForWidth())
+        self.text_M_icode_Cnd.setSizePolicy(sizePolicy)
+        self.text_M_icode_Cnd.setMaximumSize(QtCore.QSize(64, 16777215))
         font = QtGui.QFont()
         font.setFamily(_fromUtf8("Courier New"))
         font.setUnderline(False)
-        self.text_D_icode_ifun_5.setFont(font)
-        self.text_D_icode_ifun_5.setObjectName(_fromUtf8("text_D_icode_ifun_5"))
-        self.stage_memory.addWidget(self.text_D_icode_ifun_5, 0, 2, 1, 1)
+        self.text_M_icode_Cnd.setFont(font)
+        self.text_M_icode_Cnd.setObjectName(_fromUtf8("text_M_icode_Cnd"))
+        self.stage_memory.addWidget(self.text_M_icode_Cnd, 0, 2, 1, 1)
         spacerItem3 = QtGui.QSpacerItem(59, 20, QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Minimum)
         self.stage_memory.addItem(spacerItem3, 0, 1, 1, 1)
-        self.text_D_valC_5 = QtGui.QTextBrowser(self.verticalLayoutWidget)
+        self.text_M_valE = QtGui.QTextBrowser(self.verticalLayoutWidget)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Ignored, QtGui.QSizePolicy.Ignored)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.text_D_valC_5.sizePolicy().hasHeightForWidth())
-        self.text_D_valC_5.setSizePolicy(sizePolicy)
-        self.text_D_valC_5.setMaximumSize(QtCore.QSize(110, 16777215))
+        sizePolicy.setHeightForWidth(self.text_M_valE.sizePolicy().hasHeightForWidth())
+        self.text_M_valE.setSizePolicy(sizePolicy)
+        self.text_M_valE.setMaximumSize(QtCore.QSize(110, 16777215))
         font = QtGui.QFont()
         font.setFamily(_fromUtf8("Courier New"))
         font.setUnderline(False)
-        self.text_D_valC_5.setFont(font)
-        self.text_D_valC_5.setObjectName(_fromUtf8("text_D_valC_5"))
-        self.stage_memory.addWidget(self.text_D_valC_5, 0, 3, 1, 1)
-        self.text_D_valC_6 = QtGui.QTextBrowser(self.verticalLayoutWidget)
+        self.text_M_valE.setFont(font)
+        self.text_M_valE.setObjectName(_fromUtf8("text_M_valE"))
+        self.stage_memory.addWidget(self.text_M_valE, 0, 3, 1, 1)
+        self.text_M_valA = QtGui.QTextBrowser(self.verticalLayoutWidget)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Ignored, QtGui.QSizePolicy.Ignored)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.text_D_valC_6.sizePolicy().hasHeightForWidth())
-        self.text_D_valC_6.setSizePolicy(sizePolicy)
-        self.text_D_valC_6.setMaximumSize(QtCore.QSize(110, 16777215))
+        sizePolicy.setHeightForWidth(self.text_M_valA.sizePolicy().hasHeightForWidth())
+        self.text_M_valA.setSizePolicy(sizePolicy)
+        self.text_M_valA.setMaximumSize(QtCore.QSize(110, 16777215))
         font = QtGui.QFont()
         font.setFamily(_fromUtf8("Courier New"))
         font.setUnderline(False)
-        self.text_D_valC_6.setFont(font)
-        self.text_D_valC_6.setObjectName(_fromUtf8("text_D_valC_6"))
-        self.stage_memory.addWidget(self.text_D_valC_6, 0, 4, 1, 1)
-        self.text_D_icode_ifun_7 = QtGui.QTextBrowser(self.verticalLayoutWidget)
+        self.text_M_valA.setFont(font)
+        self.text_M_valA.setObjectName(_fromUtf8("text_M_valA"))
+        self.stage_memory.addWidget(self.text_M_valA, 0, 4, 1, 1)
+        self.text_M_dstE_dstM = QtGui.QTextBrowser(self.verticalLayoutWidget)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Ignored, QtGui.QSizePolicy.Ignored)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.text_D_icode_ifun_7.sizePolicy().hasHeightForWidth())
-        self.text_D_icode_ifun_7.setSizePolicy(sizePolicy)
-        self.text_D_icode_ifun_7.setMaximumSize(QtCore.QSize(65, 16777215))
+        sizePolicy.setHeightForWidth(self.text_M_dstE_dstM.sizePolicy().hasHeightForWidth())
+        self.text_M_dstE_dstM.setSizePolicy(sizePolicy)
+        self.text_M_dstE_dstM.setMaximumSize(QtCore.QSize(65, 16777215))
         font = QtGui.QFont()
         font.setFamily(_fromUtf8("Courier New"))
         font.setUnderline(False)
-        self.text_D_icode_ifun_7.setFont(font)
-        self.text_D_icode_ifun_7.setObjectName(_fromUtf8("text_D_icode_ifun_7"))
-        self.stage_memory.addWidget(self.text_D_icode_ifun_7, 0, 6, 1, 1)
+        self.text_M_dstE_dstM.setFont(font)
+        self.text_M_dstE_dstM.setObjectName(_fromUtf8("text_M_dstE_dstM"))
+        self.stage_memory.addWidget(self.text_M_dstE_dstM, 0, 6, 1, 1)
         self.label_decode_4 = QtGui.QLabel(self.verticalLayoutWidget)
         self.label_decode_4.setMaximumSize(QtCore.QSize(73, 16777215))
         font = QtGui.QFont()
@@ -195,84 +195,84 @@ class Ui_total(object):
         self.label_decode_3.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
         self.label_decode_3.setObjectName(_fromUtf8("label_decode_3"))
         self.stage_execute.addWidget(self.label_decode_3, 0, 0, 1, 1)
-        self.text_D_valC_3 = QtGui.QTextBrowser(self.verticalLayoutWidget)
+        self.text_E_valA = QtGui.QTextBrowser(self.verticalLayoutWidget)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Ignored, QtGui.QSizePolicy.Ignored)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.text_D_valC_3.sizePolicy().hasHeightForWidth())
-        self.text_D_valC_3.setSizePolicy(sizePolicy)
-        self.text_D_valC_3.setMaximumSize(QtCore.QSize(110, 16777215))
+        sizePolicy.setHeightForWidth(self.text_E_valA.sizePolicy().hasHeightForWidth())
+        self.text_E_valA.setSizePolicy(sizePolicy)
+        self.text_E_valA.setMaximumSize(QtCore.QSize(110, 16777215))
         font = QtGui.QFont()
         font.setFamily(_fromUtf8("Courier New"))
         font.setUnderline(False)
-        self.text_D_valC_3.setFont(font)
-        self.text_D_valC_3.setObjectName(_fromUtf8("text_D_valC_3"))
-        self.stage_execute.addWidget(self.text_D_valC_3, 0, 3, 1, 1)
-        self.text_D_valC_4 = QtGui.QTextBrowser(self.verticalLayoutWidget)
+        self.text_E_valA.setFont(font)
+        self.text_E_valA.setObjectName(_fromUtf8("text_E_valA"))
+        self.stage_execute.addWidget(self.text_E_valA, 0, 3, 1, 1)
+        self.text_E_valB = QtGui.QTextBrowser(self.verticalLayoutWidget)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Ignored, QtGui.QSizePolicy.Ignored)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.text_D_valC_4.sizePolicy().hasHeightForWidth())
-        self.text_D_valC_4.setSizePolicy(sizePolicy)
-        self.text_D_valC_4.setMaximumSize(QtCore.QSize(110, 16777215))
+        sizePolicy.setHeightForWidth(self.text_E_valB.sizePolicy().hasHeightForWidth())
+        self.text_E_valB.setSizePolicy(sizePolicy)
+        self.text_E_valB.setMaximumSize(QtCore.QSize(110, 16777215))
         font = QtGui.QFont()
         font.setFamily(_fromUtf8("Courier New"))
         font.setUnderline(False)
-        self.text_D_valC_4.setFont(font)
-        self.text_D_valC_4.setObjectName(_fromUtf8("text_D_valC_4"))
-        self.stage_execute.addWidget(self.text_D_valC_4, 0, 4, 1, 1)
-        self.text_D_valC_2 = QtGui.QTextBrowser(self.verticalLayoutWidget)
+        self.text_E_valB.setFont(font)
+        self.text_E_valB.setObjectName(_fromUtf8("text_E_valB"))
+        self.stage_execute.addWidget(self.text_E_valB, 0, 4, 1, 1)
+        self.text_E_valC = QtGui.QTextBrowser(self.verticalLayoutWidget)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Ignored, QtGui.QSizePolicy.Ignored)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.text_D_valC_2.sizePolicy().hasHeightForWidth())
-        self.text_D_valC_2.setSizePolicy(sizePolicy)
-        self.text_D_valC_2.setMaximumSize(QtCore.QSize(110, 16777215))
+        sizePolicy.setHeightForWidth(self.text_E_valC.sizePolicy().hasHeightForWidth())
+        self.text_E_valC.setSizePolicy(sizePolicy)
+        self.text_E_valC.setMaximumSize(QtCore.QSize(110, 16777215))
         font = QtGui.QFont()
         font.setFamily(_fromUtf8("Courier New"))
         font.setUnderline(False)
-        self.text_D_valC_2.setFont(font)
-        self.text_D_valC_2.setObjectName(_fromUtf8("text_D_valC_2"))
-        self.stage_execute.addWidget(self.text_D_valC_2, 0, 2, 1, 1)
-        self.text_D_icode_ifun_2 = QtGui.QTextBrowser(self.verticalLayoutWidget)
+        self.text_E_valC.setFont(font)
+        self.text_E_valC.setObjectName(_fromUtf8("text_E_valC"))
+        self.stage_execute.addWidget(self.text_E_valC, 0, 2, 1, 1)
+        self.text_E_icode_ifun = QtGui.QTextBrowser(self.verticalLayoutWidget)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Ignored, QtGui.QSizePolicy.Ignored)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.text_D_icode_ifun_2.sizePolicy().hasHeightForWidth())
-        self.text_D_icode_ifun_2.setSizePolicy(sizePolicy)
-        self.text_D_icode_ifun_2.setMaximumSize(QtCore.QSize(70, 16777215))
+        sizePolicy.setHeightForWidth(self.text_E_icode_ifun.sizePolicy().hasHeightForWidth())
+        self.text_E_icode_ifun.setSizePolicy(sizePolicy)
+        self.text_E_icode_ifun.setMaximumSize(QtCore.QSize(70, 16777215))
         font = QtGui.QFont()
         font.setFamily(_fromUtf8("Courier New"))
         font.setUnderline(False)
-        self.text_D_icode_ifun_2.setFont(font)
-        self.text_D_icode_ifun_2.setObjectName(_fromUtf8("text_D_icode_ifun_2"))
-        self.stage_execute.addWidget(self.text_D_icode_ifun_2, 0, 1, 1, 1)
-        self.text_D_icode_ifun_4 = QtGui.QTextBrowser(self.verticalLayoutWidget)
+        self.text_E_icode_ifun.setFont(font)
+        self.text_E_icode_ifun.setObjectName(_fromUtf8("text_E_icode_ifun"))
+        self.stage_execute.addWidget(self.text_E_icode_ifun, 0, 1, 1, 1)
+        self.text_E_srcA_srcB = QtGui.QTextBrowser(self.verticalLayoutWidget)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Ignored, QtGui.QSizePolicy.Ignored)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.text_D_icode_ifun_4.sizePolicy().hasHeightForWidth())
-        self.text_D_icode_ifun_4.setSizePolicy(sizePolicy)
-        self.text_D_icode_ifun_4.setMaximumSize(QtCore.QSize(65, 16777215))
+        sizePolicy.setHeightForWidth(self.text_E_srcA_srcB.sizePolicy().hasHeightForWidth())
+        self.text_E_srcA_srcB.setSizePolicy(sizePolicy)
+        self.text_E_srcA_srcB.setMaximumSize(QtCore.QSize(65, 16777215))
         font = QtGui.QFont()
         font.setFamily(_fromUtf8("Courier New"))
         font.setUnderline(False)
-        self.text_D_icode_ifun_4.setFont(font)
-        self.text_D_icode_ifun_4.setObjectName(_fromUtf8("text_D_icode_ifun_4"))
-        self.stage_execute.addWidget(self.text_D_icode_ifun_4, 0, 6, 1, 1)
-        self.text_D_icode_ifun_3 = QtGui.QTextBrowser(self.verticalLayoutWidget)
+        self.text_E_srcA_srcB.setFont(font)
+        self.text_E_srcA_srcB.setObjectName(_fromUtf8("text_E_srcA_srcB"))
+        self.stage_execute.addWidget(self.text_E_srcA_srcB, 0, 6, 1, 1)
+        self.text_E_dstE_dstM = QtGui.QTextBrowser(self.verticalLayoutWidget)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Ignored, QtGui.QSizePolicy.Ignored)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.text_D_icode_ifun_3.sizePolicy().hasHeightForWidth())
-        self.text_D_icode_ifun_3.setSizePolicy(sizePolicy)
-        self.text_D_icode_ifun_3.setMaximumSize(QtCore.QSize(65, 16777215))
+        sizePolicy.setHeightForWidth(self.text_E_dstE_dstM.sizePolicy().hasHeightForWidth())
+        self.text_E_dstE_dstM.setSizePolicy(sizePolicy)
+        self.text_E_dstE_dstM.setMaximumSize(QtCore.QSize(65, 16777215))
         font = QtGui.QFont()
         font.setFamily(_fromUtf8("Courier New"))
         font.setUnderline(False)
-        self.text_D_icode_ifun_3.setFont(font)
-        self.text_D_icode_ifun_3.setObjectName(_fromUtf8("text_D_icode_ifun_3"))
-        self.stage_execute.addWidget(self.text_D_icode_ifun_3, 0, 5, 1, 1)
+        self.text_E_dstE_dstM.setFont(font)
+        self.text_E_dstE_dstM.setObjectName(_fromUtf8("text_E_dstE_dstM"))
+        self.stage_execute.addWidget(self.text_E_dstE_dstM, 0, 5, 1, 1)
         self.layout_pipeline.addLayout(self.stage_execute)
         self.stage_decode = QtGui.QGridLayout()
         self.stage_decode.setContentsMargins(0, -1, -1, -1)
@@ -357,18 +357,18 @@ class Ui_total(object):
         self.label_fetch.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
         self.label_fetch.setObjectName(_fromUtf8("label_fetch"))
         self.stage_fetch.addWidget(self.label_fetch, 0, 1, 1, 1)
-        self.textBrowser = QtGui.QTextBrowser(self.verticalLayoutWidget)
+        self.text_F_predPC = QtGui.QTextBrowser(self.verticalLayoutWidget)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Ignored, QtGui.QSizePolicy.Ignored)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.textBrowser.sizePolicy().hasHeightForWidth())
-        self.textBrowser.setSizePolicy(sizePolicy)
+        sizePolicy.setHeightForWidth(self.text_F_predPC.sizePolicy().hasHeightForWidth())
+        self.text_F_predPC.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setFamily(_fromUtf8("Courier New"))
         font.setUnderline(False)
-        self.textBrowser.setFont(font)
-        self.textBrowser.setObjectName(_fromUtf8("textBrowser"))
-        self.stage_fetch.addWidget(self.textBrowser, 0, 3, 1, 1)
+        self.text_F_predPC.setFont(font)
+        self.text_F_predPC.setObjectName(_fromUtf8("text_F_predPC"))
+        self.stage_fetch.addWidget(self.text_F_predPC, 0, 3, 1, 1)
         self.layout_pipeline.addLayout(self.stage_fetch)
         self.gridLayoutWidget = QtGui.QWidget(self.centralWidget)
         self.gridLayoutWidget.setGeometry(QtCore.QRect(600, 370, 381, 151))
@@ -568,50 +568,50 @@ class Ui_total(object):
 
     def retranslateUi(self, total):
         total.setWindowTitle(_translate("total", "total", None))
-        self.text_D_valC_7.setHtml(_translate("total", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        self.text_W_valE.setHtml(_translate("total", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'Courier New\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\';\">valE</span></p>\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\';\">0x00000000</span></p></body></html>", None))
-        self.text_D_icode_ifun_8.setHtml(_translate("total", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        self.text_W_dstE_dstM.setHtml(_translate("total", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'Courier New\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\';\">dstE:dstM</span></p>\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\';\">00</span></p></body></html>", None))
-        self.text_D_icode_ifun_6.setHtml(_translate("total", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        self.text_W_icode.setHtml(_translate("total", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'Courier New\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\';\">icode</span></p>\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\';\">0</span></p></body></html>", None))
         self.label_decode_2.setText(_translate("total", "WRITE BACK", None))
-        self.text_D_valC_8.setHtml(_translate("total", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        self.text_W_valM.setHtml(_translate("total", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'Courier New\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\';\">valM</span></p>\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\';\">0x00000000</span></p></body></html>", None))
-        self.text_D_icode_ifun_5.setHtml(_translate("total", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        self.text_M_icode_Cnd.setHtml(_translate("total", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'Courier New\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\';\">icode:Cnd</span></p>\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\';\">00</span></p></body></html>", None))
-        self.text_D_valC_5.setHtml(_translate("total", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        self.text_M_valE.setHtml(_translate("total", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'Courier New\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\';\">valE</span></p>\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\';\">0x00000000</span></p></body></html>", None))
-        self.text_D_valC_6.setHtml(_translate("total", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        self.text_M_valA.setHtml(_translate("total", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'Courier New\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\';\">valA</span></p>\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\';\">0x00000000</span></p></body></html>", None))
-        self.text_D_icode_ifun_7.setHtml(_translate("total", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        self.text_M_dstE_dstM.setHtml(_translate("total", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'Courier New\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
@@ -619,37 +619,37 @@ class Ui_total(object):
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\';\">00</span></p></body></html>", None))
         self.label_decode_4.setText(_translate("total", "MEMORY", None))
         self.label_decode_3.setText(_translate("total", "EXECUTE", None))
-        self.text_D_valC_3.setHtml(_translate("total", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        self.text_E_valA.setHtml(_translate("total", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'Courier New\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\';\">valA</span></p>\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\';\">0x00000000</span></p></body></html>", None))
-        self.text_D_valC_4.setHtml(_translate("total", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        self.text_E_valB.setHtml(_translate("total", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'Courier New\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\';\">valB</span></p>\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\';\">0x00000000</span></p></body></html>", None))
-        self.text_D_valC_2.setHtml(_translate("total", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        self.text_E_valC.setHtml(_translate("total", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'Courier New\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\';\">valC</span></p>\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\';\">0x00000000</span></p></body></html>", None))
-        self.text_D_icode_ifun_2.setHtml(_translate("total", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        self.text_E_icode_ifun.setHtml(_translate("total", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'Courier New\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\';\">icode:ifun</span></p>\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\';\">00</span></p></body></html>", None))
-        self.text_D_icode_ifun_4.setHtml(_translate("total", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        self.text_E_srcA_srcB.setHtml(_translate("total", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'Courier New\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\';\">srcA:srcB</span></p>\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\';\">00</span></p></body></html>", None))
-        self.text_D_icode_ifun_3.setHtml(_translate("total", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        self.text_E_dstE_dstM.setHtml(_translate("total", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'Courier New\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
@@ -681,7 +681,7 @@ class Ui_total(object):
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\';\">icode:ifun</span></p>\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'SimSun\';\">00</span></p></body></html>", None))
         self.label_fetch.setText(_translate("total", "FETCH", None))
-        self.textBrowser.setHtml(_translate("total", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        self.text_F_predPC.setHtml(_translate("total", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'Courier New\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
