@@ -46,13 +46,14 @@ class Widow(QtGui.QMainWindow):
         self.connect(self.ui.action_4_IPS, QtCore.SIGNAL('triggered()'), self.run_4_IPS)
         self.connect(self.ui.action_8_IPS, QtCore.SIGNAL('triggered()'), self.run_8_IPS)
 
-        self.connect(self.ui.button_step, QtCore.SIGNAL('clicked()'), self.step)
-        self.connect(self.ui.button_pause, QtCore.SIGNAL('clicked()'), self.pause)
         self.connect(self.ui.button_continue, QtCore.SIGNAL('clicked()'), self.run_sim)
+        self.connect(self.ui.button_pause, QtCore.SIGNAL('clicked()'), self.pause)
+        self.connect(self.ui.button_stop, QtCore.SIGNAL('clicked()'), self.stop)
+        self.connect(self.ui.button_step, QtCore.SIGNAL('clicked()'), self.step)
+        self.connect(self.ui.button_reset, QtCore.SIGNAL('clicked()'), self.reset)
 
         self.connect(self.run_thread, QtCore.SIGNAL('next()'), self.step)
-        self.connect(self.run_thread, QtCore.SIGNAL('terminate()'), self.terminate)
-
+        self.connect(self.run_thread, QtCore.SIGNAL('terminate()'), self.thread_terminate)
     #   about
     def run_about(self):
         AboutDialog(parent = self)
@@ -103,6 +104,7 @@ class Widow(QtGui.QMainWindow):
         self.cd_paint = []
 
     def step(self):
+        self.color_interval = self.run_thread.interval / 1.618
         self.colorful = self.run_thread.interval >= self.color_interval
         if self.colorful:
             msg = self.run_thread.sim.step(self.notify, self.cd_fun)
@@ -117,7 +119,15 @@ class Widow(QtGui.QMainWindow):
         self.run_thread.terminate()
         pass
 
-    def terminate(self):
+    def stop(self):
+        #   TODO stop
+        pass
+
+    def reset(self):
+        #   TODO reset
+        pass
+
+    def thread_terminate(self):
         self.run_thread.sim.is_terminated = True
         self.run_thread.terminate()
         pass
