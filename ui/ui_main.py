@@ -12,6 +12,7 @@ from component.ips import *
 from component.pause_fun import *
 from component.table_register import *
 from component.table_pipe import *
+from component.MyThread import *
 
 sys.path.append('C:\\Users\\You\\Documents\\GitHub\\AE86\\core\\pipe')
 from main import *
@@ -23,10 +24,15 @@ class Widow(QtGui.QMainWindow):
         init()
         super(Widow, self).__init__()
         self.cd_paint = []
+        self.color_interval = 0.2
         self.ui=Ui_total()
         self.ui.setupUi(self)
         init_table_register(self.ui.table_register)
         self.show()
+        self.run_thread = MyThread()
+
+        init()
+        load_data()
         #   connect here
         self.connect(self.ui.action_about, QtCore.SIGNAL('triggered()'), self.run_about)
         self.connect(self.ui.action_load_file, QtCore.SIGNAL('triggered()'), self.run_load_instruction)
@@ -34,6 +40,9 @@ class Widow(QtGui.QMainWindow):
         self.connect(self.ui.action_2_IPS, QtCore.SIGNAL('triggered()'), self.run_2_IPS)
         self.connect(self.ui.action_4_IPS, QtCore.SIGNAL('triggered()'), self.run_4_IPS)
         self.connect(self.ui.action_8_IPS, QtCore.SIGNAL('triggered()'), self.run_8_IPS)
+
+        self.connect(self.run_thread, QtCore.SIGNAL('next()'), self.step)
+        self.connect(self.run_thread, QtCore.SIGNAL('terminate()'), self.terminate)
 
     #   about
     def run_about(self):
@@ -43,13 +52,15 @@ class Widow(QtGui.QMainWindow):
         load_instruction(self)
 
     def run_1_IPS(self):
-        self.sleep_fun = ips1
-        self.pause_fun = pause_no
-        self.update_fun = self.notify
-        init()
-        load_data()
-        msg = sim_main(self.sleep_fun, self.pause_fun, self.update_fun, self.cd_fun)
-        QtGui.QMessageBox.information(self, u'程序终止了', msg)
+        self.run_thread.interval = 0.7 / 1
+        # self.sleep_fun = ips1
+        # self.pause_fun = pause_no
+        # self.update_fun = self.notify
+        self.run_thread.run()
+        # init()
+        # load_data()
+        # msg = sim_main(self.sleep_fun, self.pause_fun, self.update_fun, self.cd_fun)
+        # QtGui.QMessageBox.information(self, u'程序终止了', msg)
 
     def run_2_IPS(self):
         self.sleep_fun = ips2
@@ -89,10 +100,18 @@ class Widow(QtGui.QMainWindow):
             self.cd_paint.append((func, args))
 
     def cd_fun(self):
-        time.sleep(2)
-        for func, args in self.cd_paint:
-            func(args)
+        time.sleep(self.color_interval)
+        for func, args in self.cd_paint: func(args)
         self.cd_paint = []
+
+    def step(self):
+        msg = sim_step(self.notify, self.cd_fun)
+        if msg != None:
+            QtGui.QMessageBox.information(self, u'程序终止了', msg)
+
+    def terminate(self):
+        #   TODO
+        pass
 
 def main():
     app = QtGui.QApplication(sys.argv)

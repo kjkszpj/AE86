@@ -271,7 +271,7 @@ def default_sleep():
 def default_pause():
     return False
 
-def step(update_fun = None, cd_fun = None):
+def sim_step(update_fun = None, cd_fun = None):
     cnt = read_reg('CYCLE') + 1
     tf_pc = f_pc(read_reg('F_predPC'), read_reg('M_icode'), read_reg('M_valA'), read_reg('W_icode'), read_reg('W_valM'), read_reg('M_Cnd'))
     tf_icode, tf_ifun, tf_rA, tf_rB, tf_valC, tf_valP, timem_error = decode(tf_pc)
@@ -383,6 +383,7 @@ def step(update_fun = None, cd_fun = None):
     if stat == SHLT:
         print '---at cycle\t%d, HLT encounter!---' % cnt
         return '---at cycle\t%d, HLT encounter, terminated---' % cnt
+    return None
 
 def sim_main(sleep_fun = default_sleep, pause_fun = default_pause, update_fun = None, cd_fun = None):
     #   TODO 什么时候运行
@@ -391,7 +392,7 @@ def sim_main(sleep_fun = default_sleep, pause_fun = default_pause, update_fun = 
     currect = 233
     while cnt < 60:
         cnt = cnt + 1
-        result = step(update_fun, cd_fun)
+        result = sim_step(update_fun, cd_fun)
         if type(result) == type('gogo'):
             return result
         #   TODO sleep多少
