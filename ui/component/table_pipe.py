@@ -3,6 +3,14 @@ from PyQt4 import QtCore
 import memory
 from memory import read_reg
 
+try:
+    _encoding = QtGui.QApplication.UnicodeUTF8
+    def _translate(context, text, disambig):
+        return QtGui.QApplication.translate(context, text, disambig, _encoding)
+except AttributeError:
+    def _translate(context, text, disambig):
+        return QtGui.QApplication.translate(context, text, disambig)
+
 def combine(name1, name2):
     return (read_reg(name1) << 4) + read_reg(name2)
 
@@ -58,10 +66,17 @@ def refresh_pipe(ui, addr, value):
         if tb != None:
             if value_len == 1: value = '%01x' % value
             elif value_len == 2: value = '%02x' % value
-            elif value_len == 4: value = '0x%04x' % value
-            elif value_len == 8: value = '0x%08x' % value
-            value = value.upper()
+            elif value_len == 4: value = '0x' + ('%04x' % value).upper()
+            elif value_len == 8: value = '0x' + ('%08x' % value).upper()
             QtGui.QTextBrowser.setText(tb, head + '\n' + value)
+            # what the html
+            tb.setHtml(_translate("total", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:\'Courier New\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'courier\';\">%s</span></p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'courier\';\">%s</span></p></body></html>" % (head, value), None))
+            #   color
             tb.repaint()
     else:
         pass
