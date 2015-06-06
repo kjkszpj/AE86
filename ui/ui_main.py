@@ -66,7 +66,7 @@ class Widow(QtGui.QMainWindow):
         self.run_thread.start()
 
     def run_1_IPS(self):
-        self.run_thread.interval = 0.7 / 1
+        self.run_thread.interval = 1 / 1
         self.run_sim()
         # self.sleep_fun = ips1
         # self.pause_fun = pause_no
@@ -105,7 +105,8 @@ class Widow(QtGui.QMainWindow):
 
     def step(self):
         self.color_interval = self.run_thread.interval / 1.618
-        self.colorful = self.run_thread.interval >= self.color_interval
+        self.colorful = self.color_interval >= 0.2
+        print self.colorful
         if self.colorful:
             msg = self.run_thread.sim.step(self.notify, self.cd_fun)
         else:
