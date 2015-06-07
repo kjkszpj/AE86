@@ -36,7 +36,7 @@ class Widow(QtGui.QMainWindow):
         self.sim.init()
         self.sim.load_data()
         self.run_thread.render(self.sim)
-        self.reset()
+        # self.reset()
 
         #   connect here
         self.connect(self.ui.action_load_file, QtCore.SIGNAL('triggered()'), self.run_load_instruction)
