@@ -11,13 +11,14 @@ def init_table_register(tb):
     global treg
     tb.resizeRowsToContents()
     tb.resizeColumnsToContents()
-    tb.verticalHeader().setVisible(False)
     for i in range(8):
         item = QtGui.QTableWidgetItem(main.register_name[i])
         item.setFlags(QtCore.Qt.ItemIsEnabled)
         item.setTextAlignment(QtCore.Qt.AlignCenter)
         tb.setItem(i, 0, item)
-        item = QtGui.QTableWidgetItem('0x%08x' % memory.mem[memory.mem_alias[main.register_name[i]]])
+        value = '%08x' % memory.mem[memory.mem_alias[main.register_name[i]]]
+        value = '0x' + value.upper()
+        item = QtGui.QTableWidgetItem(value)
         item.setFlags(QtCore.Qt.ItemIsEnabled)
         tb.setItem(i, 1, item)
     tb.resizeRowsToContents()
@@ -25,7 +26,8 @@ def init_table_register(tb):
 
 
 def refresh_reg(tb, addr, value, color = True):
-    value = '0x%08x' % value
+    value = '%08x' % value
+    value = '0x' + value.upper()
     for i in range(8):
         if memory.mem_alias[main.register_name[i]] == addr:
             QtGui.QTableWidgetItem.setText(tb.item(i, 1), value)
@@ -37,5 +39,5 @@ def refresh_reg(tb, addr, value, color = True):
 
 
 def cool_down_reg(args):
-                args[0].item(args[1], args[2]).setBackgroundColor(QtGui.QColor(0xFA, 0xFF, 0xFF))
-                args[0].repaint()
+    args[0].item(args[1], args[2]).setBackgroundColor(QtGui.QColor(0xFA, 0xFF, 0xFF))
+    args[0].repaint()

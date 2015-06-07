@@ -30,6 +30,10 @@ class Widow(QtGui.QMainWindow):
         self.ui=Ui_total()
         self.ui.setupUi(self)
         init_table_register(self.ui.table_register)
+
+        self.ui.table_memory_callee.resizeRowsToContents()
+        self.ui.table_memory_callee.resizeColumnsToContents()
+
         self.show()
         self.run_thread = MyThread()
 
