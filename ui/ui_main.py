@@ -124,6 +124,9 @@ class Widow(QtGui.QMainWindow):
         if cd_pipeline != None:
             func, args = cd_pipeline
             self.cd_paint.append((func, args))
+        if cd_stack_frame != None:
+            func, args = cd_stack_frame
+            self.cd_paint.append((func, args))
 
     def cd_fun(self):
         time.sleep(self.color_interval)

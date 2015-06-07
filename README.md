@@ -19,6 +19,7 @@
 -    并没有很好对齐
 -    stage，有颜色的框
 -    动画效果？
+-    fibo不能运行(core-bug?)
 
 PyQt
 
