@@ -12,6 +12,7 @@ from component.ips import *
 from component.pause_fun import *
 from component.table_register import *
 from component.table_pipe import *
+from component.progress import *
 from component.MyThread import *
 
 sys.path.append('C:\\Users\\You\\Documents\\GitHub\\AE86\\core\\pipe')
@@ -36,10 +37,13 @@ class Widow(QtGui.QMainWindow):
         self.sim.init()
         self.sim.load_data()
         self.run_thread.render(self.sim)
-        # self.reset()
+        sleep(0.01)
+        self.reset()
 
         #   connect here
         self.connect(self.ui.action_load_file, QtCore.SIGNAL('triggered()'), self.run_load_instruction)
+        self.connect(self.ui.action_save_progress, QtCore.SIGNAL('triggered()'), self.run_save_progress)
+        self.connect(self.ui.action_load_progress, QtCore.SIGNAL('triggered()'), self.run_load_progress)
         self.connect(self.ui.action_about, QtCore.SIGNAL('triggered()'), self.run_about)
 
         self.connect(self.ui.action_run_direct, QtCore.SIGNAL('triggered()'), self.run_direct)
@@ -62,6 +66,13 @@ class Widow(QtGui.QMainWindow):
 
     def run_load_instruction(self):
         load_instruction(self)
+
+    def run_load_progress(self):
+        load_progress(self)
+        self.refresh_all()
+
+    def run_save_progress(self):
+        save_progress(self)
 
     def run_sim(self):
         self.ui.button_continue.setEnabled(False)
@@ -88,7 +99,7 @@ class Widow(QtGui.QMainWindow):
         # QtGui.QMessageBox.information(self, u'程序终止了', msg)
 
     def run_2_IPS(self):
-        self.run_thread.interval = 1.0 / 10
+        self.run_thread.interval = 1.0 / 2
         self.run_sim()
 
     def run_4_IPS(self):
@@ -124,15 +135,6 @@ class Widow(QtGui.QMainWindow):
         self.ui.button_reset.setEnabled(True)
         self.ui.button_continue.setEnabled(True)
 
-    def thread_step(self):
-        if self.colorful:
-            msg = self.run_thread.sim.step(self.notify, self.cd_fun)
-        else:
-            msg = self.run_thread.sim.step(self.notify)
-        # msg = self.run_thread.sim.step()
-        if msg != None:
-            QtGui.QMessageBox.information(self, u'程序终止了', msg)
-
     def pause(self):
         self.thread_terminate()
         self.ui.button_pause.setEnabled(False)
@@ -158,6 +160,18 @@ class Widow(QtGui.QMainWindow):
         self.ui.button_step.setEnabled(True)
         self.ui.button_reset.setEnabled(True)
         self.ui.button_continue.setEnabled(True)
+
+    def thread_step(self):
+        self.color_interval = self.run_thread.interval / 1.618
+        self.colorful = self.color_interval >= 0.2
+        if self.colorful:
+            msg = self.run_thread.sim.step(self.notify, self.cd_fun)
+        else:
+            msg = self.run_thread.sim.step(self.notify)
+        # msg = self.run_thread.sim.step()
+        if msg != None:
+            QtGui.QMessageBox.information(self, u'程序终止了', msg)
+            self.stop()
 
     def thread_terminate(self):
         self.run_thread.sim.is_terminated = True

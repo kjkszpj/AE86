@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'total.ui'
 #
-# Created: Sat Jun 06 09:31:42 2015
+# Created: Sun Jun 07 09:56:01 2015
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -498,10 +498,10 @@ class Ui_total(object):
         self.action_load_file = QtGui.QAction(total)
         self.action_load_file.setVisible(True)
         self.action_load_file.setObjectName(_fromUtf8("action_load_file"))
-        self.action_save_process = QtGui.QAction(total)
-        self.action_save_process.setObjectName(_fromUtf8("action_save_process"))
-        self.action_load_process = QtGui.QAction(total)
-        self.action_load_process.setObjectName(_fromUtf8("action_load_process"))
+        self.action_save_progress = QtGui.QAction(total)
+        self.action_save_progress.setObjectName(_fromUtf8("action_save_progress"))
+        self.action_load_progress = QtGui.QAction(total)
+        self.action_load_progress.setObjectName(_fromUtf8("action_load_progress"))
         self.actionAbout = QtGui.QAction(total)
         self.actionAbout.setCheckable(False)
         font = QtGui.QFont()
@@ -533,9 +533,8 @@ class Ui_total(object):
         self.action.setObjectName(_fromUtf8("action"))
         self.menuMain.addAction(self.action_load_file)
         self.menuMain.addSeparator()
-        self.menuMain.addAction(self.action)
-        self.menuMain.addAction(self.action_save_process)
-        self.menuMain.addAction(self.action_load_process)
+        self.menuMain.addAction(self.action_save_progress)
+        self.menuMain.addAction(self.action_load_progress)
         self.menuMain.addSeparator()
         self.menuMain.addAction(self.action_about)
         self.menuRun.addAction(self.action_run_direct)
@@ -716,8 +715,8 @@ class Ui_total(object):
         self.action_dec2hex.setText(_translate("total", "dec2hex", None))
         self.action_7.setText(_translate("total", "保存进度", None))
         self.action_load_file.setText(_translate("total", "载入汇编文件", None))
-        self.action_save_process.setText(_translate("total", "保存进度", None))
-        self.action_load_process.setText(_translate("total", "载入进度", None))
+        self.action_save_progress.setText(_translate("total", "保存进度", None))
+        self.action_load_progress.setText(_translate("total", "载入进度", None))
         self.actionAbout.setText(_translate("total", "about", None))
         self.action_14.setText(_translate("total", "修改内存值", None))
         self.action_read_memory.setText(_translate("total", "查看内存", None))

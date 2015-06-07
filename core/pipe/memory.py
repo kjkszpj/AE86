@@ -168,7 +168,7 @@ def mem_init(instruction = '30840001000030850001000070240000000000000d000000c000
 def load_data(mem_file = '../data/runtime/mem.pk'):
     global mem
     mem = pickle.load(file(mem_file))
-    print mem
+    print mem[0:50]
 
 
 def save_data(mem_file = '../data/runtime/mem.pk'):
