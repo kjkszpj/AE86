@@ -14,17 +14,18 @@
 ......
 
 ##TODO
--    科学的memory
--    flow（FDEMW块），汇编代码展示
--    并没有很好对齐
+FDEMW块和汇编代码展示只能选一个，做完之后就开始修bug和UI。
+
+-    stausbar，cycle & condition code & instruction name
+-    UI并没有很好对齐
+-    内存监视
+-    fibo不能运行(core-bug?)
+-    按钮画好一点
+-    异常的展示
 -    stage，有颜色的框
 -    动画效果？
--    fibo不能运行(core-bug?)
-
-PyQt
-
--    怎么控制窗口，移动，显示隐藏
--    探索更多，除了文本框，菜单和按钮，还有很多元素可以用
+-    速度滑条
+-    music & sound
 
 ##Expected UI
 -    外形
