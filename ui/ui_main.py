@@ -14,6 +14,8 @@ from component.table_register import *
 from component.table_pipe import *
 from component.progress import *
 from component.MyThread import *
+from component.table_stack_frame import *
+from component.table_memory_watch import *
 
 sys.path.append('C:\\Users\\You\\Documents\\GitHub\\AE86\\core\\pipe')
 from main import *
@@ -29,10 +31,8 @@ class Widow(QtGui.QMainWindow):
         self.color_interval = 0.2
         self.ui=Ui_total()
         self.ui.setupUi(self)
+        init_stack_frame(self.ui.table_stack_frame)
         init_table_register(self.ui.table_register)
-
-        self.ui.table_memory_callee.resizeRowsToContents()
-        self.ui.table_memory_callee.resizeColumnsToContents()
 
         self.show()
         self.run_thread = MyThread()
@@ -117,6 +117,7 @@ class Widow(QtGui.QMainWindow):
     def notify(self, addr, value):
         cd_register = refresh_reg(self.ui.table_register, addr, value, self.colorful)
         cd_pipeline = refresh_pipe(self.ui, addr, value, self.colorful)
+        cd_stack_frame = refresh_stack_frame(self.ui.table_stack_frame, addr, value, self.colorful)
         if cd_register != None:
             func, args = cd_register
             self.cd_paint.append((func, args))

@@ -8,7 +8,6 @@ import memory
 
 
 def init_table_register(tb):
-    global treg
     tb.resizeRowsToContents()
     tb.resizeColumnsToContents()
     for i in range(8):
