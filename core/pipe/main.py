@@ -390,7 +390,7 @@ class Simulator():
             return '---at cycle\t%d, HLT encounter, terminated---' % cnt
         return None
 
-    def run_all(self, sleep_fun = default_sleep, pause_fun = default_pause, update_fun = None, cd_fun = None):
+    def run_all(self, update_fun = None, cd_fun = None):
         while True:
             result = self.step(update_fun, cd_fun)
             if type(result) == str: return result
@@ -403,6 +403,9 @@ class Simulator():
             # if cnt >= currect:
             #     my_print(cnt)
         return u'并没有执行完'
+
+    def load_data(self):
+        load_data()
 
 #   以下是调试模块
 def my_print(cnt):

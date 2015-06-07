@@ -31,16 +31,18 @@ class Widow(QtGui.QMainWindow):
         init_table_register(self.ui.table_register)
         self.show()
         self.run_thread = MyThread()
-        self.sim = Simulator()
-        self.run_thread.render(self.sim)
-        self.run_thread.sim.init()
 
-        init()
-        load_data()
+        self.sim = Simulator()
+        self.sim.init()
+        self.sim.load_data()
+        self.run_thread.render(self.sim)
+        self.reset()
+
         #   connect here
         self.connect(self.ui.action_load_file, QtCore.SIGNAL('triggered()'), self.run_load_instruction)
         self.connect(self.ui.action_about, QtCore.SIGNAL('triggered()'), self.run_about)
 
+        self.connect(self.ui.action_run_direct, QtCore.SIGNAL('triggered()'), self.run_direct)
         self.connect(self.ui.action_1_IPS, QtCore.SIGNAL('triggered()'), self.run_1_IPS)
         self.connect(self.ui.action_2_IPS, QtCore.SIGNAL('triggered()'), self.run_2_IPS)
         self.connect(self.ui.action_4_IPS, QtCore.SIGNAL('triggered()'), self.run_4_IPS)
@@ -49,12 +51,12 @@ class Widow(QtGui.QMainWindow):
         self.connect(self.ui.button_continue, QtCore.SIGNAL('clicked()'), self.run_sim)
         self.connect(self.ui.button_pause, QtCore.SIGNAL('clicked()'), self.pause)
         self.connect(self.ui.button_stop, QtCore.SIGNAL('clicked()'), self.stop)
-        self.connect(self.ui.button_step, QtCore.SIGNAL('clicked()'), self.step)
+        self.connect(self.ui.button_step, QtCore.SIGNAL('clicked()'), self.run_step)
         self.connect(self.ui.button_reset, QtCore.SIGNAL('clicked()'), self.reset)
 
-        self.connect(self.run_thread, QtCore.SIGNAL('next()'), self.step)
+        self.connect(self.run_thread, QtCore.SIGNAL('next()'), self.thread_step)
         self.connect(self.run_thread, QtCore.SIGNAL('terminate()'), self.thread_terminate)
-    #   about
+
     def run_about(self):
         AboutDialog(parent = self)
 
@@ -62,8 +64,17 @@ class Widow(QtGui.QMainWindow):
         load_instruction(self)
 
     def run_sim(self):
+        self.ui.button_continue.setEnabled(False)
+        self.ui.button_reset.setEnabled(False)
+        self.ui.button_step.setEnabled(False)
+        self.ui.button_pause.setEnabled(True)
+        self.ui.button_stop.setEnabled(True)
         self.run_thread.sim.is_terminated = False
         self.run_thread.start()
+
+    def run_direct(self):
+        self.run_thread.interval = 0.01
+        self.run_sim()
 
     def run_1_IPS(self):
         self.run_thread.interval = 1 / 1
@@ -103,10 +114,17 @@ class Widow(QtGui.QMainWindow):
         for func, args in self.cd_paint: func(args)
         self.cd_paint = []
 
-    def step(self):
+    def run_step(self):
         self.color_interval = self.run_thread.interval / 1.618
         self.colorful = self.color_interval >= 0.2
-        print self.colorful
+        self.thread_step()
+        self.ui.button_pause.setEnabled(True)
+        self.ui.button_step.setEnabled(True)
+        self.ui.button_stop.setEnabled(True)
+        self.ui.button_reset.setEnabled(True)
+        self.ui.button_continue.setEnabled(True)
+
+    def thread_step(self):
         if self.colorful:
             msg = self.run_thread.sim.step(self.notify, self.cd_fun)
         else:
@@ -116,22 +134,42 @@ class Widow(QtGui.QMainWindow):
             QtGui.QMessageBox.information(self, u'程序终止了', msg)
 
     def pause(self):
-        self.run_thread.sim.is_terminated = True
-        self.run_thread.terminate()
-        pass
+        self.thread_terminate()
+        self.ui.button_pause.setEnabled(False)
+        self.ui.button_step.setEnabled(True)
+        self.ui.button_stop.setEnabled(True)
+        self.ui.button_reset.setEnabled(True)
+        self.ui.button_continue.setEnabled(True)
 
     def stop(self):
-        #   TODO stop
-        pass
+        self.thread_terminate()
+        self.run_thread.sim.load_data()
+        self.ui.button_continue.setEnabled(False)
+        self.ui.button_pause.setEnabled(False)
+        self.ui.button_step.setEnabled(False)
+        self.ui.button_stop.setEnabled(False)
+        self.ui.button_reset.setEnabled(True)
 
     def reset(self):
-        #   TODO reset
-        pass
+        self.stop()
+        self.refresh_all()
+        self.ui.button_stop.setEnabled(False)
+        self.ui.button_pause.setEnabled(False)
+        self.ui.button_step.setEnabled(True)
+        self.ui.button_reset.setEnabled(True)
+        self.ui.button_continue.setEnabled(True)
 
     def thread_terminate(self):
         self.run_thread.sim.is_terminated = True
         self.run_thread.terminate()
-        pass
+
+    def refresh_all(self):
+        #   可以改进一下
+        mem_size = len(memory.mem)
+        for i in range(mem_size): self.notify(i, memory.mem[i])
+        self.cd_fun()
+
+    #   TODO status bar
 
 def main():
     app = QtGui.QApplication(sys.argv)
