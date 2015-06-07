@@ -37,6 +37,7 @@ def refresh_pipe(ui, addr, value, color = True):
         elif pr_head == 'd': head = 'dstE:dstM'; value_len = 2; value = combine(stage + '_dstE', stage + '_dstM')
         elif pr_head == 's': head = 'srcA:srcB'; value_len = 2; value = combine('E_srcA', 'E_srcB')
         elif pr_head == 'r': head = 'rA:rB'; value_len = 2; value = combine('D_rA', 'D_rB')
+        else: return None
 
         #   get textBrowser object
         #   FETCH
@@ -82,6 +83,7 @@ def refresh_pipe(ui, addr, value, color = True):
                 return (cool_down_pipe, (tb, head, value))
     else:
         pass
+        return None
 
 def cool_down_pipe(args):
     args[0].setHtml(_translate("total", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"

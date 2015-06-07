@@ -368,15 +368,22 @@ class Simulator():
 
         #   ---WRITE BACK connection---
         rf_write(read_reg('W_dstM'), read_reg('W_valM'), read_reg('W_dstE'), read_reg('W_valE'), w_stall, w_bubble)
-        prepare_reg('CYCLE', cnt)
+
+        #   instruction prepare
+        prepare_reg('F_PC', f_predPC(tf_icode, tf_valC, tf_valP), f_stall, f_bubble)
+        prepare_reg('D_PC', read_reg('F_PC'), d_stall, d_bubble)
+        prepare_reg('E_PC', read_reg('D_PC'), e_stall, e_bubble)
+        prepare_reg('M_PC', read_reg('E_PC'), m_stall, m_bubble)
+        prepare_reg('W_PC', read_reg('M_PC'), w_stall, w_bubble)
 
         #   commit changes
+        prepare_reg('CYCLE', cnt)
         commit(update_fun)
         if cd_fun != None: cd_fun()
         #   output status
         stat = read_reg('W_stat')
         if stat not in [SAOK, SADR, SINS, SHLT]:
-            raw_input('continue')
+            print stat
             self.is_terminated = True
             return 'status code error!'
         elif stat == SADR:

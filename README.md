@@ -18,6 +18,7 @@ FDEMW块和汇编代码展示只能选一个，做完之后就开始修bug和UI�
 
 -    stausbar，cycle & condition code & instruction name
 -    UI并没有很好对齐
+-    输出到文件
 -    内存监视
 -    fibo不能运行(core-bug?)
 -    按钮画好一点

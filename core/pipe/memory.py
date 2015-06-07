@@ -121,8 +121,6 @@ def write_data(addr, val, data_len = 1):
 def mem_init(instruction = '30840001000030850001000070240000000000000d000000c0000000000b000000a00000308004000000a008308214000000a028803a00000010a058204550150800000050250c00000030800000000062227374000000506100000000606030830400000060313083ffffffff60327457000000b05890', save = True):
     global mem_alias, mem, stage_list, register_default
 
-    #   TEST
-
     stage_list = {};
     #   mem
     instr_init(instruction)
@@ -138,7 +136,8 @@ def mem_init(instruction = '30840001000030850001000070240000000000000d000000c000
     M_alias = {'M_stat':26, 'M_icode':27, 'M_Cnd':28, 'M_valE':39, 'M_valA':30, 'M_dstE':31, 'M_dstM':32, 'CC':39}
     W_alias = {'W_stat':33, 'W_icode':34, 'W_valE':35, 'W_valM':36, 'W_dstE':37, 'W_dstM':38}
     circle_alias = {'CYCLE':40}
-    mem_alias = dict(register_alias.items() + F_alias.items() + D_alias.items() + E_alias.items() + M_alias.items() + W_alias.items() + circle_alias.items())
+    instruction_alias = {'F_PC':41, 'D_PC':42, 'E_PC':43, 'M_PC':44, 'W_PC':45}
+    mem_alias = dict(register_alias.items() + F_alias.items() + D_alias.items() + E_alias.items() + M_alias.items() + W_alias.items() + circle_alias.items() + instruction_alias.items())
 
     register_default = {'REAX':0, 'RECX':0, 'REDX':0, 'REBX':0, 'RESP':0, 'REBP':0, 'RESI':0, 'REDI':0}
     #   default value for pipeline-register, used for bubble
@@ -147,9 +146,11 @@ def mem_init(instruction = '30840001000030850001000070240000000000000d000000c000
     E_default = {'E_stat':1, 'E_icode':0, 'E_ifun':0, 'E_valC':0, 'E_valA':0, 'E_valB':0, 'E_dstE':0xF, 'E_dstM':0xF, 'E_srcA':0, 'E_srcB':0}
     M_default = {'M_stat':1, 'M_icode':0, 'M_Cnd':1, 'M_valE':0, 'M_valA':0, 'M_dstE':0xF, 'M_dstM':0xF, 'CC':0}
     W_default = {'W_stat':1, 'W_icode':0, 'W_valE':0, 'W_valM':0, 'W_dstE':0xF, 'W_dstM':0xF}
-    register_default = dict(register_default.items() + F_default.items() + D_default.items() + E_default.items() + M_default.items() + W_default.items())
+    cycle_default = {'CYCLE':0}
+    instruction_default = {'F_PC':0, 'D_PC':0, 'E_PC':0, 'M_PC':0, 'W_PC':0}
+    register_default = dict(register_default.items() + F_default.items() + D_default.items() + E_default.items() + M_default.items() + W_default.items() + cycle_default.items() + instruction_default.items())
     #   给寄存器分配实际内存地址
-    cnt = 0x200
+    cnt = 0x500
     for key, value in mem_alias.items():
         cnt = cnt + 1
         mem_alias[key] = cnt

@@ -16,6 +16,7 @@ from component.progress import *
 from component.MyThread import *
 from component.table_stack_frame import *
 from component.table_memory_watch import *
+from component.table_code import *
 
 sys.path.append('C:\\Users\\You\\Documents\\GitHub\\AE86\\core\\pipe')
 from main import *
@@ -31,15 +32,18 @@ class Widow(QtGui.QMainWindow):
         self.color_interval = 0.2
         self.ui=Ui_total()
         self.ui.setupUi(self)
+
         init_stack_frame(self.ui.table_stack_frame)
         init_table_register(self.ui.table_register)
 
         self.show()
         self.run_thread = MyThread()
 
+        self.inst_file = 'C:\\Users\\You\\Documents\\GitHub\\AE86\\data\\y86_code\\asum.yo'
         self.sim = Simulator()
         self.sim.init()
         self.sim.load_data()
+        self.code = init_code(self.ui.text_code, self.inst_file)
         self.run_thread.render(self.sim)
         sleep(0.01)
         self.reset()
@@ -94,13 +98,6 @@ class Widow(QtGui.QMainWindow):
     def run_1_IPS(self):
         self.run_thread.interval = 1 / 1
         self.run_sim()
-        # self.sleep_fun = ips1
-        # self.pause_fun = pause_no
-        # self.update_fun = self.notify
-        # init()
-        # load_data()
-        # msg = sim_main(self.sleep_fun, self.pause_fun, self.update_fun, self.cd_fun)
-        # QtGui.QMessageBox.information(self, u'≥Ã–Ú÷’÷π¡À', msg)
 
     def run_2_IPS(self):
         self.run_thread.interval = 1.0 / 2
@@ -118,6 +115,7 @@ class Widow(QtGui.QMainWindow):
         cd_register = refresh_reg(self.ui.table_register, addr, value, self.colorful)
         cd_pipeline = refresh_pipe(self.ui, addr, value, self.colorful)
         cd_stack_frame = refresh_stack_frame(self.ui.table_stack_frame, addr, value, self.colorful)
+        cd_code = refresh_code(self.ui.text_code, self.code, addr, value)
         if cd_register != None:
             func, args = cd_register
             self.cd_paint.append((func, args))
@@ -154,6 +152,7 @@ class Widow(QtGui.QMainWindow):
     def stop(self):
         self.thread_terminate()
         self.run_thread.sim.load_data()
+        self.code = init_code(self.ui.text_code, self.inst_file)
         self.ui.button_continue.setEnabled(False)
         self.ui.button_pause.setEnabled(False)
         self.ui.button_step.setEnabled(False)

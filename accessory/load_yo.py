@@ -18,7 +18,7 @@ def load_yo(inf_name):
             instruction[st + i] = s[1][i]
     instruction = "".join(instruction)
     mem_init(instruction)
-    print instruction
+    save_data()
 
 if __name__ == '__main__':
     load_yo('../data/y86_code/fibo.yo')

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'total.ui'
 #
-# Created: Sun Jun 07 13:14:12 2015
+# Created: Sun Jun 07 19:56:03 2015
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -370,12 +370,6 @@ class Ui_total(object):
         self.text_F_predPC.setObjectName(_fromUtf8("text_F_predPC"))
         self.stage_fetch.addWidget(self.text_F_predPC, 0, 3, 1, 1)
         self.layout_pipeline.addLayout(self.stage_fetch)
-        self.gridLayoutWidget = QtGui.QWidget(self.centralWidget)
-        self.gridLayoutWidget.setGeometry(QtCore.QRect(600, 370, 381, 151))
-        self.gridLayoutWidget.setObjectName(_fromUtf8("gridLayoutWidget"))
-        self.gridLayout_3 = QtGui.QGridLayout(self.gridLayoutWidget)
-        self.gridLayout_3.setMargin(0)
-        self.gridLayout_3.setObjectName(_fromUtf8("gridLayout_3"))
         self.groupBox = QtGui.QGroupBox(self.centralWidget)
         self.groupBox.setGeometry(QtCore.QRect(130, 300, 161, 247))
         self.groupBox.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
@@ -466,7 +460,7 @@ class Ui_total(object):
         self.table_stack_frame.horizontalHeader().setVisible(True)
         self.table_stack_frame.verticalHeader().setVisible(False)
         self.verticalLayoutWidget_2 = QtGui.QWidget(self.centralWidget)
-        self.verticalLayoutWidget_2.setGeometry(QtCore.QRect(300, 280, 160, 251))
+        self.verticalLayoutWidget_2.setGeometry(QtCore.QRect(310, 290, 160, 251))
         self.verticalLayoutWidget_2.setObjectName(_fromUtf8("verticalLayoutWidget_2"))
         self.verticalLayout_3 = QtGui.QVBoxLayout(self.verticalLayoutWidget_2)
         self.verticalLayout_3.setMargin(0)
@@ -511,6 +505,12 @@ class Ui_total(object):
         self.button_reset.setSizePolicy(sizePolicy)
         self.button_reset.setObjectName(_fromUtf8("button_reset"))
         self.verticalLayout_3.addWidget(self.button_reset)
+        self.text_code = QtGui.QTextBrowser(self.centralWidget)
+        self.text_code.setGeometry(QtCore.QRect(490, 300, 481, 231))
+        font = QtGui.QFont()
+        font.setFamily(_fromUtf8("Courier New"))
+        self.text_code.setFont(font)
+        self.text_code.setObjectName(_fromUtf8("text_code"))
         total.setCentralWidget(self.centralWidget)
         self.menuBar = QtGui.QMenuBar(total)
         self.menuBar.setGeometry(QtCore.QRect(0, 0, 1000, 23))
@@ -788,6 +788,11 @@ class Ui_total(object):
         self.button_stop.setText(_translate("total", "停止程序", None))
         self.button_step.setText(_translate("total", "单步执行", None))
         self.button_reset.setText(_translate("total", "重置", None))
+        self.text_code.setHtml(_translate("total", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:\'Courier New\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", None))
         self.menuMain.setTitle(_translate("total", "菜单", None))
         self.menuRun.setTitle(_translate("total", "运行", None))
         self.menuTool.setTitle(_translate("total", "小工具", None))
