@@ -21,6 +21,10 @@ def refresh_stack_frame(tb, addr, value, color = True):
     if addr in [memory.mem_alias['RESP'], memory.mem_alias['REBP']]:
         new_vesp = memory.read_reg('RESP') - 4
         new_vebp = memory.read_reg('REBP')
+        if value == 0:
+            vesp = 4
+            vebp = 0
+            tb.setRowCount(0)
         if new_vebp > 0:
             new_vebp = max(memory.read_data(new_vebp, 4), new_vebp)
             cnt = 0
@@ -62,5 +66,6 @@ def refresh_stack_frame(tb, addr, value, color = True):
 
 def cool_down_stack_frame(args):
     item = args[0].item(args[1], args[2])
+    if item == None: return
     item.setBackgroundColor(QtGui.QColor(0xFF, 0xFF, 0xFF))
     args[0].repaint()
