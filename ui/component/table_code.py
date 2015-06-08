@@ -44,7 +44,7 @@ def refresh_code(ui, code, addr, value):
     reg_name = memory.mem_alias.keys()[memory.mem_alias.values().index(addr)]
     if reg_name[1:] == '_PC':
         relate_pc = memory.read_reg('W_PC')
-        if value not in code.keys(): return None
+        if relate_pc not in code.keys(): return None
         text = star_code(relate_pc, code[relate_pc])
         #   5 behind and 5 ahead
         pc = relate_pc - 2

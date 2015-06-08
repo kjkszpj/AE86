@@ -8,7 +8,6 @@ from PyQt4 import QtCore
 from total import Ui_total
 from component.AboutDialog import *
 from component.load_instruction import *
-from component.ips import *
 from component.pause_fun import *
 from component.table_register import *
 from component.table_pipe import *
@@ -19,6 +18,7 @@ from component.table_memory_watch import *
 from component.table_code import *
 from component.table_status import *
 from component.output import *
+from component.table_memory_watch import *
 
 sys.path.append('C:\\Users\\You\\Documents\\GitHub\\AE86\\core\\pipe')
 from main import *
@@ -67,6 +67,9 @@ class Widow(QtGui.QMainWindow):
         self.connect(self.ui.action_pause, QtCore.SIGNAL('triggered()'), self.pause)
         self.connect(self.ui.action_step, QtCore.SIGNAL('triggered()'), self.thread_step)
 
+        self.connect(self.ui.action_read_memory, QtCore.SIGNAL('triggered()'), self.run_watch_memory)
+        self.connect(self.ui.action_write_memory, QtCore.SIGNAL('triggered()'), self.run_alter_memory)
+
         self.connect(self.ui.button_continue, QtCore.SIGNAL('clicked()'), self.run_sim)
         self.connect(self.ui.button_pause, QtCore.SIGNAL('clicked()'), self.pause)
         self.connect(self.ui.button_stop, QtCore.SIGNAL('clicked()'), self.stop)
@@ -91,6 +94,12 @@ class Widow(QtGui.QMainWindow):
 
     def run_save_progress(self):
         save_progress(self)
+
+    def run_watch_memory(self):
+        WatchDialog(self)
+
+    def run_alter_memory(self):
+        AlterDialog(self)
 
     def run_sim(self):
         self.ui.button_continue.setEnabled(False)
