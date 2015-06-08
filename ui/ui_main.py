@@ -17,6 +17,7 @@ from component.MyThread import *
 from component.table_stack_frame import *
 from component.table_memory_watch import *
 from component.table_code import *
+from component.table_status import *
 
 sys.path.append('C:\\Users\\You\\Documents\\GitHub\\AE86\\core\\pipe')
 from main import *
@@ -35,6 +36,7 @@ class Widow(QtGui.QMainWindow):
 
         init_stack_frame(self.ui.table_stack_frame)
         init_table_register(self.ui.table_register)
+        init_status(self.ui.statusBar)
 
         self.show()
         self.run_thread = MyThread()
@@ -47,6 +49,7 @@ class Widow(QtGui.QMainWindow):
         self.run_thread.render(self.sim)
         sleep(0.01)
         self.reset()
+        print self.sim.f_stall
 
         #   connect here
         self.connect(self.ui.action_load_file, QtCore.SIGNAL('triggered()'), self.run_load_instruction)
@@ -116,6 +119,7 @@ class Widow(QtGui.QMainWindow):
         cd_pipeline = refresh_pipe(self.ui, addr, value, self.colorful)
         cd_stack_frame = refresh_stack_frame(self.ui.table_stack_frame, addr, value, self.colorful)
         cd_code = refresh_code(self.ui.text_code, self.code, addr, value)
+        cd_status = refresh_status(self.ui.statusBar, addr, value, self.run_thread.sim)
         if cd_register != None:
             func, args = cd_register
             self.cd_paint.append((func, args))
@@ -124,6 +128,9 @@ class Widow(QtGui.QMainWindow):
             self.cd_paint.append((func, args))
         if cd_stack_frame != None:
             func, args = cd_stack_frame
+            self.cd_paint.append((func, args))
+        if cd_code != None:
+            func, args = cd_code
             self.cd_paint.append((func, args))
 
     def cd_fun(self):

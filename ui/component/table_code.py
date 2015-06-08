@@ -24,6 +24,7 @@ def init_code(ui, f_name = 'C:\\Users\\You\\Documents\\GitHub\\AE86\\data\\y86_c
     return result
 
 
+#   TODO color
 def refresh_code(ui, code, addr, value):
     if addr not in memory.mem_alias.values(): return None
     reg_name = memory.mem_alias.keys()[memory.mem_alias.values().index(addr)]
@@ -52,10 +53,14 @@ def refresh_code(ui, code, addr, value):
         ui.repaint()
         return None
 
+
 #   TODO cd here
+def cool_down_code():
+    pass
+
 
 if __name__ == '__main__':
     result = init_code(None)
     for addr, code in result.items():
         print addr, code
-    refresh(None, result, 10)
+    refresh_code(None, result, 10)

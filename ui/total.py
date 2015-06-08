@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'total.ui'
 #
-# Created: Sun Jun 07 19:56:03 2015
+# Created: Mon Jun 08 10:38:11 2015
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -505,8 +505,11 @@ class Ui_total(object):
         self.button_reset.setSizePolicy(sizePolicy)
         self.button_reset.setObjectName(_fromUtf8("button_reset"))
         self.verticalLayout_3.addWidget(self.button_reset)
-        self.text_code = QtGui.QTextBrowser(self.centralWidget)
-        self.text_code.setGeometry(QtCore.QRect(490, 300, 481, 231))
+        self.groupBox_3 = QtGui.QGroupBox(self.centralWidget)
+        self.groupBox_3.setGeometry(QtCore.QRect(490, 300, 501, 251))
+        self.groupBox_3.setObjectName(_fromUtf8("groupBox_3"))
+        self.text_code = QtGui.QTextBrowser(self.groupBox_3)
+        self.text_code.setGeometry(QtCore.QRect(10, 20, 481, 221))
         font = QtGui.QFont()
         font.setFamily(_fromUtf8("Courier New"))
         self.text_code.setFont(font)
@@ -528,6 +531,9 @@ class Ui_total(object):
         self.mainToolBar.setObjectName(_fromUtf8("mainToolBar"))
         total.addToolBar(QtCore.Qt.TopToolBarArea, self.mainToolBar)
         self.statusBar = QtGui.QStatusBar(total)
+        font = QtGui.QFont()
+        font.setFamily(_fromUtf8("Courier New"))
+        self.statusBar.setFont(font)
         self.statusBar.setObjectName(_fromUtf8("statusBar"))
         total.setStatusBar(self.statusBar)
         self.actionSo = QtGui.QAction(total)
@@ -788,6 +794,7 @@ class Ui_total(object):
         self.button_stop.setText(_translate("total", "停止程序", None))
         self.button_step.setText(_translate("total", "单步执行", None))
         self.button_reset.setText(_translate("total", "重置", None))
+        self.groupBox_3.setTitle(_translate("total", "代码展示", None))
         self.text_code.setHtml(_translate("total", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"

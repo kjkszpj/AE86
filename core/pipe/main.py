@@ -274,6 +274,21 @@ def default_pause():
 class Simulator():
     def init(self):
         #   TODO what to init?
+        self.ts_exc = False
+        self.ts_luh = False
+        self.ts_ret = False
+        self.ts_mis = False
+        self.f_stall = False
+        self.f_bubble = False
+        self.d_stall = False
+        self.d_bubble = False
+        self.e_stall = False
+        self.e_bubble = False
+        self.m_stall = False
+        self.m_bubble = False
+        self.w_stall = False
+        self.w_bubble = False
+        self.stat = SAOK
         self.is_terminated = True
 
     def step(self, update_fun = None, cd_fun = None):
@@ -306,21 +321,21 @@ class Simulator():
                          te_valE, tm_valM,  read_reg('M_valE'), read_reg('W_valM'), read_reg('W_valE'))
         #   order ok?
         #   enough to generate stat?
-        ts_ret = processing_ret(read_reg('D_icode'), read_reg('E_icode'), read_reg('M_icode'))
-        ts_luh = load_use(read_reg('E_icode'), read_reg('E_dstM'), srcA, srcB)
-        ts_mis = mispredict(read_reg('E_icode'), te_Cnd)
-        ts_exc = exception(tm_stat, read_reg('W_stat'))
+        self.ts_ret = ts_ret = processing_ret(read_reg('D_icode'), read_reg('E_icode'), read_reg('M_icode'))
+        self.ts_luh = ts_luh = load_use(read_reg('E_icode'), read_reg('E_dstM'), srcA, srcB)
+        self.ts_mis = ts_mis = mispredict(read_reg('E_icode'), te_Cnd)
+        self.ts_exc = ts_exc = exception(tm_stat, read_reg('W_stat'))
 
-        f_stall = F_stall(ts_ret, ts_luh, ts_mis, ts_exc)
-        f_bubble = F_bubble(ts_ret, ts_luh, ts_mis, ts_exc)
-        d_stall = D_stall(ts_ret, ts_luh, ts_mis, ts_exc)
-        d_bubble = D_bubble(ts_ret, ts_luh, ts_mis, ts_exc)
-        e_stall = E_stall(ts_ret, ts_luh, ts_mis, ts_exc)
-        e_bubble = E_bubble(ts_ret, ts_luh, ts_mis, ts_exc)
-        m_stall = M_stall(ts_ret, ts_luh, ts_mis, ts_exc)
-        m_bubble = M_bubble(ts_ret, ts_luh, ts_mis, ts_exc)
-        w_stall = W_stall(read_reg('W_stat'))
-        w_bubble = W_bubble(ts_ret, ts_luh, ts_mis, ts_exc)
+        self.f_stall = f_stall = F_stall(ts_ret, ts_luh, ts_mis, ts_exc)
+        self.f_bubble = f_bubble = F_bubble(ts_ret, ts_luh, ts_mis, ts_exc)
+        self.d_stall = d_stall = D_stall(ts_ret, ts_luh, ts_mis, ts_exc)
+        self.d_bubble = d_bubble = D_bubble(ts_ret, ts_luh, ts_mis, ts_exc)
+        self.e_stall = e_stall = E_stall(ts_ret, ts_luh, ts_mis, ts_exc)
+        self.e_bubble = e_bubble = E_bubble(ts_ret, ts_luh, ts_mis, ts_exc)
+        self.m_stall = m_stall = M_stall(ts_ret, ts_luh, ts_mis, ts_exc)
+        self.m_bubble = m_bubble = M_bubble(ts_ret, ts_luh, ts_mis, ts_exc)
+        self.w_stall = w_stall = W_stall(read_reg('W_stat'))
+        self.w_bubble = w_bubble = W_bubble(ts_ret, ts_luh, ts_mis, ts_exc)
 
         #   ---FETCH connection---
         #   用的是f_stall, f_bubble, 来看能不能更新fetch阶段的结果
@@ -381,7 +396,7 @@ class Simulator():
         commit(update_fun)
         if cd_fun != None: cd_fun()
         #   output status
-        stat = read_reg('W_stat')
+        self.stat = stat = read_reg('W_stat')
         if stat not in [SAOK, SADR, SINS, SHLT]:
             print stat
             self.is_terminated = True
