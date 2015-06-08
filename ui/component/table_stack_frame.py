@@ -20,7 +20,8 @@ def refresh_stack_frame(tb, addr, value, color = True):
 
     if addr in [memory.mem_alias['RESP'], memory.mem_alias['REBP']]:
         new_vesp = memory.read_reg('RESP') - 4
-        new_vebp = memory.read_reg('REBP')
+        t_vebp = memory.read_reg('REBP')
+        new_vebp = t_vebp
         if value == 0:
             vesp = 4
             vebp = 0
@@ -31,18 +32,28 @@ def refresh_stack_frame(tb, addr, value, color = True):
             for i in range(vesp, vebp + 1, 4):
                 if i not in range(new_vesp, new_vebp + 1):
                     tb.removeRow(cnt)
-                cnt += 1
+                else:
+                    s = '0x' + ('%04x' % i).upper()
+                    if i == t_vebp: s = '>' + s
+                    if i == new_vesp + 4: s = '<' + s
+                    item = QtGui.QTableWidgetItem(s)
+                    item.setFlags(QtCore.Qt.ItemIsEnabled)
+                    item.setTextAlignment(QtCore.Qt.AlignRight)
+                    tb.setItem(cnt, 0, item)
+                    cnt += 1
             for i in range(new_vesp, new_vebp + 1, 4):
                 if i in range(vesp, vebp + 1): continue
                 tb.insertRow((i - new_vesp) / 4)
-                s = ('%04x' % i).upper()
-                item = QtGui.QTableWidgetItem('0x' + s)
+                s = '0x' + ('%04x' % i).upper()
+                if i == t_vebp: s = '>' + s
+                if i == new_vesp + 4: s = '<' + s
+                item = QtGui.QTableWidgetItem(s)
                 item.setFlags(QtCore.Qt.ItemIsEnabled)
-                item.setTextAlignment(QtCore.Qt.AlignCenter)
+                item.setTextAlignment(QtCore.Qt.AlignRight)
                 tb.setItem((i - new_vesp) / 4, 0, item)
 
-                s = ('%08x' % memory.read_data(i, 4)).upper()
-                item = QtGui.QTableWidgetItem('0x' + s)
+                s = '0x' + ('%08x' % memory.read_data(i, 4)).upper()
+                item = QtGui.QTableWidgetItem(s)
                 item.setFlags(QtCore.Qt.ItemIsEnabled)
                 item.setTextAlignment(QtCore.Qt.AlignCenter)
                 tb.setItem((i - new_vesp) / 4, 1, item)
