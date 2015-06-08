@@ -29,13 +29,13 @@ def refresh_pipe(ui, addr, value, color = True):
         #   format define(head & value)
         if pr_head == 'i':
             if stage == 'W': head = 'icode'; value_len = 1; value = read_reg('W_icode')
-            elif stage == 'M': head = 'icode:Cnd'; value_len = 2; value = combine('M_icode', 'M_Cnd')
-            else: head = 'icode:ifun'; value_len = 2; value = combine(stage + '_icode', stage + '_ifun')
-        elif pr_head == 'C': head = 'icode:Cnd'; value_len = 2; value = combine('M_icode', 'M_Cnd')
+            elif stage == 'M': head = 'icode Cnd'; value_len = 2; value = combine('M_icode', 'M_Cnd')
+            else: head = 'icode ifun'; value_len = 2; value = combine(stage + '_icode', stage + '_ifun')
+        elif pr_head == 'C': head = 'icode Cnd'; value_len = 2; value = combine('M_icode', 'M_Cnd')
         elif pr_head == 'v': head = prpr[2:]; value_len = 8
         elif pr_head == 'p': head = 'predPC'; value_len = 4
-        elif pr_head == 'd': head = 'dstE:dstM'; value_len = 2; value = combine(stage + '_dstE', stage + '_dstM')
-        elif pr_head == 's': head = 'srcA:srcB'; value_len = 2; value = combine('E_srcA', 'E_srcB')
+        elif pr_head == 'd': head = 'dstE dstM'; value_len = 2; value = combine(stage + '_dstE', stage + '_dstM')
+        elif pr_head == 's': head = 'srcA srcB'; value_len = 2; value = combine('E_srcA', 'E_srcB')
         elif pr_head == 'r': head = 'rA:rB'; value_len = 2; value = combine('D_rA', 'D_rB')
         else: return None
 
