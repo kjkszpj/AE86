@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'total.ui'
 #
-# Created: Mon Jun 08 11:08:19 2015
+# Created: Mon Jun 08 16:39:53 2015
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -568,7 +568,10 @@ class Ui_total(object):
         self.action_about.setObjectName(_fromUtf8("action_about"))
         self.action = QtGui.QAction(total)
         self.action.setObjectName(_fromUtf8("action"))
+        self.action_output = QtGui.QAction(total)
+        self.action_output.setObjectName(_fromUtf8("action_output"))
         self.menuMain.addAction(self.action_load_file)
+        self.menuMain.addAction(self.action_output)
         self.menuMain.addSeparator()
         self.menuMain.addAction(self.action_save_progress)
         self.menuMain.addAction(self.action_load_progress)
@@ -787,4 +790,5 @@ class Ui_total(object):
         self.action_21.setText(_translate("total", "y86编辑器", None))
         self.action_about.setText(_translate("total", "about", None))
         self.action.setText(_translate("total", "新增进度", None))
+        self.action_output.setText(_translate("total", "导出结果到文件", None))
 

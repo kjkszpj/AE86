@@ -18,6 +18,7 @@ from component.table_stack_frame import *
 from component.table_memory_watch import *
 from component.table_code import *
 from component.table_status import *
+from component.output import *
 
 sys.path.append('C:\\Users\\You\\Documents\\GitHub\\AE86\\core\\pipe')
 from main import *
@@ -52,6 +53,7 @@ class Widow(QtGui.QMainWindow):
 
         #   connect here
         self.connect(self.ui.action_load_file, QtCore.SIGNAL('triggered()'), self.run_load_instruction)
+        self.connect(self.ui.action_output, QtCore.SIGNAL('triggered()'), self.run_output)
         self.connect(self.ui.action_save_progress, QtCore.SIGNAL('triggered()'), self.run_save_progress)
         self.connect(self.ui.action_load_progress, QtCore.SIGNAL('triggered()'), self.run_load_progress)
         self.connect(self.ui.action_about, QtCore.SIGNAL('triggered()'), self.run_about)
@@ -79,6 +81,9 @@ class Widow(QtGui.QMainWindow):
 
     def run_load_instruction(self):
         load_instruction(self)
+
+    def run_output(self):
+        output(self)
 
     def run_load_progress(self):
         load_progress(self)

@@ -159,7 +159,7 @@ def alu(aluA=1, aluB=1, aluFun=0):
     #   alu result
     aluA = big2int(aluA)
     aluB = big2int(aluB)
-    if aluFun not in [0, 1, 2, 3]: print "alu_fun error! %d" % aluFun
+    if aluFun not in [0, 1, 2, 3]: print 'alu_fun error! %d' % aluFun
     if aluFun == 0:   result = aluA + aluB
     elif aluFun == 1: result = aluB - aluA
     elif aluFun == 2: result = aluA & aluB
@@ -273,7 +273,7 @@ def default_pause():
 
 class Simulator():
     def init(self):
-        #   TODO what to init?
+        #   THINK what to init?
         self.ts_exc = False
         self.ts_luh = False
         self.ts_ret = False
@@ -412,68 +412,62 @@ class Simulator():
             return '---at cycle\t%d, HLT encounter, terminated---' % cnt
         return None
 
-    def run_all(self, update_fun = None, cd_fun = None):
+    def run_all(self, update_fun = None, cd_fun = None, file_name = 'C:\\Users\\You\\Documents\\GitHub\\AE86\\data\\y86_code\\asum.txt'):
+        file(file_name, 'w').write('')
+        outf = file(file_name, 'a')
         while True:
             result = self.step(update_fun, cd_fun)
+            my_print(outf)
             if type(result) == str: return result
-            #   TODO sleep多少
-            # time.sleep(sleep_fun())
-            # while pause_fun():
-            #     time.sleep(0.05)
-            #   TODO n = raw_input()
-            #   TODO 是否输出（到文件）
-            # if cnt >= currect:
-            #     my_print(cnt)
         return u'并没有执行完'
 
     def load_data(self):
         load_data()
 
 #   以下是调试模块
-def my_print(cnt):
-    #   NO stat here
-    print "FETCH:"
-    print '\tF_predPC 	= 0x%x' % read_reg('F_predPC')
+def my_print(outf):
+    outf.write('------CYCLE %d------\n' % (read_reg('CYCLE') - 1))
+    outf.write('FETCH:\n')
+    outf.write('\tF_predPC 	= 0x%x\n' % read_reg('F_predPC'))
 
-    print 'DECODE:'
-    print '\tD_icode  	= 0x%x' % read_reg('D_icode')
-    print '\tD_ifun   	= 0x%x' % read_reg('D_ifun')
-    print '\tD_rA     	= 0x%x' % read_reg('D_rA')
-    print '\tD_rB     	= 0x%x' % read_reg('D_rB')
-    print '\tD_valC   	= 0x%x' % read_reg('D_valC')
-    print '\tD_valP   	= 0x%x' % read_reg('D_valP')
-    print '\tD_stat   	= 0x%x' % read_reg('D_stat')
+    outf.write('DECODE:\n')
+    outf.write('\tD_icode  	= 0x%x\n' % read_reg('D_icode'))
+    outf.write('\tD_ifun   	= 0x%x\n' % read_reg('D_ifun'))
+    outf.write('\tD_rA     	= 0x%x\n' % read_reg('D_rA'))
+    outf.write('\tD_rB     	= 0x%x\n' % read_reg('D_rB'))
+    outf.write('\tD_valC   	= 0x%x\n' % read_reg('D_valC'))
+    outf.write('\tD_valP   	= 0x%x\n' % read_reg('D_valP'))
+    outf.write('\tD_stat   	= 0x%x\n' % read_reg('D_stat'))
 
-    print 'EXECUTE:'
-    print '\tE_icode  	= 0x%x' % read_reg('E_icode')
-    print '\tE_ifun   	= 0x%x' % read_reg('E_ifun')
-    print '\tE_valC   	= 0x%x' % read_reg('E_valC')
-    print '\tE_valA   	= 0x%x' % read_reg('E_valA')
-    print '\tE_valB   	= 0x%x' % read_reg('E_valB')
-    print '\tE_dstE   	= 0x%x' % read_reg('E_dstE')
-    print '\tE_dstM   	= 0x%x' % read_reg('E_dstM')
-    print '\tE_srcA   	= 0x%x' % read_reg('E_srcA')
-    print '\tE_srcB   	= 0x%x' % read_reg('E_srcB')
-    print '\tE_stat   	= 0x%x' % read_reg('E_stat')
+    outf.write('EXECUTE:\n')
+    outf.write('\tE_icode  	= 0x%x\n' % read_reg('E_icode'))
+    outf.write('\tE_ifun   	= 0x%x\n' % read_reg('E_ifun'))
+    outf.write('\tE_valC   	= 0x%x\n' % read_reg('E_valC'))
+    outf.write('\tE_valA   	= 0x%x\n' % read_reg('E_valA'))
+    outf.write('\tE_valB   	= 0x%x\n' % read_reg('E_valB'))
+    outf.write('\tE_dstE   	= 0x%x\n' % read_reg('E_dstE'))
+    outf.write('\tE_dstM   	= 0x%x\n' % read_reg('E_dstM'))
+    outf.write('\tE_srcA   	= 0x%x\n' % read_reg('E_srcA'))
+    outf.write('\tE_srcB   	= 0x%x\n' % read_reg('E_srcB'))
+    outf.write('\tE_stat   	= 0x%x\n' % read_reg('E_stat'))
 
-    print 'MEMORY:'
-    print '\tM_icode  	= 0x%x' % read_reg('M_icode')
-    print '\tM_Cnd    	= %d'   % read_reg('M_Cnd')
-    print '\tM_valE   	= 0x%x' % read_reg('M_valE')
-    print '\tM_valA   	= 0x%x' % read_reg('M_valA')
-    print '\tM_dstE   	= 0x%x' % read_reg('M_dstE')
-    print '\tM_dstM   	= 0x%x' % read_reg('M_dstM')
-    print '\tCC         = %x'   % read_reg('CC')
-    print '\tM_stat   	= 0x%x' % read_reg('M_stat')
+    outf.write('MEMORY:\n')
+    outf.write('\tM_icode  	= 0x%x\n' % read_reg('M_icode'))
+    outf.write('\tM_Cnd    	= %d\n'   % read_reg('M_Cnd'))
+    outf.write('\tM_valE   	= 0x%x\n' % read_reg('M_valE'))
+    outf.write('\tM_valA   	= 0x%x\n' % read_reg('M_valA'))
+    outf.write('\tM_dstE   	= 0x%x\n' % read_reg('M_dstE'))
+    outf.write('\tM_dstM   	= 0x%x\n' % read_reg('M_dstM'))
+    outf.write('\tCC         = %x\n'   % read_reg('CC'))
+    outf.write('\tM_stat   	= 0x%x\n' % read_reg('M_stat'))
 
-    print 'WRITE BACK:'
-    print '\tW_icode  	= 0x%x' % read_reg('W_icode')
-    print '\tW_valE   	= 0x%x' % read_reg('W_valE')
-    print '\tW_valM   	= 0x%x' % read_reg('W_valM')
-    print '\tW_dstE   	= 0x%x' % read_reg('W_dstE')
-    print '\tW_dstM   	= 0x%x' % read_reg('W_dstM')
-    print '\tW_stat   	= 0x%x' % read_reg('W_stat')
-    raw_input('continue')
+    outf.write('WRITE BACK:\n')
+    outf.write('\tW_icode  	= 0x%x\n' % read_reg('W_icode'))
+    outf.write('\tW_valE   	= 0x%x\n' % read_reg('W_valE'))
+    outf.write('\tW_valM   	= 0x%x\n' % read_reg('W_valM'))
+    outf.write('\tW_dstE   	= 0x%x\n' % read_reg('W_dstE'))
+    outf.write('\tW_dstM   	= 0x%x\n' % read_reg('W_dstM'))
+    outf.write('\tW_stat   	= 0x%x\n' % read_reg('W_stat'))
 
 def sleep_time(f):
     return f()
@@ -511,7 +505,7 @@ def init(save_instruction = False):
     #   id-name index for register
     register_name = {0:'REAX', 1:'RECX', 2:'REDX', 3:'REBX', 4:'RESP', 5:'REBP', 6:'RESI', 7:'REDI', 8:'RNONE', 0xF:'RNONE'}
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     init()
     load_data()
     sim_main()
