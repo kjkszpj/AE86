@@ -49,7 +49,6 @@ class Widow(QtGui.QMainWindow):
         self.run_thread.render(self.sim)
         sleep(0.01)
         self.reset()
-        print self.sim.f_stall
 
         #   connect here
         self.connect(self.ui.action_load_file, QtCore.SIGNAL('triggered()'), self.run_load_instruction)
@@ -62,6 +61,9 @@ class Widow(QtGui.QMainWindow):
         self.connect(self.ui.action_2_IPS, QtCore.SIGNAL('triggered()'), self.run_2_IPS)
         self.connect(self.ui.action_4_IPS, QtCore.SIGNAL('triggered()'), self.run_4_IPS)
         self.connect(self.ui.action_8_IPS, QtCore.SIGNAL('triggered()'), self.run_8_IPS)
+        self.connect(self.ui.action_stop, QtCore.SIGNAL('triggered()'), self.stop)
+        self.connect(self.ui.action_pause, QtCore.SIGNAL('triggered()'), self.pause)
+        self.connect(self.ui.action_step, QtCore.SIGNAL('triggered()'), self.thread_step)
 
         self.connect(self.ui.button_continue, QtCore.SIGNAL('clicked()'), self.run_sim)
         self.connect(self.ui.button_pause, QtCore.SIGNAL('clicked()'), self.pause)

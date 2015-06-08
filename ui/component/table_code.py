@@ -1,3 +1,5 @@
+# -*- coding: cp936 -*-
+
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 from time import sleep
@@ -35,15 +37,17 @@ def star_code(pc, s):
     return s + '\n'
 
 #   TODO color
+#   TODO 填充满整个textbrowser
+#   TODO bubble, stall展示
 def refresh_code(ui, code, addr, value):
     if addr not in memory.mem_alias.values(): return None
     reg_name = memory.mem_alias.keys()[memory.mem_alias.values().index(addr)]
     if reg_name[1:] == '_PC':
-        value = memory.read_reg('W_PC')
+        relate_pc = memory.read_reg('W_PC')
         if value not in code.keys(): return None
-        text = star_code(value, code[value])
+        text = star_code(relate_pc, code[relate_pc])
         #   5 behind and 5 ahead
-        pc = value - 2
+        pc = relate_pc - 2
         cnt = 5
         while cnt:
             cnt -= 1

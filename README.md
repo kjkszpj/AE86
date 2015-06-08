@@ -16,14 +16,14 @@
 ##TODO
 FDEMW块和汇编代码展示只能选一个，做完之后就开始修bug和UI。
 
--    stausbar，cycle & condition code & instruction name
+-    使用html优化咯
 -    UI并没有很好对齐
 -    输出到文件
 -    内存监视
 -    fibo不能运行(core-bug?)
 -    按钮画好一点
 -    异常的展示
--    stage，有颜色的框
+-    stage，有颜色的框, status, stall, bubble
 -    动画效果？
 -    速度滑条
 -    music & sound
