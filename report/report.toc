@@ -14,6 +14,7 @@
 \contentsline {subsection}{\numberline {5.3}菜单栏其他功能}{9}{subsection.5.3}
 \contentsline {section}{\numberline {6}UI的关键实现}{10}{section.6}
 \contentsline {subsection}{\numberline {6.1}模拟运行}{10}{subsection.6.1}
+\contentsline {subsection}{\numberline {6.2}颜色的更新}{10}{subsection.6.2}
 \contentsline {section}{\numberline {7}其他功能}{10}{section.7}
 \contentsline {section}{\numberline {8}遇到的问题}{10}{section.8}
 \contentsline {section}{\numberline {9}项目总结}{10}{section.9}

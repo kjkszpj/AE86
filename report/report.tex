@@ -273,7 +273,7 @@ memory = pickle.load(file)	#	载入
 \end{itemize}
 \item 运行
 \begin{itemize}
-	\item 以不同速率来运行，为了图形界面的显示效果(慢速运行的时候有颜色，如果颜色闪烁太快会对用户造成精神污染，所以在快速运行的时候去掉颜色变化)，这里只提供几种速度，单位是instruction per second(IPS)
+	\item 以不同速率来运行，为了图形界面的显示效果(慢速运行的时候有颜色，如果颜色闪烁太快会对用户造成精神污染，所以我在快速运行的时候去掉颜色变化)，这里只提供几种速度，单位是instruction per second(IPS)
 	\item 运行，单步，暂停，停止等控制，同上。
 \end{itemize}
 \item 其他小工具，包括
@@ -294,13 +294,16 @@ Simulator包括以下方法
 
 在程序commit内存修改的时候，会调用update\_fun(addr, value)，告诉UI界面需要更新addr这个内存/寄存器，刷新界面。
 
+\subsection{颜色的更新}
+在值改变的时候(可能)会有颜色变化，然后过了一段时间又会重新变成白色（类似于cool down），这样的功能使用CSS和HTML可以简单实现(比如说使用-webkit-transform等)，然而我这次要用的是Qt，所以我手动实现了这个功能。
+%continue here
 \section{其他功能}
 \section{遇到的问题}
 \section{项目总结}
 \section{Thank You}
 \indent\indent
 {\Large{
-截止报告完成的时候，代码已经没有任何bug。考虑到今天到明天还会继续整理和优化代码，可能在最终应用程序会引入一些小问题请谅解。
+截至本报告完成的时候，代码已经没有任何bug。考虑到今天到明天还会继续整理和优化代码，可能在最终应用程序会引入一些小问题，请谅解。
 
 View this project on GitHub\cite{2}
 
