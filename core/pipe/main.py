@@ -1,6 +1,9 @@
 # -*- coding: cp936 -*-
 
+import pickle
+import time
 from memory import *
+
 #   以下是小函数
 #   ---about FETCH stage---
 
@@ -156,7 +159,7 @@ def alu(aluA=1, aluB=1, aluFun=0):
     #   alu result
     aluA = big2int(aluA)
     aluB = big2int(aluB)
-    if aluFun not in [0, 1, 2, 3]: print "alu_fun error! %d" % aluFun
+    if aluFun not in [0, 1, 2, 3]: print 'alu_fun error! %d' % aluFun
     if aluFun == 0:   result = aluA + aluB
     elif aluFun == 1: result = aluB - aluA
     elif aluFun == 2: result = aluA & aluB
@@ -262,17 +265,34 @@ def int2big(x):
     if x < 0: x = x + 0x100000000
     return x
 
-def sim_main():
-    cnt = 0
-    #   (假装)正确运行的周期数
-    currect = 233
-    while cnt < 70:
-        #   TODO debug sim_main here
-        cnt = cnt + 1
-        print '------cycle\t%d!------' % cnt
-        if cnt >= currect:
-            print 'good'
-        #   出现两次的表达式基本上用临时变量存储
+def default_sleep():
+    return 0
+
+def default_pause():
+    return False
+
+class Simulator():
+    def init(self):
+        #   THINK what to init?
+        self.ts_exc = False
+        self.ts_luh = False
+        self.ts_ret = False
+        self.ts_mis = False
+        self.f_stall = False
+        self.f_bubble = False
+        self.d_stall = False
+        self.d_bubble = False
+        self.e_stall = False
+        self.e_bubble = False
+        self.m_stall = False
+        self.m_bubble = False
+        self.w_stall = False
+        self.w_bubble = False
+        self.stat = SAOK
+        self.is_terminated = True
+
+    def step(self, update_fun = None, cd_fun = None):
+        cnt = read_reg('CYCLE') + 1
         tf_pc = f_pc(read_reg('F_predPC'), read_reg('M_icode'), read_reg('M_valA'), read_reg('W_icode'), read_reg('W_valM'), read_reg('M_Cnd'))
         tf_icode, tf_ifun, tf_rA, tf_rB, tf_valC, tf_valP, timem_error = decode(tf_pc)
 
@@ -301,21 +321,21 @@ def sim_main():
                          te_valE, tm_valM,  read_reg('M_valE'), read_reg('W_valM'), read_reg('W_valE'))
         #   order ok?
         #   enough to generate stat?
-        ts_ret = processing_ret(read_reg('D_icode'), read_reg('E_icode'), read_reg('M_icode'))
-        ts_luh = load_use(read_reg('E_icode'), read_reg('E_dstM'), srcA, srcB)
-        ts_mis = mispredict(read_reg('E_icode'), te_Cnd)
-        ts_exc = exception(tm_stat, read_reg('W_stat'))
+        self.ts_ret = ts_ret = processing_ret(read_reg('D_icode'), read_reg('E_icode'), read_reg('M_icode'))
+        self.ts_luh = ts_luh = load_use(read_reg('E_icode'), read_reg('E_dstM'), srcA, srcB)
+        self.ts_mis = ts_mis = mispredict(read_reg('E_icode'), te_Cnd)
+        self.ts_exc = ts_exc = exception(tm_stat, read_reg('W_stat'))
 
-        f_stall = F_stall(ts_ret, ts_luh, ts_mis, ts_exc)
-        f_bubble = F_bubble(ts_ret, ts_luh, ts_mis, ts_exc)
-        d_stall = D_stall(ts_ret, ts_luh, ts_mis, ts_exc)
-        d_bubble = D_bubble(ts_ret, ts_luh, ts_mis, ts_exc)
-        e_stall = E_stall(ts_ret, ts_luh, ts_mis, ts_exc)
-        e_bubble = E_bubble(ts_ret, ts_luh, ts_mis, ts_exc)
-        m_stall = M_stall(ts_ret, ts_luh, ts_mis, ts_exc)
-        m_bubble = M_bubble(ts_ret, ts_luh, ts_mis, ts_exc)
-        w_stall = W_stall(read_reg('W_stat'))
-        w_bubble = W_bubble(ts_ret, ts_luh, ts_mis, ts_exc)
+        self.f_stall = f_stall = F_stall(ts_ret, ts_luh, ts_mis, ts_exc)
+        self.f_bubble = f_bubble = F_bubble(ts_ret, ts_luh, ts_mis, ts_exc)
+        self.d_stall = d_stall = D_stall(ts_ret, ts_luh, ts_mis, ts_exc)
+        self.d_bubble = d_bubble = D_bubble(ts_ret, ts_luh, ts_mis, ts_exc)
+        self.e_stall = e_stall = E_stall(ts_ret, ts_luh, ts_mis, ts_exc)
+        self.e_bubble = e_bubble = E_bubble(ts_ret, ts_luh, ts_mis, ts_exc)
+        self.m_stall = m_stall = M_stall(ts_ret, ts_luh, ts_mis, ts_exc)
+        self.m_bubble = m_bubble = M_bubble(ts_ret, ts_luh, ts_mis, ts_exc)
+        self.w_stall = w_stall = W_stall(read_reg('W_stat'))
+        self.w_bubble = w_bubble = W_bubble(ts_ret, ts_luh, ts_mis, ts_exc)
 
         #   ---FETCH connection---
         #   用的是f_stall, f_bubble, 来看能不能更新fetch阶段的结果
@@ -356,98 +376,110 @@ def sim_main():
         prepare_reg('W_stat', tm_stat, w_stall, w_bubble)
         prepare_reg('W_icode', read_reg('M_icode'), w_stall, w_bubble)
         prepare_reg('W_valE', read_reg('M_valE'))
-        # if mem_read(read_reg('M_icode')):
-        #     tm_valM = dm_read(tm_addr)
-        #     dmem_error = tm_valM == 'mem_error'
-        # else: tm_valM = 0
         prepare_reg('W_valM', tm_valM, w_stall, w_bubble)
         if mem_write(read_reg('M_icode')): dm_write(tm_addr, read_reg('M_valA'), w_stall, w_bubble)
         prepare_reg('W_dstE', read_reg('M_dstE'), w_stall, w_bubble)
         prepare_reg('W_dstM', read_reg('M_dstM'), w_stall, w_bubble)
 
         #   ---WRITE BACK connection---
-        print read_reg('W_dstM')
         rf_write(read_reg('W_dstM'), read_reg('W_valM'), read_reg('W_dstE'), read_reg('W_valE'), w_stall, w_bubble)
 
-        #   commit changes
-        commit()
-        #   output status
-        stat = read_reg('W_stat')
-        if stat not in [SAOK, SADR, SINS, SHLT]:
-            print 'status code error!'
-            raw_input('continue')
-            return
-        if stat == SADR:
-            print 'memory error!'
-            raw_input('continue')
-            return
-        if stat == SINS:
-            print 'instruction error!'
-            raw_input('continue')
-            return
-        if stat == SHLT:
-            print 'HLT encounter!'
-            raw_input('continue')
-            return
+        #   instruction prepare
+        prepare_reg('F_PC', f_predPC(tf_icode, tf_valC, tf_valP), f_stall, f_bubble)
+        prepare_reg('D_PC', read_reg('F_PC'), d_stall, d_bubble)
+        prepare_reg('E_PC', read_reg('D_PC'), e_stall, e_bubble)
+        prepare_reg('M_PC', read_reg('E_PC'), m_stall, m_bubble)
+        prepare_reg('W_PC', read_reg('M_PC'), w_stall, w_bubble)
 
-        if cnt >= currect:
-            my_print(cnt)
-    return 0
+        #   commit changes
+        prepare_reg('CYCLE', cnt)
+        commit(update_fun)
+        if cd_fun != None: cd_fun()
+        #   output status
+        self.stat = stat = read_reg('W_stat')
+        if stat not in [SAOK, SADR, SINS, SHLT]:
+            print stat
+            self.is_terminated = True
+            return 'status code error!'
+        elif stat == SADR:
+            self.is_terminated = True
+            return '---at cycle\t%d, memory error!---' % cnt
+        elif stat == SINS:
+            self.is_terminated = True
+            return '---at cycle\t%d, instruction error!---' % cnt
+        elif stat == SHLT:
+            self.is_terminated = True
+            return '---at cycle\t%d, HLT encounter, terminated---' % cnt
+        return None
+
+    def run_all(self, update_fun = None, cd_fun = None, file_name = 'C:\\Users\\You\\Documents\\GitHub\\AE86\\data\\y86_code\\asum.txt'):
+        file(file_name, 'w').write('')
+        outf = file(file_name, 'a')
+        while True:
+            result = self.step(update_fun, cd_fun)
+            my_print(outf)
+            if type(result) == str: return result
+        return u'并没有执行完'
+
+    def load_data(self):
+        load_data()
 
 #   以下是调试模块
-def my_print(cnt):
-    #   NO stat here
-    print "FETCH:"
-    print '\tF_predPC 	= 0x%x' % read_reg('F_predPC')
+def my_print(outf):
+    outf.write('------CYCLE %d------\n' % (read_reg('CYCLE') - 1))
+    outf.write('FETCH:\n')
+    outf.write('\tF_predPC 	= 0x%x\n' % read_reg('F_predPC'))
 
-    print 'DECODE:'
-    print '\tD_icode  	= 0x%x' % read_reg('D_icode')
-    print '\tD_ifun   	= 0x%x' % read_reg('D_ifun')
-    print '\tD_rA     	= 0x%x' % read_reg('D_rA')
-    print '\tD_rB     	= 0x%x' % read_reg('D_rB')
-    print '\tD_valC   	= 0x%x' % read_reg('D_valC')
-    print '\tD_valP   	= 0x%x' % read_reg('D_valP')
-    print '\tD_stat   	= 0x%x' % read_reg('D_stat')
+    outf.write('DECODE:\n')
+    outf.write('\tD_icode  	= 0x%x\n' % read_reg('D_icode'))
+    outf.write('\tD_ifun   	= 0x%x\n' % read_reg('D_ifun'))
+    outf.write('\tD_rA     	= 0x%x\n' % read_reg('D_rA'))
+    outf.write('\tD_rB     	= 0x%x\n' % read_reg('D_rB'))
+    outf.write('\tD_valC   	= 0x%x\n' % read_reg('D_valC'))
+    outf.write('\tD_valP   	= 0x%x\n' % read_reg('D_valP'))
+    outf.write('\tD_stat   	= 0x%x\n' % read_reg('D_stat'))
 
-    print 'EXECUTE:'
-    print '\tE_icode  	= 0x%x' % read_reg('E_icode')
-    print '\tE_ifun   	= 0x%x' % read_reg('E_ifun')
-    print '\tE_valC   	= 0x%x' % read_reg('E_valC')
-    print '\tE_valA   	= 0x%x' % read_reg('E_valA')
-    print '\tE_valB   	= 0x%x' % read_reg('E_valB')
-    print '\tE_dstE   	= 0x%x' % read_reg('E_dstE')
-    print '\tE_dstM   	= 0x%x' % read_reg('E_dstM')
-    print '\tE_srcA   	= 0x%x' % read_reg('E_srcA')
-    print '\tE_srcB   	= 0x%x' % read_reg('E_srcB')
-    print '\tE_stat   	= 0x%x' % read_reg('E_stat')
+    outf.write('EXECUTE:\n')
+    outf.write('\tE_icode  	= 0x%x\n' % read_reg('E_icode'))
+    outf.write('\tE_ifun   	= 0x%x\n' % read_reg('E_ifun'))
+    outf.write('\tE_valC   	= 0x%x\n' % read_reg('E_valC'))
+    outf.write('\tE_valA   	= 0x%x\n' % read_reg('E_valA'))
+    outf.write('\tE_valB   	= 0x%x\n' % read_reg('E_valB'))
+    outf.write('\tE_dstE   	= 0x%x\n' % read_reg('E_dstE'))
+    outf.write('\tE_dstM   	= 0x%x\n' % read_reg('E_dstM'))
+    outf.write('\tE_srcA   	= 0x%x\n' % read_reg('E_srcA'))
+    outf.write('\tE_srcB   	= 0x%x\n' % read_reg('E_srcB'))
+    outf.write('\tE_stat   	= 0x%x\n' % read_reg('E_stat'))
 
-    print 'MEMORY:'
-    print '\tM_icode  	= 0x%x' % read_reg('M_icode')
-    print '\tM_Cnd    	= %d'   % read_reg('M_Cnd')
-    print '\tM_valE   	= 0x%x' % read_reg('M_valE')
-    print '\tM_valA   	= 0x%x' % read_reg('M_valA')
-    print '\tM_dstE   	= 0x%x' % read_reg('M_dstE')
-    print '\tM_dstM   	= 0x%x' % read_reg('M_dstM')
-    print '\tCC         = %x'   % read_reg('CC')
-    print '\tM_stat   	= 0x%x' % read_reg('M_stat')
+    outf.write('MEMORY:\n')
+    outf.write('\tM_icode  	= 0x%x\n' % read_reg('M_icode'))
+    outf.write('\tM_Cnd    	= %d\n'   % read_reg('M_Cnd'))
+    outf.write('\tM_valE   	= 0x%x\n' % read_reg('M_valE'))
+    outf.write('\tM_valA   	= 0x%x\n' % read_reg('M_valA'))
+    outf.write('\tM_dstE   	= 0x%x\n' % read_reg('M_dstE'))
+    outf.write('\tM_dstM   	= 0x%x\n' % read_reg('M_dstM'))
+    outf.write('\tCC         = %x\n'   % read_reg('CC'))
+    outf.write('\tM_stat   	= 0x%x\n' % read_reg('M_stat'))
 
-    print 'WRITE BACK:'
-    print '\tW_icode  	= 0x%x' % read_reg('W_icode')
-    print '\tW_valE   	= 0x%x' % read_reg('W_valE')
-    print '\tW_valM   	= 0x%x' % read_reg('W_valM')
-    print '\tW_dstE   	= 0x%x' % read_reg('W_dstE')
-    print '\tW_dstM   	= 0x%x' % read_reg('W_dstM')
-    print '\tW_stat   	= 0x%x' % read_reg('W_stat')
-    raw_input('continue')
+    outf.write('WRITE BACK:\n')
+    outf.write('\tW_icode  	= 0x%x\n' % read_reg('W_icode'))
+    outf.write('\tW_valE   	= 0x%x\n' % read_reg('W_valE'))
+    outf.write('\tW_valM   	= 0x%x\n' % read_reg('W_valM'))
+    outf.write('\tW_dstE   	= 0x%x\n' % read_reg('W_dstE'))
+    outf.write('\tW_dstM   	= 0x%x\n' % read_reg('W_dstM'))
+    outf.write('\tW_stat   	= 0x%x\n' % read_reg('W_stat'))
 
-def init():
+def sleep_time(f):
+    return f()
+
+def init(save_instruction = False):
     #   double check this function
     global INOP, IHALT, IRRMOVL, IIRMOVL, IRMMOVL, IMRMOVL, IOPL, IJXX, ICALL, IRET, IPUSHL, IPOPL
     global FNONE, RNONE, RESP, ALUADD, SAOK, SADR, SINS, SHLT
     global register_name
     global CC_mask, CC_result
 
-    mem_init();
+    mem_init(save=save_instruction)
     INOP = 0x0
     IHALT = 0x1
     IRRMOVL = 0x2
@@ -473,8 +505,10 @@ def init():
     #   id-name index for register
     register_name = {0:'REAX', 1:'RECX', 2:'REDX', 3:'REBX', 4:'RESP', 5:'REBP', 6:'RESI', 7:'REDI', 8:'RNONE', 0xF:'RNONE'}
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     init()
+    load_data()
     sim_main()
+    save_data()
     print read_reg('REAX')
     print read_data(240+8)

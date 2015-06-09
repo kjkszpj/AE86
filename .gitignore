@@ -1,5 +1,10 @@
+#	my ignore 
 data/
 .idea/
+ui/creator/
+*.pk
+*.yo
+*.ym
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
