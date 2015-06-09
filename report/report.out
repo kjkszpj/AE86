@@ -15,7 +15,8 @@
 \BOOKMARK [1][-]{section.6}{UI的关键实现}{}% 15
 \BOOKMARK [2][-]{subsection.6.1}{模拟运行}{section.6}% 16
 \BOOKMARK [2][-]{subsection.6.2}{颜色的更新}{section.6}% 17
-\BOOKMARK [1][-]{section.7}{其他功能}{}% 18
-\BOOKMARK [1][-]{section.8}{遇到的问题}{}% 19
-\BOOKMARK [1][-]{section.9}{项目总结}{}% 20
-\BOOKMARK [1][-]{section.10}{Thank\040You}{}% 21
+\BOOKMARK [2][-]{subsection.6.3}{线程阻塞}{section.6}% 18
+\BOOKMARK [1][-]{section.7}{项目特点}{}% 19
+\BOOKMARK [1][-]{section.8}{未实现功能}{}% 20
+\BOOKMARK [1][-]{section.9}{项目总结}{}% 21
+\BOOKMARK [1][-]{section.10}{Thank\040You}{}% 22

@@ -71,17 +71,17 @@
 \begin{table}[!ht]     % 强制在原位显示表格
 \centering
 \caption{开发环境}
-\begin{tabular}{|l|c|c|c|}
+\begin{tabular}{|c|c|c|c|}
 \hline
-\multirow{2}{*}{主要使用语言} & 内核 & Python 2.7.9\\
-\cline{2-3}
- & GUI & PyQt 4.11.3\\
+\multirow{2}{*}{主要使用语言} & 内核 & Python & Python 2.7.9\\
+\cline{2-4}
+ & GUI & PyQt & PyQt 4.11.3\\
 \hline
-\multirow{2}{*}{开发平台} & IDE & PyCharm\\
-\cline{2-3}
-& 操作系统 & Windows 8.1\\
+\multirow{2}{*}{开发平台} & IDE & PyCharm & PyCharm Community Edition 4.5\\
+\cline{2-4}
+& 操作系统 & MS Windows 8 & Windows 8.1\\
 \hline
-辅助工具 & GUI界面绘制 & Qt Creator\\
+辅助工具 & GUI界面绘制 & Qt Creator &\\
 \hline
 \end{tabular}
 \end{table}
@@ -93,7 +93,26 @@
 
 在这个项目之前几天我们还完成了数据库的课程项目(HTML+PHP实现)，所以作者这次不想再写web端的UI，试图使用不会的Qt来实现一个桌面端应用程序。虽然界面不一定好看，但是也是一种挑战。
 
-%目录介绍here
+
+\begin{center}
+\begin{table}[!ht]     % 强制在原位显示表格
+\centering
+\caption{目录介绍}
+\begin{tabular}{|l|c|l|}
+\hline
+\multirow{2}{*}{./core/pipe} & main.py & 核心模拟器主程序\\
+\cline{2-3}
+& memory.py & 内存管理模块\\
+\hline
+\multirow{3}{*}{./ui} & ui\_main.py & UI信号(signal)和槽(slot)连接的主程序\\
+\cline{2-3}
+& total.py & 定义UI界面\\
+\cline{2-3}
+& ./component/ & 各种小模块，具体实现UI界面的每个小框\\
+\hline
+\end{tabular}
+\end{table}
+\end{center}
 
 \section{内核具体实现}
 \subsection{中间变量的实现}
@@ -112,10 +131,7 @@ def f_stat(f_icode, imem_error):
 
 \end{lstlisting}
 
-其中部分stage output只用到了一次
-%example
-，我们在需要的时候再计算这个结果，以保证程序整体运行速度，而对于在不止一个地方用到的值，我们采用中间变量来保存这些值。
-%example
+其中部分stage output只用到了一次，我们在需要的时候再计算这个结果，以保证程序整体运行速度，而对于在不止一个地方用到的值，我们采用中间变量来保存这些值。
 \\
 \\
 \\
@@ -128,9 +144,7 @@ def d_srcB(D_icode, D_rB):
     return RNONE;
 \end{lstlisting}
 
-我们发现Python在这里看起来就和真的硬件描述语言一样，同时十分接近自然语言，给人带来愉悦感！这也是其他语言（比如C++）所没有的
-%词穷
-。
+我们发现Python在这里看起来就和真的硬件描述语言一样，同时十分接近自然语言，这带给我其他语言（比如C++，Java）所没有的愉悦感！
 
 使用Python是一个正确的选择。
 %_(:зゝ∠)_
@@ -172,8 +186,7 @@ def inst_valid(addr):
 在写入内存的时候，考虑到这是一个同步的RAM，所以不能异步的写入。
 我实现的办法是先把这个写操作记录到一个类似于缓冲区的东西里，当在时钟上升沿的时候再修改。
 
-有点类似于Git的stage和commit操作，如果需要修改，我先加入到stage里面，等时钟上升沿再一起commit。如下例子：
-%example here
+有点类似于Git的stage和commit操作，如果需要修改，我先加入到stage里面，等时钟上升沿再一起commit。
 
 需要注意的是，这种实现方式从原理上与以下程序有所不同
 \begin{lstlisting}[frame=single]
@@ -295,11 +308,54 @@ Simulator包括以下方法
 在程序commit内存修改的时候，会调用update\_fun(addr, value)，告诉UI界面需要更新addr这个内存/寄存器，刷新界面。
 
 \subsection{颜色的更新}
-在值改变的时候(可能)会有颜色变化，然后过了一段时间又会重新变成白色（类似于cool down），这样的功能使用CSS和HTML可以简单实现(比如说使用-webkit-transform等)，然而我这次要用的是Qt，所以我手动实现了这个功能。
-%continue here
-\section{其他功能}
-\section{遇到的问题}
+在值改变的时候(可能)会有颜色变化，然后过了一段时间又会重新变成白色，这样的功能使用CSS和HTML可以简单实现(比如说使用-webkit-transform等)，然而我这次要用的是Qt，所以手动实现了这个功能。
+
+我们在update\_fun中返回对应的cd\_fun和对应的参数来让程序在后续过程中重新变成白色。
+
+\subsection{线程阻塞}
+原本自动执行的时候GUI会被卡死，猜测是线程阻塞的问题，因为在自动运行的时候，程序调用内核的模拟器，让他跑好几十秒，那么就不能同时在GUI中进行操作了。
+
+为了解决这个问题，我猜测需要把后台模拟器移到另外一条thread上，参考了一下往届同学的做法\cite{4}，新建了QThread的一个子类，终于不再阻塞了。
+
+\section{项目特点}
+\begin{itemize}
+\item 内存管理方式比较新奇
+\item 能保存运行进度，下次继续执行
+\item 能直接修改内存的值，从而实现输入的功能(比如直接修改asum内存让他对不同的4个数进行求和)
+\item 有颜色效果
+\end{itemize}
+
+\section{未实现功能}
+以下包括想要实现但是由于技术问题未能实现的功能：
+\begin{enumerate}
+\item 可持久化的内存，可以使用高级数据结构，但是我设想的解决方案是直接使用Git的commit和reset等来管理.pk文件（性能和使用高级数据结构差不多，可以接受）
+\item 画出课本上的pipeline图，思考了一个晚上觉得实现起来比较麻烦，剩下时间不多了所以没做。
+\begin{center}
+\includegraphics[width = 7cm]{8.jpg}
+\end{center}
+\item 声音效果，作为一个有情怀的程序员，我们企图把汇编代码执行过程和音乐联系起来，来表现出代码执行的时候也像音乐一样美。考虑到寄存器有8个，可以弹出7个基本的音(do, rui, mi...)，加上一个可以作为简单的踏板，那么在寄存器更新的时候就能有音效了。
+
+希望以后能有时间继续实现这样的功能。
+\end{enumerate}
+
 \section{项目总结}
+本次项目是我们大学以来程序最长的，历时最长的课程项目之一。我深刻体会到写好一个完整的项目不容易。
+
+首先当然是要选对语言，我认为在这个项目中我选择Python十分正确。在项目设计过程中我就用到了Python的很多特性，比如
+\begin{enumerate}
+\item 用的最多的就是函数对象，Python的函数也可以当成一个对象，我就经常把一系列的函数存放到list中在后续过程中使用，或者把函数对象当成一个参数传递给另外一个函数。
+\item 比较贴近自然语言，查错比较容易。
+\item 库和相关资料比较多，在遇到问题的时候我们使用Google一般可以轻松解决(事实证明百度并没有什么用)
+\end{enumerate}
+
+自己设计一个图形化界面真的不容易，一个小框就需要调半天，特别是新近学的PyQt。经常能在图书馆看到我们班的同学做计原项目，大家都很努力。如果能组队协作可能最后功能实现的应该会更好。
+
+通过这次项目，我对流水线的理解更加深入，特别是会分辨stall和bubble了。使用程序模拟一个Y86的处理器尚且这么难，如果使用硬件来实现流水线处理器应该更复杂。
+
+下次我还是使用JS吧，有现成的框架不需要做很多事就能实现各种效果。
+
+看过别人的项目我发现自己做的还是too simple，还需要学习。
+
 \section{Thank You}
 \indent\indent
 {\Large{
@@ -307,12 +363,13 @@ Simulator包括以下方法
 
 View this project on GitHub\cite{2}
 
-Report is written in \LaTeX}
+Report is written in \LaTeX}}
 
 \begin{thebibliography}{99}
 \bibitem{1} \url{http://www.csapp.cs.cmu.edu/}
 \bibitem{2} \url{https://github.com/kjkszpj/AE86}
 \bibitem{3} \url{http://en.wikipedia.org/wiki/Endianness#Little-endian}
+\bibitem{4} \url{https://github.com/CatMiaoMiaoMiao/y86-simulator/blob/master/gui/y86.py}
 \end{thebibliography}
 
 \end{document}

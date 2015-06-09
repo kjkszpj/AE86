@@ -1,6 +1,7 @@
 from time import sleep
 from PyQt4 import QtCore
 
+
 class MyThread(QtCore.QThread):
     def __init__(self, parent = None):
         QtCore.QThread.__init__(self, parent)
@@ -22,6 +23,3 @@ class MyThread(QtCore.QThread):
             self.emit(QtCore.SIGNAL('next()'))
             sleep(self.interval)
         self.emit(QtCore.SIGNAL('terminate()'))
-
-    def setslide(run_thread, interval = 0.1):
-        run_thread.interval = interval
