@@ -2,12 +2,19 @@
 \contentsline {section}{\numberline {2}工作原理}{2}{section.2}
 \contentsline {subsection}{\numberline {2.1}指令集}{2}{subsection.2.1}
 \contentsline {subsection}{\numberline {2.2}PIPELINE}{3}{subsection.2.2}
+\contentsline {subsection}{\numberline {2.3}Memory}{3}{subsection.2.3}
 \contentsline {section}{\numberline {3}我的项目概况}{3}{section.3}
 \contentsline {section}{\numberline {4}内核具体实现}{4}{section.4}
 \contentsline {subsection}{\numberline {4.1}中间变量的实现}{4}{subsection.4.1}
-\contentsline {section}{\numberline {5}UI介绍}{5}{section.5}
-\contentsline {section}{\numberline {6}UI实现}{5}{section.6}
-\contentsline {section}{\numberline {7}其他功能}{5}{section.7}
-\contentsline {section}{\numberline {8}遇到的问题}{5}{section.8}
-\contentsline {section}{\numberline {9}项目总结}{5}{section.9}
-\contentsline {section}{\numberline {10}Thank You}{5}{section.10}
+\contentsline {subsection}{\numberline {4.2}内存的实现}{4}{subsection.4.2}
+\contentsline {subsection}{\numberline {4.3}寄存器的实现}{6}{subsection.4.3}
+\contentsline {section}{\numberline {5}UI介绍}{6}{section.5}
+\contentsline {subsection}{\numberline {5.1}界面介绍}{6}{subsection.5.1}
+\contentsline {subsection}{\numberline {5.2}怎样运行程序}{9}{subsection.5.2}
+\contentsline {subsection}{\numberline {5.3}菜单栏其他功能}{9}{subsection.5.3}
+\contentsline {section}{\numberline {6}UI的关键实现}{10}{section.6}
+\contentsline {subsection}{\numberline {6.1}模拟运行}{10}{subsection.6.1}
+\contentsline {section}{\numberline {7}其他功能}{10}{section.7}
+\contentsline {section}{\numberline {8}遇到的问题}{10}{section.8}
+\contentsline {section}{\numberline {9}项目总结}{10}{section.9}
+\contentsline {section}{\numberline {10}Thank You}{10}{section.10}

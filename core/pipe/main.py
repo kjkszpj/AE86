@@ -416,7 +416,7 @@ class Simulator():
         file(file_name, 'w').write('')
         outf = file(file_name, 'a')
         while True:
-            result = self.step(update_fun, cd_fun)
+            result = self.step(update_fun)
             my_print(outf)
             if type(result) == str: return result
         return u'并没有执行完'

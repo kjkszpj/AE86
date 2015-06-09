@@ -111,7 +111,7 @@ class Widow(QtGui.QMainWindow):
         self.run_thread.start()
 
     def run_direct(self):
-        self.run_thread.interval = 0.01
+        self.run_thread.interval = 0.02
         self.run_sim()
 
     def run_1_IPS(self):
