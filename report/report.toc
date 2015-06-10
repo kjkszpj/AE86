@@ -8,15 +8,15 @@
 \contentsline {subsection}{\numberline {4.1}中间变量的实现}{4}{subsection.4.1}
 \contentsline {subsection}{\numberline {4.2}内存的实现}{5}{subsection.4.2}
 \contentsline {subsection}{\numberline {4.3}寄存器的实现}{6}{subsection.4.3}
-\contentsline {section}{\numberline {5}UI介绍}{6}{section.5}
-\contentsline {subsection}{\numberline {5.1}界面介绍}{6}{subsection.5.1}
+\contentsline {section}{\numberline {5}UI介绍}{7}{section.5}
+\contentsline {subsection}{\numberline {5.1}界面介绍}{7}{subsection.5.1}
 \contentsline {subsection}{\numberline {5.2}怎样运行程序}{9}{subsection.5.2}
 \contentsline {subsection}{\numberline {5.3}菜单栏其他功能}{9}{subsection.5.3}
 \contentsline {section}{\numberline {6}UI的关键实现}{10}{section.6}
 \contentsline {subsection}{\numberline {6.1}模拟运行}{10}{subsection.6.1}
 \contentsline {subsection}{\numberline {6.2}颜色的更新}{10}{subsection.6.2}
-\contentsline {subsection}{\numberline {6.3}线程阻塞}{10}{subsection.6.3}
-\contentsline {section}{\numberline {7}项目特点}{10}{section.7}
+\contentsline {subsection}{\numberline {6.3}线程阻塞}{11}{subsection.6.3}
+\contentsline {section}{\numberline {7}项目特点}{11}{section.7}
 \contentsline {section}{\numberline {8}未实现功能}{11}{section.8}
-\contentsline {section}{\numberline {9}项目总结}{11}{section.9}
+\contentsline {section}{\numberline {9}项目总结}{12}{section.9}
 \contentsline {section}{\numberline {10}Thank You}{12}{section.10}
