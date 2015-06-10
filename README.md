@@ -2,8 +2,6 @@
 
 计算机原理(ICS)课程项目，pipeline处理器模拟咯。
 
-争取在周六前做完PJ，周日(6-7日，表弟高考)要去复旦微软俱乐部\_(:зゝ∠)_
-
 ---
 ![AE86](http://i.ytimg.com/vi/Gah8FnYSypk/maxresdefault.jpg)
 
@@ -14,15 +12,19 @@
 觉得自己真机智
 
 ......
+
+---
+##Requirement
+-    Python 2.7
+-    PtQt4
+
+---
 ##TODO
--    还需要教他们怎么装
 -    fibo不能运行(core-bug?)
 -    按钮画好一点
--    report
 -    使用html优化咯
 -    异常的展示
 -    stage，有颜色的框, status, stall, bubble
--    代码整理
 
 ##Expected UI
 -    外形
@@ -48,11 +50,11 @@
 
 ##功能列表
 
--    内核    (DONE)
--    UI
+-    内核 (DONE)
+-    UI (DONE)
+-    report (DONE)  
 -    内存管理
 -    拓展功能？
--    report
 -    输入文件解析器
 -    单条语句执行程序
 
