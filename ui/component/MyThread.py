@@ -19,7 +19,7 @@ class MyThread(QtCore.QThread):
         self.start()
 
     def run(self):
-        while self.sim.is_terminated == False:
+        while not self.sim.is_terminated:
             self.emit(QtCore.SIGNAL('next()'))
             sleep(self.interval)
         self.emit(QtCore.SIGNAL('terminate()'))

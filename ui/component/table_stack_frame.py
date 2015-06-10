@@ -1,7 +1,5 @@
 from PyQt4 import QtGui
 from PyQt4 import QtCore
-import sys
-sys.path.append('C:\\Users\\You\\Documents\\GitHub\\AE86\\core\\pipe')
 import memory
 
 
@@ -77,6 +75,6 @@ def refresh_stack_frame(tb, addr, value, color = True):
 
 def cool_down_stack_frame(args):
     item = args[0].item(args[1], args[2])
-    if item == None: return
+    if item is None: return
     item.setBackgroundColor(QtGui.QColor(0xFF, 0xFF, 0xFF))
     args[0].repaint()

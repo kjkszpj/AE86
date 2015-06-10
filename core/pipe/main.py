@@ -424,9 +424,9 @@ class Simulator():
     def load_data(self):
         load_data()
 
-#   以下是调试模块
+#   以下是输出模块
 def my_print(outf):
-    outf.write('------CYCLE %d------\n' % (read_reg('CYCLE') - 1))
+    outf.write('------CYCLE %d------\n' % read_reg('CYCLE'))
     outf.write('FETCH:\n')
     outf.write('\tF_predPC 	= 0x%x\n' % read_reg('F_predPC'))
 

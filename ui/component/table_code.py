@@ -1,10 +1,6 @@
 # -*- coding: cp936 -*-
 
 from PyQt4 import QtGui
-from PyQt4 import QtCore
-from time import sleep
-import sys
-sys.path.append('C:\\Users\\You\\Documents\\GitHub\\AE86\\core\\pipe')
 import memory
 import re
 
@@ -15,7 +11,7 @@ def init_code(ui, f_name = 'C:\\Users\\You\\Documents\\GitHub\\AE86\\data\\y86_c
     result = {}
     for s in code:
         pattern = 'x\w+:'
-        if re.search('x[\dabcdefABCDEF]+:.*\S+.*\|', s) == None: continue
+        if re.search('x[\dabcdefABCDEF]+:.*\S+.*\|', s) is None: continue
         temp = re.search('x[\dabcdefABCDEF]+|', s).group()
         if re.search(pattern, s) == None: continue
         addr = re.search('x[\dabcdefABCDEF]+:', s).group()
@@ -35,6 +31,7 @@ def star_code(pc, s):
     if pc == memory.read_reg('D_PC'): s = s[0:1] + 'D' + s[2:]
     if pc == memory.read_reg('F_PC'): s = 'F' + s[1:]
     return s + '\n'
+
 
 #   TODO color
 #   TODO 填充满整个textbrowser
@@ -62,13 +59,14 @@ def refresh_code(ui, code, addr, value):
             cnt -= 1
             while pc not in code.keys() and pc <= addr_limit: pc += 2
             if pc > addr_limit: break
-            text = text + star_code(pc, code[pc])
+            text += star_code(pc, code[pc])
             pc += 2
         QtGui.QTextBrowser.setText(ui, text)
         ui.repaint()
         return None
 
-#   TODO cd here
+
+#   cd here
 def cool_down_code():
     pass
 
@@ -77,4 +75,4 @@ if __name__ == '__main__':
     result = init_code(None)
     for addr, code in result.items():
         print addr, code
-    refresh_code(None, result, 10)
+    refresh_code(None, result, 10, 233)

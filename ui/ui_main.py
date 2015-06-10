@@ -1,6 +1,8 @@
 # -*- coding: cp936 -*-
 
+import os
 import sys
+sys.path.append(os.path.abspath(sys.argv[0])[0:-13] + 'core\\pipe')
 import time
 import thread
 from PyQt4 import QtGui
@@ -20,7 +22,6 @@ from component.table_status import *
 from component.output import *
 from component.table_memory_watch import *
 
-sys.path.append('C:\\Users\\You\\Documents\\GitHub\\AE86\\core\\pipe')
 from main import *
 from memory import *
 

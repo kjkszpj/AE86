@@ -1,8 +1,5 @@
 from PyQt4 import QtGui
 from PyQt4 import QtCore
-from time import sleep
-import sys
-sys.path.append('C:\\Users\\You\\Documents\\GitHub\\AE86\\core\\pipe')
 import main
 import memory
 
@@ -33,7 +30,7 @@ def refresh_reg(tb, addr, value, color = True):
             if color:
                 tb.item(i, 1).setBackgroundColor(QtGui.QColor(0xFA, 0xD3, 0xD3))
                 tb.repaint()
-                return (cool_down_reg, (tb, i, 1))
+                return cool_down_reg, (tb, i, 1)
     return None
 
 

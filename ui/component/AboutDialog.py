@@ -1,6 +1,5 @@
 # -*- coding: cp936 -*-
 
-import sys
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 
@@ -31,6 +30,7 @@ class AboutDialog(QtGui.QDialog):
 
 
 def main():
+    import sys
     app = QtGui.QApplication(sys.argv)
     AboutDialog()
     sys.exit(app.exec_())

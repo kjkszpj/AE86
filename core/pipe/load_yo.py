@@ -1,5 +1,3 @@
-import sys
-sys.path.append('C:\\Users\\You\\Documents\\GitHub\\AE86\\core\\pipe')
 from memory import *
 
 def load_yo(inf_name):

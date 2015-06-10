@@ -4,9 +4,6 @@ from pickle import load
 from pickle import dump
 from PyQt4 import QtCore
 from PyQt4 import QtGui
-
-import sys
-sys.path.append('C:\\Users\\You\\Documents\\GitHub\\AE86\\core\\pipe')
 import memory
 
 

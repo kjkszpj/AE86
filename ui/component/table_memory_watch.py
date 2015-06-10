@@ -1,11 +1,10 @@
 # -*- coding: cp936 -*-
 
-import sys
-sys.path.append('C:\\Users\\You\\Documents\\GitHub\\AE86\\core\\pipe')
-from main import *
-import memory
 from PyQt4 import QtGui
 from PyQt4 import QtCore
+from main import *
+import memory
+
 
 class WatchDialog(QtGui.QDialog):
     def __init__(self, parent = None):
@@ -82,6 +81,7 @@ class AlterDialog(QtGui.QDialog):
 
 
 def main():
+    import sys
     app = QtGui.QApplication(sys.argv)
     u = AlterDialog()
     sys.exit(app.exec_())

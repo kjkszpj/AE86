@@ -3,6 +3,7 @@
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 
+
 def output(widow):
     output_file_name = QtGui.QFileDialog.getSaveFileName(widow, u'导出结果', '', QtCore.QString('*.txt'))
     widow.sim.run_all(file_name = output_file_name)
